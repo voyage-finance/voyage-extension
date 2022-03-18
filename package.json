@@ -4,6 +4,9 @@
   "private": true,
   "dependencies": {
     "@babel/core": "^7.16.0",
+    "@mantine/core": "^4.0.5",
+    "@mantine/form": "^4.0.5",
+    "@mantine/hooks": "^4.0.5",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.3",
     "@svgr/webpack": "^5.5.0",
     "@testing-library/jest-dom": "^5.16.2",
@@ -47,6 +50,7 @@
     "react-dev-utils": "^12.0.0",
     "react-dom": "^17.0.2",
     "react-refresh": "^0.11.0",
+    "react-router-dom": "^6.2.2",
     "resolve": "^1.20.0",
     "resolve-url-loader": "^4.0.0",
     "sass-loader": "^12.3.0",
@@ -145,6 +149,7 @@
     "@voyage-finance/webpack-ext-reloader": "^1.2.0",
     "clean-webpack-plugin": "^4.0.0",
     "copy-webpack-plugin": "^10.2.4",
-    "prettier": "^2.6.0"
+    "prettier": "^2.6.0",
+    "sass": "^1.49.9"
   }
 }
