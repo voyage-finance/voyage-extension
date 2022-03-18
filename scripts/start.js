@@ -62,6 +62,7 @@ function startCompiler() {
       watching.close();
       process.exit(1);
     }
+    console.log(stats);
   });
 
   ['SIGINT', 'SIGTERM'].forEach(function (sig) {

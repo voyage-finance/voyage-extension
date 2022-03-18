@@ -70,8 +70,8 @@ module.exports = {
 
   appPopup: resolveModule(resolveApp, 'src/ui/pages/Popup/index'),
   appPopupHtml: resolveApp('src/ui/pages/Popup/index.html'),
-  appBackground: resolveModule(resolveApp, 'src/scripts/background.ts'),
-  appContentScript: resolveModule(resolveApp, 'src/scripts/contentscript.ts'),
+  appBackground: resolveModule(resolveApp, 'src/scripts/background'),
+  appContentScript: resolveModule(resolveApp, 'src/scripts/contentscript'),
 };
 
 module.exports.moduleFileExtensions = moduleFileExtensions;
