@@ -1,8 +1,8 @@
 import React from 'react';
 import logo from './logo.svg';
-import './App.css';
+import './Popup.css';
 
-function App() {
+function Popup() {
   return (
     <div className="App">
       <header className="App-header">
@@ -16,11 +16,11 @@ function App() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Learn React
+          learn blockchain
         </a>
       </header>
     </div>
   );
 }
 
-export default App;
+export default Popup;
