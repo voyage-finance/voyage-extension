@@ -68,6 +68,7 @@
   },
   "scripts": {
     "start": "node scripts/start.js",
+    "devtools:react": "react-devtools",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js"
   },
@@ -150,6 +151,7 @@
     "clean-webpack-plugin": "^4.0.0",
     "copy-webpack-plugin": "^10.2.4",
     "prettier": "^2.6.0",
+    "react-devtools": "^4.24.1",
     "sass": "^1.49.9"
   }
 }
