@@ -179,7 +179,10 @@ module.exports = function (webpackEnv) {
     bail: isEnvProduction,
     devtool: isEnvDevelopment && 'cheap-module-source-map',
     entry: {
-      popup: paths.appPopup,
+      popup: [
+        isEnvDevelopment && require.resolve('react-devtools'),
+        paths.appPopup,
+      ].filter(Boolean),
       background: paths.appBackground,
       contentScript: paths.appContentScript,
     },
