@@ -184,6 +184,7 @@ module.exports = function (webpackEnv) {
         paths.appPopup,
       ].filter(Boolean),
       background: paths.appBackground,
+      injector: paths.appInjector,
       contentScript: paths.appContentScript,
     },
     output: {
@@ -296,6 +297,11 @@ module.exports = function (webpackEnv) {
           babelRuntimeRegenerator,
         ]),
       ],
+      fallback: {
+        buffer: require.resolve('buffer/'),
+        process: require.resolve('process/browser'),
+        stream: require.resolve('stream-browserify'),
+      },
     },
     module: {
       strictExportPresence: true,
@@ -619,6 +625,10 @@ module.exports = function (webpackEnv) {
             },
           },
         }),
+      new webpack.ProvidePlugin({
+        Buffer: [require.resolve('buffer/'), 'Buffer'],
+        process: require.resolve('process/browser'),
+      }),
     ].filter(Boolean),
     // Turn off performance processing because we utilize
     // our own hints via the FileSizeReporter

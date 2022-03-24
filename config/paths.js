@@ -71,6 +71,7 @@ module.exports = {
   appPopup: resolveModule(resolveApp, 'src/ui/pages/Popup/index'),
   appPopupHtml: resolveApp('src/ui/pages/Popup/index.html'),
   appBackground: resolveModule(resolveApp, 'src/scripts/background'),
+  appInjector: resolveModule(resolveApp, 'src/scripts/injector'),
   appContentScript: resolveModule(resolveApp, 'src/scripts/contentscript'),
 };
 

@@ -12,5 +12,6 @@
     "matches": ["http://*/*", "https://*/*"],
     "js": ["contentScript.bundle.js"]
   }],
-  "icons": { "128": "icon.png" }
+  "icons": { "128": "icon.png" },
+  "web_accessible_resources": [{ "resources": ["injector.bundle.js"], "matches": ["<all_urls>"] }]
 }
