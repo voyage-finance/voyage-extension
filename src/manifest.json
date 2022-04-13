@@ -1,6 +1,7 @@
 {
   "name": "Voyage Extension",
   "description": "Enables playing/buy through your Voyage vault!",
+  "id": "voyage_extension",
   "version": "0.1",
   "manifest_version": 3,
   "action": {
@@ -13,5 +14,6 @@
     "js": ["contentScript.bundle.js"]
   }],
   "icons": { "128": "icon.png" },
+  "permissions": ["storage"],
   "web_accessible_resources": [{ "resources": ["injector.bundle.js"], "matches": ["<all_urls>"] }]
 }
