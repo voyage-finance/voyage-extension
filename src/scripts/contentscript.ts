@@ -8,7 +8,9 @@ const pageStream = new WindowPostMessageStream({
   target: 'voyage-injector',
 });
 
-pageStream.on('data', (data) => console.log('got data from injector: ', data));
+pageStream.on('data', (data) =>
+  console.log('[content-script] got data from injector: ', data)
+);
 
 const script = document.createElement('script');
 script.src = chrome.runtime.getURL('injector.bundle.js');

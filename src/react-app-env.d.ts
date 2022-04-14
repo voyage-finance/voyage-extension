@@ -2,6 +2,7 @@
 /// <reference types="react" />
 /// <reference types="react-dom" />
 import { WindowPostMessageStream } from '@metamask/post-message-stream';
+import { BaseProvider } from '@metamask/providers';
 
 declare namespace NodeJS {
   interface ProcessEnv {
@@ -68,6 +69,6 @@ declare module '*.module.sass' {
 
 declare global {
   interface Window {
-    voyageStream: WindowPostMessageStream;
+    voyage: BaseProvider;
   }
 }
