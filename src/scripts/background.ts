@@ -1,3 +1,4 @@
+import WalletConnect from '@walletconnect/client';
 import PortStream from 'extension-port-stream';
 import { detect } from 'detect-browser';
 import browser, { Runtime } from 'webextension-polyfill';
@@ -94,3 +95,27 @@ function connectToMetaMask() {
   const metaMaskPort = browser.runtime.connect(currentMetaMaskId);
   return new PortStream(metaMaskPort);
 }
+
+async function connectWc() {
+  const connector = new WalletConnect({
+    uri: 'wc:fb587373-5c3b-432a-8dee-220c67f96b5b@1?bridge=https%3A%2F%2Fn.bridge.walletconnect.org&key=a85297a604cfa792bcd7ee1b40c965b3cfdc6f020ef451c117c866c6e1295ede',
+    clientMeta: {
+      description: 'Voyage Finance extension',
+      url: 'https://voyage.finance',
+      icons: ['https://walletconnect.org/walletconnect-logo.png'],
+      name: 'Voyage Finance',
+    },
+  });
+
+  await connector.createSession();
+
+  connector.on('session_request', (error, payload) => {
+    console.log('error from wc?: ', error);
+    console.log('payload from wc?: ', payload);
+    connector.approveSession({ chainId: 1337, accounts: ['0x12345'] });
+  });
+
+  console.log('wc client: ', connector);
+}
+
+connectWc();
