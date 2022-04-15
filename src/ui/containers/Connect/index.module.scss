@@ -1,4 +1,11 @@
 .root {
   display: flex;
   flex-direction: column;
+  width: 100%;
+
+  .address {
+    white-space: pre;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }

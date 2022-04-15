@@ -3,11 +3,30 @@ import browser from 'webextension-polyfill';
 import PortStream from 'extension-port-stream';
 import { getMetaMaskExtensionId, setupMultiplex } from '../utils';
 import pump from 'pump';
-import { createAsyncMiddleware, JsonRpcEngine } from 'json-rpc-engine';
+import {
+  createAsyncMiddleware,
+  JsonRpcEngine,
+  JsonRpcRequest,
+} from 'json-rpc-engine';
 import {
   createEngineStream,
   createStreamMiddleware,
 } from 'json-rpc-middleware-stream';
+import createMetaRPCHandler from '../rpc/virtual/server';
+import WalletConnect from '@walletconnect/client';
+
+interface WalletConnectSessionRequest {
+  chainId: number | null;
+  peerId: string;
+  peerMeta: PeerMeta;
+}
+
+interface PeerMeta {
+  description?: string;
+  icons?: string[];
+  name: string;
+  url: string;
+}
 
 export class VoyageController {
   engine: JsonRpcEngine;
@@ -21,12 +40,12 @@ export class VoyageController {
    * @param stream
    */
   setupMetaMaskProviderConnection = (stream: Duplex) => {
-    try {
-      const engineStream = createEngineStream({ engine: this.engine });
-      pump(stream, engineStream, stream);
-    } catch (err) {
-      console.log('error in mm conn: ', err);
-    }
+    const engineStream = createEngineStream({ engine: this.engine });
+    pump(stream, engineStream, stream);
+  };
+
+  setupControllerConnection = (stream: Duplex) => {
+    stream.on('data', createMetaRPCHandler(this.api, stream));
   };
 
   /**
@@ -41,10 +60,48 @@ export class VoyageController {
     engine.push(this.createVoyageMiddleware());
     engine.push(this.engine.asMiddleware());
     const engineStream = createEngineStream({ engine });
-    pump(stream, engineStream, stream, () =>
-      console.log('disconnected from inpage provider stream')
+    pump(stream, engineStream, stream);
+  };
+
+  connectWithWC = async (uri: string) => {
+    const connector = new WalletConnect({
+      uri,
+      clientMeta: {
+        description: 'Voyage Finance extension',
+        url: 'https://voyage.finance',
+        icons: ['https://walletconnect.org/walletconnect-logo.png'],
+        name: 'Voyage Finance',
+      },
+    });
+
+    await connector.createSession();
+
+    console.log('wc client: ', connector);
+
+    return new Promise<{ peerMeta: PeerMeta; peerId: string }>(
+      (resolve, reject) => {
+        connector.on(
+          'session_request',
+          (error, payload: JsonRpcRequest<[WalletConnectSessionRequest]>) => {
+            if (error) {
+              console.log('error from wc?: ', error);
+              return reject(error);
+            }
+            console.log('payload from wc?: ', payload);
+            connector.approveSession({ chainId: 1337, accounts: ['0x12345'] });
+            const [req] = payload.params!;
+            resolve({ peerMeta: req.peerMeta, peerId: req.peerId });
+          }
+        );
+      }
     );
   };
+
+  get api() {
+    return {
+      connectWithWC: this.connectWithWC,
+    };
+  }
 
   /**
    * Create a raw duplex stream to the MetaMask extension provider

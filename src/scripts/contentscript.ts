@@ -1,7 +1,7 @@
 import { WindowPostMessageStream } from '@metamask/post-message-stream';
 import pump from 'pump';
 import PortStream from 'extension-port-stream';
-import { Runtime } from 'webextension-polyfill-ts';
+import { Runtime } from 'webextension-polyfill';
 
 const pageStream = new WindowPostMessageStream({
   name: 'voyage-contentscript',

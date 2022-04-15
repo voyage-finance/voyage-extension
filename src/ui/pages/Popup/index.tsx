@@ -1,20 +1,15 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import Popup from './Popup';
-import PortStream from 'extension-port-stream';
-import browser from 'webextension-polyfill';
-import { BaseProvider } from '@metamask/providers';
-import { Duplex } from 'stream';
+import React from "react";
+import ReactDOM from "react-dom";
+import Popup from "./Popup";
+import "./index.css";
+import { initWeb3 } from "../../web3/init";
 
 async function bootstrap() {
   // set up a connection to background script
-  const port = browser.runtime.connect({ name: 'voyage-popup' });
-  const providerStream = new PortStream(port) as unknown as Duplex;
-  const provider = new BaseProvider(providerStream);
+  initWeb3();
   ReactDOM.render(
     <React.StrictMode>
-      <Popup provider={provider} />
+      <Popup />
     </React.StrictMode>,
     document.getElementById('root')
   );
