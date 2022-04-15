@@ -180,6 +180,7 @@ module.exports = function (webpackEnv) {
     devtool: isEnvDevelopment && 'cheap-module-source-map',
     entry: {
       popup: [
+        require.resolve('globalthis/auto'),
         isEnvDevelopment && require.resolve('react-devtools'),
         paths.appPopup,
       ].filter(Boolean),
@@ -299,8 +300,10 @@ module.exports = function (webpackEnv) {
       ],
       fallback: {
         buffer: require.resolve('buffer/'),
+        events: require.resolve('events/'),
         process: require.resolve('process/browser'),
         stream: require.resolve('stream-browserify'),
+        util: require.resolve('util/'),
       },
     },
     module: {
@@ -555,7 +558,6 @@ module.exports = function (webpackEnv) {
       // TypeScript type checking
       useTypeScript &&
         new ForkTsCheckerWebpackPlugin({
-          async: isEnvDevelopment,
           typescript: {
             typescriptPath: resolve.sync('typescript', {
               basedir: paths.appNodeModules,
@@ -578,7 +580,7 @@ module.exports = function (webpackEnv) {
               syntactic: true,
             },
             mode: 'write-references',
-            // profile: true,
+            profile: true,
           },
           issue: {
             // This one is specifically to match during CI tests,

@@ -1,17 +1,17 @@
 import { WindowPostMessageStream } from '@metamask/post-message-stream';
-import { MetaMaskInpageProvider } from '@metamask/providers';
+import { initializeProvider } from '@voyage-finance/providers';
 import { Duplex } from 'stream';
 
-const voyageStream = new WindowPostMessageStream({
+const connectionStream = new WindowPostMessageStream({
   name: 'voyage-injector',
   target: 'voyage-contentscript',
+}) as Duplex;
+
+initializeProvider({
+  connectionStream,
 });
-const provider = new MetaMaskInpageProvider(voyageStream as unknown as Duplex, {
-  jsonRpcStreamName: 'voyage-provider',
-});
-window.voyage = provider;
-window.dispatchEvent(new Event('voyage#initialized'));
+
 (async function () {
-  const res = await provider.request({ method: 'eth_requestAccounts' });
+  const res = await window.voyage.request({ method: 'eth_requestAccounts' });
   console.log('inpage received response: ', res);
 })();

@@ -1,5 +1,5 @@
 import { Web3Provider } from '@ethersproject/providers';
-import { BaseProvider } from '@metamask/providers';
+import { BaseProvider } from '@voyage-finance/providers';
 import { Signer, utils } from 'ethers';
 import {
   AddChainError,

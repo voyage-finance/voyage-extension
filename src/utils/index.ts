@@ -9,11 +9,11 @@ import { detect } from 'detect-browser';
  * @param {Duplex} connectionStream - the stream to mux
  * @returns {ObjectMultiplex} the multiplexed stream
  */
-export function setupMultiplex(connectionStream: Duplex) {
+export function setupMultiplex(connectionStream: Duplex, name?: string) {
   const mux = new ObjectMultiplex();
   pump(connectionStream, mux, connectionStream, (err) => {
     if (err) {
-      console.error(err);
+      console.error(`[${name}] error in mux: `, err);
     }
   });
   return mux;
