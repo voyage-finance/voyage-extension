@@ -181,6 +181,7 @@
     "clean-webpack-plugin": "^4.0.0",
     "copy-webpack-plugin": "^10.2.4",
     "events": "^3.3.0",
+    "fork-ts-checker-webpack-plugin": "^7.2.6",
     "prettier": "^2.6.0",
     "react-devtools": "^4.24.1",
     "sass": "^1.49.9",

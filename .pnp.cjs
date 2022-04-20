@@ -85,6 +85,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["events", "npm:3.3.0"],\
             ["extension-port-stream", "npm:2.0.1"],\
             ["file-loader", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:6.2.0"],\
+            ["fork-ts-checker-webpack-plugin", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:7.2.6"],\
             ["fs-extra", "npm:10.0.1"],\
             ["globalthis", "npm:1.0.2"],\
             ["html-webpack-plugin", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:5.5.0"],\
@@ -11462,6 +11463,45 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "SOFT"\
         }],\
+        ["npm:7.2.6", {\
+          "packageLocation": "./.yarn/cache/fork-ts-checker-webpack-plugin-npm-7.2.6-59e36ef7e1-d74e8b22e3.zip/node_modules/fork-ts-checker-webpack-plugin/",\
+          "packageDependencies": [\
+            ["fork-ts-checker-webpack-plugin", "npm:7.2.6"]\
+          ],\
+          "linkType": "SOFT"\
+        }],\
+        ["virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:7.2.6", {\
+          "packageLocation": "./.yarn/__virtual__/fork-ts-checker-webpack-plugin-virtual-1acf6576ac/0/cache/fork-ts-checker-webpack-plugin-npm-7.2.6-59e36ef7e1-d74e8b22e3.zip/node_modules/fork-ts-checker-webpack-plugin/",\
+          "packageDependencies": [\
+            ["fork-ts-checker-webpack-plugin", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:7.2.6"],\
+            ["@babel/code-frame", "npm:7.16.7"],\
+            ["@types/typescript", null],\
+            ["@types/vue-template-compiler", null],\
+            ["@types/webpack", null],\
+            ["chalk", "npm:4.1.2"],\
+            ["chokidar", "npm:3.5.3"],\
+            ["cosmiconfig", "npm:7.0.1"],\
+            ["deepmerge", "npm:4.2.2"],\
+            ["fs-extra", "npm:10.0.1"],\
+            ["memfs", "npm:3.4.1"],\
+            ["minimatch", "npm:3.1.2"],\
+            ["schema-utils", "npm:3.1.1"],\
+            ["semver", "npm:7.3.7"],\
+            ["tapable", "npm:2.2.1"],\
+            ["typescript", "patch:typescript@npm%3A4.6.3#~builtin<compat/typescript>::version=4.6.3&hash=bda367"],\
+            ["vue-template-compiler", null],\
+            ["webpack", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:5.72.0"]\
+          ],\
+          "packagePeers": [\
+            "@types/typescript",\
+            "@types/vue-template-compiler",\
+            "@types/webpack",\
+            "typescript",\
+            "vue-template-compiler",\
+            "webpack"\
+          ],\
+          "linkType": "HARD"\
+        }],\
         ["virtual:83ba06e3eededf50c22d14f2306ef7682f396ba243e99186afc1bcd6d01d6a1d9fe8dc949ce2cf94fb904a9c46d03d713aed9f5217ba904c13b784e5a1479300#npm:6.5.1", {\
           "packageLocation": "./.yarn/__virtual__/fork-ts-checker-webpack-plugin-virtual-e3f5f3ac9a/0/cache/fork-ts-checker-webpack-plugin-npm-6.5.1-78ee1bf5f7-b5a06f72fb.zip/node_modules/fork-ts-checker-webpack-plugin/",\
           "packageDependencies": [\
@@ -20772,6 +20812,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["events", "npm:3.3.0"],\
             ["extension-port-stream", "npm:2.0.1"],\
             ["file-loader", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:6.2.0"],\
+            ["fork-ts-checker-webpack-plugin", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:7.2.6"],\
             ["fs-extra", "npm:10.0.1"],\
             ["globalthis", "npm:1.0.2"],\
             ["html-webpack-plugin", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:5.5.0"],\

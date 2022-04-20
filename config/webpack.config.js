@@ -13,10 +13,7 @@ const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const ESLintPlugin = require('eslint-webpack-plugin');
 const ModuleNotFoundPlugin = require('react-dev-utils/ModuleNotFoundPlugin');
-const ForkTsCheckerWebpackPlugin =
-  process.env.TSC_COMPILE_ON_ERROR === 'true'
-    ? require('react-dev-utils/ForkTsCheckerWarningWebpackPlugin')
-    : require('react-dev-utils/ForkTsCheckerWebpackPlugin');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const ExtensionReloaderPlugin = require('@voyage-finance/webpack-ext-reloader');
@@ -560,53 +557,48 @@ module.exports = function (webpackEnv) {
           filename: 'static/css/[name].[contenthash:8].css',
           chunkFilename: 'static/css/[name].[contenthash:8].chunk.css',
         }),
-      // TypeScript type checking
-      useTypeScript &&
-        new ForkTsCheckerWebpackPlugin({
-          typescript: {
-            typescriptPath: resolve.sync('typescript', {
-              basedir: paths.appNodeModules,
-            }),
-            configOverwrite: {
-              compilerOptions: {
-                sourceMap: isEnvProduction
-                  ? shouldUseSourceMap
-                  : isEnvDevelopment,
-                skipLibCheck: true,
-                inlineSourceMap: false,
-                declarationMap: false,
-                noEmit: true,
-                incremental: true,
-                tsBuildInfoFile: paths.appTsBuildInfoFile,
-              },
+      new ForkTsCheckerWebpackPlugin({
+        async: isEnvDevelopment,
+        typescript: {
+          typescriptPath: resolve.sync('typescript', {
+            basedir: paths.appNodeModules,
+          }),
+          configOverwrite: {
+            compilerOptions: {
+              sourceMap: isEnvProduction
+                ? shouldUseSourceMap
+                : isEnvDevelopment,
+              skipLibCheck: true,
+              inlineSourceMap: false,
+              declarationMap: false,
+              noEmit: true,
+              incremental: true,
+              tsBuildInfoFile: paths.appTsBuildInfoFile,
             },
-            context: paths.appPath,
-            diagnosticOptions: {
-              syntactic: true,
-            },
-            mode: 'write-references',
-            profile: true,
           },
-          issue: {
-            // This one is specifically to match during CI tests,
-            // as micromatch doesn't match
-            // '../cra-template-typescript/template/src/App.tsx'
-            // otherwise.
-            include: [
-              { file: '../**/src/**/*.{ts,tsx}' },
-              { file: '**/src/**/*.{ts,tsx}' },
-            ],
-            exclude: [
-              { file: '**/src/**/__tests__/**' },
-              { file: '**/src/**/?(*.){spec|test}.*' },
-              { file: '**/src/setupProxy.*' },
-              { file: '**/src/setupTests.*' },
-            ],
+          context: paths.appPath,
+          diagnosticOptions: {
+            syntactic: true,
           },
-          logger: {
-            infrastructure: 'silent',
-          },
-        }),
+          mode: 'write-references',
+        },
+        issue: {
+          // This one is specifically to match during CI tests,
+          // as micromatch doesn't match
+          // '../cra-template-typescript/template/src/App.tsx'
+          // otherwise.
+          include: [
+            { file: '../**/src/**/*.{ts,tsx}' },
+            { file: '**/src/**/*.{ts,tsx}' },
+          ],
+          exclude: [
+            { file: '**/src/**/__tests__/**' },
+            { file: '**/src/**/*.test.*' },
+            { file: '**/src/setupProxy.*' },
+            { file: '**/src/setupTests.*' },
+          ],
+        },
+      }),
       !disableESLintPlugin &&
         new ESLintPlugin({
           // Plugin options

@@ -20,7 +20,7 @@ const clearConsole = require('react-dev-utils/clearConsole');
 const configFactory = require('../config/webpack.config');
 const isInteractive = process.stdout.isTTY;
 
-const forkTsCheckerWebpackPlugin = require('react-dev-utils/ForkTsCheckerWebpackPlugin');
+const forkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 
 function startCompiler() {
   const config = configFactory('development');
