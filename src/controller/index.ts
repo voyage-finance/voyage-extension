@@ -57,6 +57,7 @@ export class VoyageController {
   setupVoyageProviderConnection = (stream: Duplex) => {
     // connect the voyage provider stream to the rpc engine
     const engine = new JsonRpcEngine();
+    // intercept and handle some methods
     engine.push(this.createVoyageMiddleware());
     engine.push(this.engine.asMiddleware());
     const engineStream = createEngineStream({ engine });
@@ -127,7 +128,6 @@ export class VoyageController {
       () => console.log('disconnected from metamask provider')
     );
     const engine = new JsonRpcEngine();
-    // intercept and handle some methods
     engine.push(metaMaskMiddleware.middleware);
     return engine;
   };

@@ -4302,6 +4302,40 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@zxing/browser@npm:^0.1.1":
+  version: 0.1.1
+  resolution: "@zxing/browser@npm:0.1.1"
+  dependencies:
+    "@zxing/text-encoding": ^0.9.0
+  peerDependencies:
+    "@zxing/library": ^0.19.1
+  dependenciesMeta:
+    "@zxing/text-encoding":
+      optional: true
+  checksum: c681b8b8c61d33c75b2e67cab05ced4de01d00d3999a8ab287c8daf349cc593e4ba62f933497cd794b83468c853eec1e30b15651da3d0665b5bcd8815e5fae17
+  languageName: node
+  linkType: hard
+
+"@zxing/library@npm:^0.19.1":
+  version: 0.19.1
+  resolution: "@zxing/library@npm:0.19.1"
+  dependencies:
+    "@zxing/text-encoding": ~0.9.0
+    ts-custom-error: ^3.0.0
+  dependenciesMeta:
+    "@zxing/text-encoding":
+      optional: true
+  checksum: ed650e4afc74560950efad3d1479f4bcd9878b6baadd4ac9280cec45bdbeba957bb1185cde7858e49493b3f0052d25bd0be3a1c277433e4e09e1f29018aec2f3
+  languageName: node
+  linkType: hard
+
+"@zxing/text-encoding@npm:^0.9.0, @zxing/text-encoding@npm:~0.9.0":
+  version: 0.9.0
+  resolution: "@zxing/text-encoding@npm:0.9.0"
+  checksum: c23b12aee7639382e4949961304a1294776afaffa40f579e09ffecd0e5e68cf26ef3edd75009de46da8a536e571448755ca68b3e2ea707d53793c0edb2e2c34a
+  languageName: node
+  linkType: hard
+
 "abab@npm:^2.0.3, abab@npm:^2.0.5":
   version: 2.0.5
   resolution: "abab@npm:2.0.5"
@@ -15193,6 +15227,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"ts-custom-error@npm:^3.0.0":
+  version: 3.2.0
+  resolution: "ts-custom-error@npm:3.2.0"
+  checksum: b1d2016de891cecea46a70c4adbaf1e6f7c6178994f72070ee3c218cc1a9e2b12c3011defb8385f15dc03ddfafd8d88ef2c9217e23700fb6e537755f33b9c801
+  languageName: node
+  linkType: hard
+
 "tsconfig-paths-webpack-plugin@npm:^3.5.2":
   version: 3.5.2
   resolution: "tsconfig-paths-webpack-plugin@npm:3.5.2"
@@ -15716,6 +15757,8 @@ __metadata:
     "@voyage-finance/webpack-ext-reloader": ^1.2.0
     "@walletconnect/client": ^1.7.7
     "@walletconnect/encoding": ^1.0.1
+    "@zxing/browser": ^0.1.1
+    "@zxing/library": ^0.19.1
     babel-jest: ^27.4.2
     babel-loader: ^8.2.3
     babel-plugin-named-asset-import: ^0.3.8

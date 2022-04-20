@@ -26,6 +26,8 @@
     "@voyage-finance/providers": "^9.1.0",
     "@walletconnect/client": "^1.7.7",
     "@walletconnect/encoding": "^1.0.1",
+    "@zxing/browser": "^0.1.1",
+    "@zxing/library": "^0.19.1",
     "babel-jest": "^27.4.2",
     "babel-loader": "^8.2.3",
     "babel-plugin-named-asset-import": "^0.3.8",
