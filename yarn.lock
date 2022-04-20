@@ -6114,7 +6114,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cosmiconfig@npm:^7.0.0":
+"cosmiconfig@npm:^7.0.0, cosmiconfig@npm:^7.0.1":
   version: 7.0.1
   resolution: "cosmiconfig@npm:7.0.1"
   dependencies:
@@ -8242,6 +8242,32 @@ __metadata:
     vue-template-compiler:
       optional: true
   checksum: b5a06f72fb2db5d182e026668446ef54a80eb8f2f01a4f3336dfa9770c80cda6b5657d1e8dc20f45e2aaa9b72b55be1f4425fb9cf78efc989e1b5107ccdb41a1
+  languageName: node
+  linkType: hard
+
+"fork-ts-checker-webpack-plugin@npm:^7.2.6":
+  version: 7.2.6
+  resolution: "fork-ts-checker-webpack-plugin@npm:7.2.6"
+  dependencies:
+    "@babel/code-frame": ^7.16.7
+    chalk: ^4.1.2
+    chokidar: ^3.5.3
+    cosmiconfig: ^7.0.1
+    deepmerge: ^4.2.2
+    fs-extra: ^10.0.0
+    memfs: ^3.4.1
+    minimatch: ^3.0.4
+    schema-utils: ^3.1.1
+    semver: ^7.3.5
+    tapable: ^2.2.1
+  peerDependencies:
+    typescript: ">3.6.0"
+    vue-template-compiler: "*"
+    webpack: ^5.11.0
+  peerDependenciesMeta:
+    vue-template-compiler:
+      optional: true
+  checksum: d74e8b22e3e4d5159061d93f519d7eb795bafac4b9a993b72eed952a714144d89c8a706414b231a89c69cabf29e00e1fb26d7060e3b5577c08cabb5a3d5a7697
   languageName: node
   linkType: hard
 
@@ -14927,7 +14953,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tapable@npm:^2.0.0, tapable@npm:^2.1.1, tapable@npm:^2.2.0":
+"tapable@npm:^2.0.0, tapable@npm:^2.1.1, tapable@npm:^2.2.0, tapable@npm:^2.2.1":
   version: 2.2.1
   resolution: "tapable@npm:2.2.1"
   checksum: 3b7a1b4d86fa940aad46d9e73d1e8739335efd4c48322cb37d073eb6f80f5281889bf0320c6d8ffcfa1a0dd5bfdbd0f9d037e252ef972aca595330538aac4d51
@@ -15714,6 +15740,7 @@ __metadata:
     events: ^3.3.0
     extension-port-stream: ^2.0.1
     file-loader: ^6.2.0
+    fork-ts-checker-webpack-plugin: ^7.2.6
     fs-extra: ^10.0.0
     globalthis: ^1.0.2
     html-webpack-plugin: ^5.5.0

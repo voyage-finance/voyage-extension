@@ -27,8 +27,5 @@
       "@web3/*": ["ui/web3/*"]
     }
   },
-  "include": [
-    "src",
-    "src/*/**"
-  ]
+  "include": [ "src" ]
 }
