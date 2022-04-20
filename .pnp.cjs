@@ -61,6 +61,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@voyage-finance/webpack-ext-reloader", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:1.2.0"],\
             ["@walletconnect/client", "npm:1.7.7"],\
             ["@walletconnect/encoding", "npm:1.0.1"],\
+            ["@zxing/browser", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:0.1.1"],\
+            ["@zxing/library", "npm:0.19.1"],\
             ["babel-jest", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:27.5.1"],\
             ["babel-loader", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:8.2.4"],\
             ["babel-plugin-named-asset-import", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:0.3.8"],\
@@ -6540,6 +6542,49 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@xtuc-long-npm-4.2.2-37236e6d72-8ed0d477ce.zip/node_modules/@xtuc/long/",\
           "packageDependencies": [\
             ["@xtuc/long", "npm:4.2.2"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@zxing/browser", [\
+        ["npm:0.1.1", {\
+          "packageLocation": "./.yarn/cache/@zxing-browser-npm-0.1.1-018ab3ed79-c681b8b8c6.zip/node_modules/@zxing/browser/",\
+          "packageDependencies": [\
+            ["@zxing/browser", "npm:0.1.1"]\
+          ],\
+          "linkType": "SOFT"\
+        }],\
+        ["virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:0.1.1", {\
+          "packageLocation": "./.yarn/__virtual__/@zxing-browser-virtual-e55ac6179c/0/cache/@zxing-browser-npm-0.1.1-018ab3ed79-c681b8b8c6.zip/node_modules/@zxing/browser/",\
+          "packageDependencies": [\
+            ["@zxing/browser", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:0.1.1"],\
+            ["@types/zxing__library", null],\
+            ["@zxing/library", "npm:0.19.1"],\
+            ["@zxing/text-encoding", "npm:0.9.0"]\
+          ],\
+          "packagePeers": [\
+            "@types/zxing__library",\
+            "@zxing/library"\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@zxing/library", [\
+        ["npm:0.19.1", {\
+          "packageLocation": "./.yarn/cache/@zxing-library-npm-0.19.1-74e49a9fe7-ed650e4afc.zip/node_modules/@zxing/library/",\
+          "packageDependencies": [\
+            ["@zxing/library", "npm:0.19.1"],\
+            ["@zxing/text-encoding", "npm:0.9.0"],\
+            ["ts-custom-error", "npm:3.2.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@zxing/text-encoding", [\
+        ["npm:0.9.0", {\
+          "packageLocation": "./.yarn/cache/@zxing-text-encoding-npm-0.9.0-8426ff59e9-c23b12aee7.zip/node_modules/@zxing/text-encoding/",\
+          "packageDependencies": [\
+            ["@zxing/text-encoding", "npm:0.9.0"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -20149,6 +20194,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["ts-custom-error", [\
+        ["npm:3.2.0", {\
+          "packageLocation": "./.yarn/cache/ts-custom-error-npm-3.2.0-7ef8105f26-b1d2016de8.zip/node_modules/ts-custom-error/",\
+          "packageDependencies": [\
+            ["ts-custom-error", "npm:3.2.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["tsconfig-paths", [\
         ["npm:3.14.1", {\
           "packageLocation": "./.yarn/cache/tsconfig-paths-npm-3.14.1-17a815b5c5-8afa01c673.zip/node_modules/tsconfig-paths/",\
@@ -20788,6 +20842,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@voyage-finance/webpack-ext-reloader", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:1.2.0"],\
             ["@walletconnect/client", "npm:1.7.7"],\
             ["@walletconnect/encoding", "npm:1.0.1"],\
+            ["@zxing/browser", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:0.1.1"],\
+            ["@zxing/library", "npm:0.19.1"],\
             ["babel-jest", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:27.5.1"],\
             ["babel-loader", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:8.2.4"],\
             ["babel-plugin-named-asset-import", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:0.3.8"],\

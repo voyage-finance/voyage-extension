@@ -13,6 +13,6 @@
     "js": ["contentScript.bundle.js"]
   }],
   "icons": { "128": "icon.png" },
-  "permissions": ["storage"],
+  "permissions": ["activeTab", "storage"],
   "web_accessible_resources": [{ "resources": ["injector.bundle.js"], "matches": ["<all_urls>"] }]
 }

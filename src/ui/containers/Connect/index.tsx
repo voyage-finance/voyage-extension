@@ -5,6 +5,8 @@ import styles from './index.module.scss';
 // import useVoyageController from '../../hooks/useVoyageController';
 import { connectWithWC } from './connectSlice';
 import { useAppDispatch, useAppSelector } from '../../hooks/useRedux';
+import { BrowserQRCodeReader } from '@zxing/browser';
+import browser from 'webextension-polyfill';
 
 interface Props {}
 
@@ -28,6 +30,20 @@ const Connect: React.FC<Props> = () => {
   const { connected, session } = useAppSelector((state) => {
     return state.wc;
   });
+
+  const scanForQR = async () => {
+    try {
+      const dataUrl = await browser.tabs.captureVisibleTab(undefined, {
+        format: 'jpeg',
+      });
+      const reader = new BrowserQRCodeReader();
+      const res = await reader.decodeFromImageUrl(dataUrl);
+      console.log('got WC uri: ', res.getText());
+      dispatch(connectWithWC(res.getText()));
+    } catch (e) {
+      console.error('failed to get a QR code: ', e);
+    }
+  };
 
   console.log('signature: ', signature);
   return (
@@ -53,6 +69,7 @@ const Connect: React.FC<Props> = () => {
       <Button onClick={() => dispatch(connectWithWC(wcUri))}>
         Connect with WC
       </Button>
+      <Button onClick={scanForQR}>Scan WC QR code</Button>
       {connected ? (
         <pre>
           {`Peer ID: ${session?.peerId}`}
