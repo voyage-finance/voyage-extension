@@ -1,8 +1,8 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import Popup from "./Popup";
-import "./index.css";
-import { initWeb3 } from "../../web3/init";
+import React from 'react';
+import ReactDOM from 'react-dom';
+import Popup from './Popup';
+import './index.css';
+import { initWeb3 } from '@web3/init';
 
 async function bootstrap() {
   // set up a connection to background script

@@ -20,6 +20,7 @@ const ForkTsCheckerWebpackPlugin =
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const ExtensionReloaderPlugin = require('@voyage-finance/webpack-ext-reloader');
+const TsConfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
 const getCSSModuleLocalIdent = require('react-dev-utils/getCSSModuleLocalIdent');
 const paths = require('./paths');
@@ -297,6 +298,10 @@ module.exports = function (webpackEnv) {
           babelRuntimeEntryHelpers,
           babelRuntimeRegenerator,
         ]),
+        // automatically generate aliases from tsconfig.json paths
+        new TsConfigPathsPlugin({
+          extensions: paths.moduleFileExtensions.map((str) => `.${str}`),
+        }),
       ],
       fallback: {
         buffer: require.resolve('buffer/'),
