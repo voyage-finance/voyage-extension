@@ -98,6 +98,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["json-rpc-engine", "npm:6.1.0"],\
             ["json-rpc-middleware-stream", "npm:3.0.0"],\
             ["mini-css-extract-plugin", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:2.6.0"],\
+            ["mobx", "npm:6.5.0"],\
+            ["nanoid", "npm:3.3.3"],\
             ["postcss", "npm:8.4.12"],\
             ["postcss-flexbugs-fixes", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:5.0.2"],\
             ["postcss-loader", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:6.2.1"],\
@@ -14872,6 +14874,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["mobx", [\
+        ["npm:6.5.0", {\
+          "packageLocation": "./.yarn/cache/mobx-npm-6.5.0-394d9dd878-1210fb0b1c.zip/node_modules/mobx/",\
+          "packageDependencies": [\
+            ["mobx", "npm:6.5.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["ms", [\
         ["npm:2.0.0", {\
           "packageLocation": "./.yarn/cache/ms-npm-2.0.0-9e1101a471-0e6a22b8b7.zip/node_modules/ms/",\
@@ -14911,6 +14922,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/nanoid-npm-3.3.2-8c41a1931d-376717f068.zip/node_modules/nanoid/",\
           "packageDependencies": [\
             ["nanoid", "npm:3.3.2"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:3.3.3", {\
+          "packageLocation": "./.yarn/cache/nanoid-npm-3.3.3-25d865be84-ada019402a.zip/node_modules/nanoid/",\
+          "packageDependencies": [\
+            ["nanoid", "npm:3.3.3"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -20879,6 +20897,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["json-rpc-engine", "npm:6.1.0"],\
             ["json-rpc-middleware-stream", "npm:3.0.0"],\
             ["mini-css-extract-plugin", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:2.6.0"],\
+            ["mobx", "npm:6.5.0"],\
+            ["nanoid", "npm:3.3.3"],\
             ["postcss", "npm:8.4.12"],\
             ["postcss-flexbugs-fixes", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:5.0.2"],\
             ["postcss-loader", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:6.2.1"],\

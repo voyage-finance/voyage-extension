@@ -72,11 +72,13 @@ export class MetaRPCClient {
   }
 }
 
-const controllerFactory = (connectionStream: Duplex): VoyageController => {
+type ControllerClient = VoyageController & MetaRPCClient;
+
+const controllerFactory = (connectionStream: Duplex): ControllerClient => {
   const metaRPCClient = new MetaRPCClient(connectionStream);
   return new Proxy(metaRPCClient, {
     get: (object, property) => {
-      if (object.hasOwnProperty(property)) {
+      if (Reflect.has(object, property)) {
         return Reflect.get(object, property);
       }
 
@@ -98,7 +100,7 @@ const controllerFactory = (connectionStream: Duplex): VoyageController => {
         return res;
       };
     },
-  }) as unknown as VoyageController;
+  }) as unknown as ControllerClient;
 };
 
 export default controllerFactory;
