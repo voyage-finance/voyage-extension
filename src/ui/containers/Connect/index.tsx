@@ -3,7 +3,7 @@ import { Button, TextInput } from '@mantine/core';
 import { useAccount, useConnect, useSignMessage } from 'wagmi';
 import styles from './index.module.scss';
 // import useVoyageController from '../../hooks/useVoyageController';
-import { connectWithWC } from './connectSlice';
+import { connectWithWC } from '@state/modules/connect';
 import { useAppDispatch, useAppSelector } from '../../hooks/useRedux';
 import { BrowserQRCodeReader } from '@zxing/browser';
 import browser from 'webextension-polyfill';

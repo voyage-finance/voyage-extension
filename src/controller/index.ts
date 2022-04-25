@@ -14,6 +14,10 @@ import {
 } from 'json-rpc-middleware-stream';
 import createMetaRPCHandler from '../rpc/virtual/server';
 import WalletConnect from '@walletconnect/client';
+import ControllerState from './state';
+import { IReactionDisposer, reaction } from 'mobx';
+import SafeEventEmitter from '@metamask/safe-event-emitter';
+import { nanoid } from 'nanoid';
 
 interface WalletConnectSessionRequest {
   chainId: number | null;
@@ -28,11 +32,31 @@ interface PeerMeta {
   url: string;
 }
 
-export class VoyageController {
+export class VoyageController extends SafeEventEmitter {
   engine: JsonRpcEngine;
+  state: ControllerState;
+  private disposer: IReactionDisposer;
+
   constructor() {
+    super();
     this.engine = this.createRpcEngine();
+    const state = new ControllerState();
+    this.state = state;
+    this.disposer = reaction(
+      () => {
+        console.log('approvals: ', state.state);
+        return state.state;
+      },
+      (state) => {
+        console.log('[controller] updated state: ', state);
+        this.sendUpdate(state);
+      }
+    );
   }
+
+  private sendUpdate = (state: unknown) => {
+    this.emit('update', state);
+  };
 
   /**
    * Sets up a direct pass through stream to the MetaMask provider backend.
@@ -46,6 +70,15 @@ export class VoyageController {
 
   setupControllerConnection = (stream: Duplex) => {
     stream.on('data', createMetaRPCHandler(this.api, stream));
+    const handleUpdate = (update: unknown) => {
+      stream.write({
+        jsonrpc: '2.0',
+        method: 'sendUpdate',
+        params: [update],
+      });
+    };
+    this.on('update', handleUpdate);
+    stream.on('end', () => this.removeListener('update', handleUpdate));
   };
 
   /**
@@ -89,8 +122,14 @@ export class VoyageController {
               return reject(error);
             }
             console.log('payload from wc?: ', payload);
-            connector.approveSession({ chainId: 1337, accounts: ['0x12345'] });
+            // connector.approveSession({ chainId: 1337, accounts: ['0x12345'] });
             const [req] = payload.params!;
+            this.state.add({
+              id: nanoid(),
+              origin: req.peerMeta.url,
+              type: 'wc',
+              metadata: req.peerMeta,
+            });
             resolve({ peerMeta: req.peerMeta, peerId: req.peerId });
           }
         );

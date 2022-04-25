@@ -2,7 +2,8 @@
 /// <reference types="react" />
 /// <reference types="react-dom" />
 import { BaseProvider } from '@voyage-providers/providers';
-import { VoyageController } from "./controller";
+import { VoyageController } from './controller';
+import { MetaRPCClient } from './rpc/virtual/client';
 
 declare namespace NodeJS {
   interface ProcessEnv {
@@ -69,7 +70,7 @@ declare module '*.module.sass' {
 
 declare global {
   var voyage: BaseProvider;
-  var controller: VoyageController;
+  var controller: VoyageController & MetaRPCClient;
   var provider: BaseProvider;
   interface Window {
     voyage: BaseProvider;
