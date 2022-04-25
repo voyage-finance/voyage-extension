@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { Button, TextInput } from '@mantine/core';
 import { useAccount, useConnect, useSignMessage } from 'wagmi';
 import styles from './index.module.scss';
-// import useVoyageController from '../../hooks/useVoyageController';
-import { connectWithWC } from './connectSlice';
+import { connectWithWC } from '@state/modules/connect';
 import { useAppDispatch, useAppSelector } from '../../hooks/useRedux';
 import { BrowserQRCodeReader } from '@zxing/browser';
 import browser from 'webextension-polyfill';
@@ -11,13 +10,6 @@ import browser from 'webextension-polyfill';
 interface Props {}
 
 const Connect: React.FC<Props> = () => {
-  // const controller = useVoyageController();
-  // // useEffect(() => {
-  // //   (async () => {
-  // //     const res = await controller.connectWithWC();
-  // //     console.log('controller response: ', res);
-  // //   })();
-  // // }, []);
   const [{ data, error, loading }, connect] = useConnect();
   const [{ data: account }, disconnect] = useAccount();
   const [{ data: signature, loading: signingMessage }, signMessage] =

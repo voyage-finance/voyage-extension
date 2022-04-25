@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
-import wc from '../containers/Connect/connectSlice';
+import wc from './modules/connect';
+import core from './modules/core';
 
 export const store = configureStore({
   reducer: {
     wc,
+    core,
   },
 });
 

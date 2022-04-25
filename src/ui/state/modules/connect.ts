@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 interface ConnectionState {
   connected: boolean;
@@ -9,7 +9,7 @@ const initialState: ConnectionState = {
   connected: false,
 };
 
-const connectSlice = createSlice({
+const connect = createSlice({
   name: 'wc',
   initialState,
   reducers: {
@@ -45,4 +45,4 @@ export const connectWithWC = createAsyncThunk<WalletConnectSession, string>(
   }
 );
 
-export default connectSlice.reducer;
+export default connect.reducer;
