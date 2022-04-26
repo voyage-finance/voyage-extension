@@ -2,11 +2,11 @@ import React from 'react';
 import { MantineProvider } from '@mantine/core';
 import { Provider as WagmiProvider } from 'wagmi';
 import { Provider as StoreProvider } from 'react-redux';
-
-import Connect from '@containers/Connect';
 import { ExtensionConnector } from '@web3/connector';
 import VoyageProvider from '@components/VoyageProvider';
 import { store } from '@state/store';
+import { MemoryRouter } from 'react-router-dom';
+import Router from './routes';
 
 function App() {
   const { provider, controller } = globalThis;
@@ -18,7 +18,9 @@ function App() {
       >
         <VoyageProvider controller={controller}>
           <MantineProvider withGlobalStyles withNormalizeCSS>
-            <Connect />
+            <MemoryRouter>
+              <Router />
+            </MemoryRouter>
           </MantineProvider>
         </VoyageProvider>
       </WagmiProvider>
