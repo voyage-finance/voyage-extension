@@ -8,7 +8,7 @@ import { ExtensionConnector } from '@web3/connector';
 import VoyageProvider from '@components/VoyageProvider';
 import { store } from '@state/store';
 
-function Popup() {
+function App() {
   const { provider, controller } = globalThis;
   return (
     <StoreProvider store={store}>
@@ -26,4 +26,4 @@ function Popup() {
   );
 }
 
-export default Popup;
+export default App;
