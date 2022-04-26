@@ -1,3 +1,4 @@
+import { ethErrors } from 'eth-rpc-errors';
 import { makeAutoObservable } from 'mobx';
 import { ApprovalRequest } from './types';
 
@@ -7,6 +8,8 @@ interface ApprovalCallbacks {
   resolve: ApprovalPromiseResolve;
   reject: ApprovalPromiseReject;
 }
+
+const noop = () => undefined;
 
 class ControllerState {
   approvals: Record<string, ApprovalCallbacks> = {};
@@ -36,7 +39,24 @@ class ControllerState {
   }
 
   approve(id: string) {
+    const { resolve } = this.delete(id);
+    resolve();
+  }
+
+  reject(id: string) {
+    const { reject } = this.delete(id);
+    reject(ethErrors.provider.userRejectedRequest());
+  }
+
+  private delete(id: string) {
+    if (!this.approvals[id]) {
+      return { resolve: noop, reject: noop };
+    }
+
+    const cbs = this.approvals[id];
+    delete this.approvals[id];
     delete this.pendingApprovals[id];
+    return cbs;
   }
 }
 

@@ -20,6 +20,7 @@ const connect = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(connectWithWC.fulfilled, (state, action) => {
+      console.warn('connected with WC: ', JSON.stringify(action, null, 4));
       state.connected = true;
       state.session = action.payload;
     });
@@ -38,11 +39,15 @@ interface WalletConnectSession {
   peerMeta: PeerMeta;
 }
 
-export const connectWithWC = createAsyncThunk<WalletConnectSession, string>(
-  'wc/connect',
-  async (uri: string) => {
-    return await globalThis.controller.connectWithWC(uri);
+export const connectWithWC = createAsyncThunk<
+  WalletConnectSession | undefined,
+  string
+>('wc/connect', async (uri: string) => {
+  try {
+    return globalThis.controller.connectWithWC(uri);
+  } catch (err) {
+    console.warn('rejected connect with WC: ', err);
   }
-);
+});
 
 export default connect.reducer;

@@ -177,10 +177,10 @@ module.exports = function (webpackEnv) {
     bail: isEnvProduction,
     devtool: isEnvDevelopment && 'cheap-module-source-map',
     entry: {
-      popup: [
+      ui: [
         require.resolve('globalthis/auto'),
         isEnvDevelopment && require.resolve('react-devtools'),
-        paths.appPopup,
+        paths.appJs,
       ].filter(Boolean),
       background: paths.appBackground,
       injector: paths.appInjector,
@@ -534,7 +534,13 @@ module.exports = function (webpackEnv) {
       new HtmlWebpackPlugin({
         template: paths.appPopupHtml,
         filename: 'popup.html',
-        chunks: ['popup'],
+        chunks: ['ui'],
+        cache: false,
+      }),
+      new HtmlWebpackPlugin({
+        template: paths.appNotificationHtml,
+        filename: 'notification.html',
+        chunks: ['ui'],
         cache: false,
       }),
       new CopyWebpackPlugin({
@@ -547,7 +553,7 @@ module.exports = function (webpackEnv) {
         new ExtensionReloaderPlugin({
           background: 'background',
           contentScript: 'contentScript',
-          extensionPage: 'popup',
+          extensionPage: 'ui',
         }),
       new ModuleNotFoundPlugin(paths.appPath),
       new webpack.DefinePlugin(env.stringified),

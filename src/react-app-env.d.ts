@@ -2,8 +2,7 @@
 /// <reference types="react" />
 /// <reference types="react-dom" />
 import { BaseProvider } from '@voyage-providers/providers';
-import { VoyageController } from './controller';
-import { MetaRPCClient } from './rpc/virtual/client';
+import { ControllerClient } from './rpc/virtual/client';
 
 declare namespace NodeJS {
   interface ProcessEnv {
@@ -47,17 +46,6 @@ declare module '*.webp' {
   export default src;
 }
 
-declare module '*.svg' {
-  import * as React from 'react';
-
-  export const ReactComponent: React.FunctionComponent<
-    React.SVGProps<SVGSVGElement> & { title?: string }
-  >;
-
-  const src: string;
-  export default src;
-}
-
 declare module '*.module.css' {
   const classes: { readonly [key: string]: string };
   export default classes;
@@ -70,7 +58,7 @@ declare module '*.module.sass' {
 
 declare global {
   var voyage: BaseProvider;
-  var controller: VoyageController & MetaRPCClient;
+  var controller: ControllerClient;
   var provider: BaseProvider;
   interface Window {
     voyage: BaseProvider;

@@ -1,10 +1,10 @@
 import React from 'react';
-import { VoyageContext } from '../components/VoyageProvider';
-import { VoyageController } from '../../controller';
+import { VoyageContext } from '@components/VoyageProvider';
+import { ControllerClient } from '../../rpc/virtual/client';
 
 const useVoyageController = () => {
   const context = React.useContext(VoyageContext);
-  return context as VoyageController;
+  return context as unknown as ControllerClient;
 };
 
 export default useVoyageController;

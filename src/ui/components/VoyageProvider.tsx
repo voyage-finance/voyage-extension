@@ -1,8 +1,8 @@
 import React from 'react';
-import { VoyageController } from '../../controller';
-export const VoyageContext = React.createContext<VoyageController | null>(null);
+import { ControllerClient } from '../../rpc/virtual/client';
+export const VoyageContext = React.createContext<ControllerClient | null>(null);
 interface Props {
-  controller: VoyageController;
+  controller: ControllerClient;
 }
 const VoyageProvider: React.FC<Props> = ({ controller, children }) => {
   return (

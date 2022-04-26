@@ -1,0 +1,29 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  .statusBar {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    background-color: #1B1D2C;
+    padding: 16px 24px;
+
+    .metaMaskFox {
+      height: 28px;
+      width: 28px;
+      margin-right: 6px;
+    }
+
+    .address {
+      color: #ffffff;
+      flex: 0 1 auto;
+      line-height: 28px;
+    }
+  }
+
+  .vault {
+    padding: 18px 24px;
+  }
+}

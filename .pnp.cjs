@@ -125,6 +125,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["source-map-loader", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:3.0.1"],\
             ["stream-browserify", "npm:3.0.0"],\
             ["style-loader", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:3.3.1"],\
+            ["tabler-icons-react", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:1.46.0"],\
             ["tailwindcss", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:3.0.24"],\
             ["terser-webpack-plugin", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:5.3.1"],\
             ["tsconfig-paths-webpack-plugin", "npm:3.5.2"],\
@@ -19876,6 +19877,28 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["tabler-icons-react", [\
+        ["npm:1.46.0", {\
+          "packageLocation": "./.yarn/cache/tabler-icons-react-npm-1.46.0-0a0411e6d5-50d08ddf01.zip/node_modules/tabler-icons-react/",\
+          "packageDependencies": [\
+            ["tabler-icons-react", "npm:1.46.0"]\
+          ],\
+          "linkType": "SOFT"\
+        }],\
+        ["virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:1.46.0", {\
+          "packageLocation": "./.yarn/__virtual__/tabler-icons-react-virtual-dfd3db68f8/0/cache/tabler-icons-react-npm-1.46.0-0a0411e6d5-50d08ddf01.zip/node_modules/tabler-icons-react/",\
+          "packageDependencies": [\
+            ["tabler-icons-react", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:1.46.0"],\
+            ["@types/react", "npm:17.0.44"],\
+            ["react", "npm:17.0.2"]\
+          ],\
+          "packagePeers": [\
+            "@types/react",\
+            "react"\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["tailwindcss", [\
         ["npm:3.0.24", {\
           "packageLocation": "./.yarn/cache/tailwindcss-npm-3.0.24-76d1231da5-52a21192b7.zip/node_modules/tailwindcss/",\
@@ -20924,6 +20947,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["source-map-loader", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:3.0.1"],\
             ["stream-browserify", "npm:3.0.0"],\
             ["style-loader", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:3.3.1"],\
+            ["tabler-icons-react", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:1.46.0"],\
             ["tailwindcss", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:3.0.24"],\
             ["terser-webpack-plugin", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:5.3.1"],\
             ["tsconfig-paths-webpack-plugin", "npm:3.5.2"],\
