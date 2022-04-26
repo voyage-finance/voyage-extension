@@ -17,7 +17,7 @@ const core = createSlice({
   reducers: {
     updateState(state, action) {
       console.warn('received state update: ', JSON.stringify(action));
-      state = { ...state, ...action.payload };
+      return { ...state, ...action.payload };
     },
   },
 });

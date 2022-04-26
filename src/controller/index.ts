@@ -15,9 +15,10 @@ import {
 import createMetaRPCHandler from '../rpc/virtual/server';
 import WalletConnect from '@walletconnect/client';
 import ControllerState from './state';
-import { IReactionDisposer, reaction } from 'mobx';
+import { IReactionDisposer, reaction, toJS } from 'mobx';
 import SafeEventEmitter from '@metamask/safe-event-emitter';
 import { nanoid } from 'nanoid';
+import { openNotificationWindow } from '../utils/extension';
 
 interface WalletConnectSessionRequest {
   chainId: number | null;
@@ -34,14 +35,14 @@ interface PeerMeta {
 
 export class VoyageController extends SafeEventEmitter {
   engine: JsonRpcEngine;
-  state: ControllerState;
+  store: ControllerState;
   private disposer: IReactionDisposer;
 
   constructor() {
     super();
     this.engine = this.createRpcEngine();
     const state = new ControllerState();
-    this.state = state;
+    this.store = state;
     this.disposer = reaction(
       () => {
         console.log('approvals: ', state.state);
@@ -53,10 +54,6 @@ export class VoyageController extends SafeEventEmitter {
       }
     );
   }
-
-  private sendUpdate = (state: unknown) => {
-    this.emit('update', state);
-  };
 
   /**
    * Sets up a direct pass through stream to the MetaMask provider backend.
@@ -116,32 +113,66 @@ export class VoyageController extends SafeEventEmitter {
       (resolve, reject) => {
         connector.on(
           'session_request',
-          (error, payload: JsonRpcRequest<[WalletConnectSessionRequest]>) => {
+          async (
+            error,
+            payload: JsonRpcRequest<[WalletConnectSessionRequest]>
+          ) => {
             if (error) {
               console.log('error from wc?: ', error);
               return reject(error);
             }
             console.log('payload from wc?: ', payload);
             // connector.approveSession({ chainId: 1337, accounts: ['0x12345'] });
-            const [req] = payload.params!;
-            this.state.add({
-              id: nanoid(),
-              origin: req.peerMeta.url,
-              type: 'wc',
-              metadata: req.peerMeta,
-            });
-            resolve({ peerMeta: req.peerMeta, peerId: req.peerId });
+            try {
+              const [req] = payload.params!;
+              const approval = this.store.add({
+                id: nanoid(),
+                origin: req.peerMeta.url,
+                type: 'wc',
+                metadata: req.peerMeta,
+              });
+              await this.openNotificationWindow();
+              await approval;
+
+              connector.approveSession({
+                chainId: 1337,
+                accounts: ['0x12345'],
+              });
+              resolve({ peerMeta: req.peerMeta, peerId: req.peerId });
+            } catch (err) {
+              console.log('error in wc connect bg: ', JSON.stringify(err));
+            }
           }
         );
       }
     );
   };
 
+  getState = () => {
+    return this.store.state;
+  };
+
   get api() {
     return {
+      getState: this.getState,
       connectWithWC: this.connectWithWC,
+      approveApprovalRequest: this.approveApprovalRequest,
+      rejectApprovalRequest: this.rejectApprovalRequest,
     };
   }
+
+  approveApprovalRequest = (id: string) => {
+    console.log('approving id: ', id);
+    this.store.approve(id);
+  };
+
+  rejectApprovalRequest = (id: string) => {
+    this.store.reject(id);
+  };
+
+  private sendUpdate = (state: unknown) => {
+    this.emit('update', toJS(state));
+  };
 
   /**
    * Create a raw duplex stream to the MetaMask extension provider
@@ -170,6 +201,16 @@ export class VoyageController extends SafeEventEmitter {
     engine.push(metaMaskMiddleware.middleware);
     return engine;
   };
+
+  private openNotificationWindow = () =>
+    openNotificationWindow({
+      url: 'notification.html',
+      type: 'popup',
+      width: 300,
+      height: 600,
+      left: 0,
+      top: 0,
+    });
 
   private createVoyageMiddleware = () => {
     return createAsyncMiddleware(async (req, res, next) => {

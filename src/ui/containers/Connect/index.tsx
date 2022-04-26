@@ -1,58 +1,53 @@
 import React, { useState } from 'react';
-import { Button, TextInput } from '@mantine/core';
-import { useAccount, useConnect, useSignMessage } from 'wagmi';
+import { Alert, Button, TextInput } from '@mantine/core';
 import styles from './index.module.scss';
 import { connectWithWC } from '@state/modules/connect';
-import { useAppDispatch, useAppSelector } from '../../hooks/useRedux';
 import { BrowserQRCodeReader } from '@zxing/browser';
 import browser from 'webextension-polyfill';
+import { useAppDispatch, useAppSelector } from '@hooks/useRedux';
 
 interface Props {}
 
 const Connect: React.FC<Props> = () => {
-  const [{ data, error, loading }, connect] = useConnect();
-  const [{ data: account }, disconnect] = useAccount();
-  const [{ data: signature, loading: signingMessage }, signMessage] =
-    useSignMessage();
-  if (error) {
-    console.error('error connecting: ', error);
-  }
   const dispatch = useAppDispatch();
   const [wcUri, setWcUri] = useState('');
+  const [qrError, setQrError] = useState<string>();
   const { connected, session } = useAppSelector((state) => {
     return state.wc;
   });
 
   const scanForQR = async () => {
     try {
+      if (qrError) setQrError(undefined);
       const dataUrl = await browser.tabs.captureVisibleTab(undefined, {
         format: 'jpeg',
       });
       const reader = new BrowserQRCodeReader();
       const res = await reader.decodeFromImageUrl(dataUrl);
-      console.log('got WC uri: ', res.getText());
       dispatch(connectWithWC(res.getText()));
     } catch (e) {
-      console.error('failed to get a QR code: ', e);
+      console.error('Failed to get a QR code: ', e);
+      setQrError('Could not find a QR code');
     }
   };
 
-  console.log('signature: ', signature);
   return (
     <div className={styles.root}>
-      {data.connected && (
-        <p className={styles.address}>
-          Yay you are connected: {account?.address}
-        </p>
+      <div>Connect your Vault to games with WalletConnect.</div>
+      {/* TODO: get the actual vault address from store */}
+      <div>Vault address: 0x12345</div>
+      <div>Network: Avalanche-C</div>
+      {qrError && (
+        <Alert
+          title={qrError}
+          withCloseButton
+          color="red"
+          onClose={() => setQrError(undefined)}
+        >
+          We didn't find a QR code on the page. Try again or enter the URI
+          manually.
+        </Alert>
       )}
-      <Button
-        onClick={() =>
-          data.connected ? disconnect() : connect(data.connectors[0])
-        }
-      >
-        {data.connected ? 'Disconnect MetaMask' : 'Connect to metamask'}
-      </Button>
-
       <TextInput
         placeholder="WC URI"
         value={wcUri}
@@ -68,16 +63,6 @@ const Connect: React.FC<Props> = () => {
           {JSON.stringify(session)}
         </pre>
       ) : null}
-
-      <Button
-        disabled={!data.connected || signingMessage || loading}
-        onClick={() =>
-          signMessage({ message: "i'm a little teapot short and stout!" })
-        }
-      >
-        Sign something
-      </Button>
-      {signature && <p>Got a signature: {signature}</p>}
     </div>
   );
 };

@@ -49,7 +49,12 @@ export class MetaRPCClient {
     }
 
     if (error) {
-      const e = new EthereumRpcError(error.code, error.message, error.data);
+      console.warn('error in eth cilent: ', JSON.stringify(error));
+      const e = new EthereumRpcError(
+        error.code,
+        error.message || '',
+        error.data || {}
+      );
       // preserve the stack from serializeError
       e.stack = error.stack;
       if (cb) {
@@ -72,7 +77,12 @@ export class MetaRPCClient {
   }
 }
 
-type ControllerClient = VoyageController & MetaRPCClient;
+export type ControllerClient = PromisifyObj<VoyageController> & MetaRPCClient;
+
+type Promisify<T> = T extends (...args: infer A) => infer R
+  ? (...args: A) => R extends Promise<any> ? R : Promise<R>
+  : T;
+type PromisifyObj<T> = { [K in keyof T]: Promisify<T[K]> };
 
 const controllerFactory = (connectionStream: Duplex): ControllerClient => {
   const metaRPCClient = new MetaRPCClient(connectionStream);

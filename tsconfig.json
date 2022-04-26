@@ -25,7 +25,10 @@
       "@components/*": ["ui/components/*"],
       "@containers/*": ["ui/containers/*"],
       "@state/*": ["ui/state/*"],
-      "@web3/*": ["ui/web3/*"]
+      "@web3/*": ["ui/web3/*"],
+      "@images/*": ["assets/img/*"],
+      "@hooks/*": ["ui/hooks/*"],
+      "@utils/*": ["utils/*"]
     }
   },
   "include": [ "src" ]

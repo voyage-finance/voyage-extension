@@ -4,11 +4,11 @@ import { Provider as WagmiProvider } from 'wagmi';
 import { Provider as StoreProvider } from 'react-redux';
 import { ExtensionConnector } from '@web3/connector';
 import VoyageProvider from '@components/VoyageProvider';
-import { store } from '@state/store';
 import { MemoryRouter } from 'react-router-dom';
+import './app.css';
 import Router from './routes';
 
-function App() {
+function App({ store }: any) {
   const { provider, controller } = globalThis;
   return (
     <StoreProvider store={store}>
