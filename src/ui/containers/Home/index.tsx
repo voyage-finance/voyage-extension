@@ -7,6 +7,7 @@ import { ReactComponent as CrabadaLogo } from '@images/crabada-logo.svg';
 import { useAppSelector } from '@hooks/useRedux';
 import styles from './index.module.scss';
 import { Link, useNavigate } from 'react-router-dom';
+import { useNetwork } from 'wagmi';
 
 const truncateAddress = (address?: string) => {
   if (!address) return '';
@@ -16,12 +17,9 @@ const truncateAddress = (address?: string) => {
 };
 
 const Home: React.FC = () => {
-  const [{ data: web3, error }, connect] = useConnect();
-  const [{ data: account }, disconnect] = useAccount();
-
-  if (error) {
-    console.error('error connecting: ', error);
-  }
+  const { address, isConnected } = useAccount();
+  const { chain } = useNetwork();
+  console.log('current chain: ', chain);
 
   const approvals = useAppSelector((state) => {
     return state.core.pendingApprovals;
@@ -39,17 +37,17 @@ const Home: React.FC = () => {
 
   return (
     <div className={styles.root}>
-      {web3.connected && (
+      {isConnected && (
         <div className={styles.statusBar}>
           <div className={styles.metaMaskFox}>
             <MetaMaskFox />
           </div>
           <div className={styles.address}>
-            <Code color="teal">{truncateAddress(account?.address)}</Code>
+            <Code color="teal">{truncateAddress(address)}</Code>
           </div>
-          <ActionIcon color="red" onClick={disconnect} variant="transparent">
+          {/* <ActionIcon color="red" onClick={disconnect} variant="transparent">
             <Unlink size={18} />
-          </ActionIcon>
+          </ActionIcon> */}
         </div>
       )}
       {/* TODO: fetch actual vaults here */}

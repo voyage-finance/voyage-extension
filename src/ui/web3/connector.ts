@@ -1,5 +1,6 @@
 import { Web3Provider } from '@ethersproject/providers';
 import { BaseProvider } from '@voyage-finance/providers';
+import { normalizeChainId } from '@wagmi/core';
 import { Signer, utils } from 'ethers';
 import {
   AddChainError,
@@ -7,9 +8,9 @@ import {
   Chain,
   ChainNotConfiguredError,
   Connector,
-  ConnectorData,
   ConnectorNotFoundError,
-  normalizeChainId,
+  ProviderRpcError,
+  RpcError,
   SwitchChainError,
   UserRejectedRequestError,
 } from 'wagmi';
@@ -40,54 +41,59 @@ export class ExtensionConnector extends Connector<
 
   readonly name: string = 'MetaMask extension connector';
 
-  provider: BaseProvider;
+  readonly ready: boolean = true;
+
+  #provider: BaseProvider;
 
   constructor({ provider, chains, options = {} }: ExtensionConnectorConfig) {
     super({ chains, options });
-    this.provider = provider;
+    this.#provider = provider;
   }
 
-  getProvider(): BaseProvider {
-    return this.provider;
+  async getProvider() {
+    return this.#provider;
   }
 
-  async connect(): Promise<ConnectorData> {
+  async connect({ chainId }: { chainId?: number } = {}) {
     try {
-      const provider = this.getProvider();
+      const provider = await this.getProvider();
       if (!provider) throw new ConnectorNotFoundError();
 
       if (provider.on) {
         provider.on('accountsChanged', this.onAccountsChanged);
         provider.on('chainChanged', this.onChainChanged);
-        if (this.options?.shimChainChangedDisconnect) {
-          provider.on('disconnect', this.onDisconnect);
-        }
+        provider.on('disconnect', this.onDisconnect);
       }
+      this.emit('message', { type: 'connecting' });
 
       const account = await this.getAccount();
-      const chainId = await this.getChainId();
-      const unsupported = this.isChainUnsupported(chainId);
+      let id = await this.getChainId();
+      let unsupported = this.isChainUnsupported(id);
+      if (chainId && id !== chainId) {
+        const chain = await this.switchChain(chainId);
+        id = chain.id;
+        unsupported = this.isChainUnsupported(id);
+      }
 
       if (this.options?.shimDisconnect) {
         await browser.storage.local.set({ [SHIM_KEY]: true });
       }
 
-      return { account, chain: { id: chainId, unsupported }, provider };
+      return { account, chain: { id, unsupported }, provider };
     } catch (err) {
-      if ((err as ProviderRpcError).code === 4001) {
-        throw new UserRejectedRequestError();
+      if ((err as RpcError).code === 4001) {
+        throw new UserRejectedRequestError(err);
       }
       throw err;
     }
   }
 
   async disconnect(): Promise<void> {
-    const provider = this.getProvider();
-    if (!provider?.removeListener) {
-      provider.removeListener('accountsChanged', this.onAccountsChanged);
-      provider.removeListener('chainChanged', this.onChainChanged);
-      provider.removeListener('disconnect', this.onDisconnect);
-    }
+    const provider = await this.getProvider();
+    if (!provider?.removeListener) return;
+    provider.removeListener('accountsChanged', this.onAccountsChanged);
+    provider.removeListener('chainChanged', this.onChainChanged);
+    provider.removeListener('disconnect', this.onDisconnect);
 
     if (this.options?.shimDisconnect) {
       await browser.storage.local.remove(SHIM_KEY);
@@ -95,21 +101,21 @@ export class ExtensionConnector extends Connector<
   }
 
   async getAccount(): Promise<string> {
-    const provider = this.getProvider();
+    const provider = await this.getProvider();
     const accounts: any = await provider.request({
-      method: 'eth_requestAccounts',
+      method: 'eth_accounts',
     });
-    return Promise.resolve(utils.getAddress(accounts[0]));
+    return utils.getAddress(accounts[0]);
   }
 
-  async getChainId(): Promise<number> {
-    const provider = this.getProvider();
+  async getChainId() {
+    const provider = await this.getProvider();
     const chainId = await provider.request({ method: 'eth_chainId' });
-    return chainId as number;
+    return normalizeChainId(chainId as number);
   }
 
   async getSigner(): Promise<Signer> {
-    const provider = this.getProvider();
+    const provider = await this.getProvider();
     const account = await this.getAccount();
     return new Web3Provider(provider).getSigner(account);
   }
@@ -121,7 +127,7 @@ export class ExtensionConnector extends Connector<
         return !!tuple[SHIM_KEY];
       }
 
-      const provider = this.getProvider();
+      const provider = await this.getProvider();
       if (!provider) {
         return false;
       }
@@ -137,7 +143,7 @@ export class ExtensionConnector extends Connector<
   }
 
   async switchChain(chainId: number) {
-    const provider = this.getProvider();
+    const provider = await this.getProvider();
     if (!provider) throw new ConnectorNotFoundError();
     const id = utils.hexValue(chainId);
 
@@ -147,7 +153,14 @@ export class ExtensionConnector extends Connector<
         params: [{ chainId: id }],
       });
       const chains = [...this.chains, ...allChains];
-      return chains.find((x) => x.id === chainId);
+      return (
+        chains.find((x) => x.id === chainId) ?? {
+          id: chainId,
+          name: `Chain ${id}`,
+          network: `${id}`,
+          rpcUrls: { default: '' },
+        }
+      );
     } catch (error) {
       // Indicates chain is not added to MetaMask
       if ((error as ProviderRpcError).code === 4902) {
@@ -162,7 +175,7 @@ export class ExtensionConnector extends Connector<
                 chainName: chain.name,
                 nativeCurrency: chain.nativeCurrency,
                 rpcUrls: chain.rpcUrls,
-                blockExplorerUrls: chain.blockExplorers?.map((x) => x.url),
+                blockExplorerUrls: this.getBlockExplorerUrls(chain),
               },
             ],
           });
@@ -171,8 +184,8 @@ export class ExtensionConnector extends Connector<
           throw new AddChainError();
         }
       } else if ((error as ProviderRpcError).code === 4001)
-        throw new UserRejectedRequestError();
-      else throw new SwitchChainError();
+        throw new UserRejectedRequestError(error);
+      else throw new SwitchChainError(error);
     }
   }
 
@@ -197,5 +210,7 @@ export class ExtensionConnector extends Connector<
     }
   }
 
-  readonly ready: boolean = true;
+  protected isUserRejectedRequestError(error: unknown) {
+    return (error as ProviderRpcError).code === 4001;
+  }
 }

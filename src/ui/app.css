@@ -1,7 +1,13 @@
+@font-face {
+  font-family: 'Titillium Web';
+  src: url('../assets/fonts/TitilliumWeb-Regular.ttf');
+}
+
 html, body {
   width: 360px;
   height: 600px;
   margin: 0;
+  font: 'Titillium Web';
 }
 
 #root {
