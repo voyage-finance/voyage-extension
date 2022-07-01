@@ -46,7 +46,7 @@ export class VoyageController extends SafeEventEmitter {
     this.disposer = reaction(
       () => {
         console.log('approvals: ', state.state);
-        return state.state;
+        return this.store.state;
       },
       (state) => {
         console.log('[controller] updated state: ', state);

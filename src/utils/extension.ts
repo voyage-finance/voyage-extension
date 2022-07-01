@@ -1,4 +1,12 @@
 import browser, { Windows } from 'webextension-polyfill';
+import { memoize } from 'lodash';
+
+export enum ExtensionEnvType {
+  Popup, // the extension panel opened by the icon in the top right corner.
+  Fullscreen, // currently not in use
+  Notification, // the popup that appears for actions taken out of the extension (e.g. signing, approving)
+  Background,
+}
 
 /**
  * Lifted directly from https://github.com/MetaMask/metamask-extension/blob/8df8f81df785f2a2b08143bcb4a0f706a2404825/app/scripts/lib/util.js#L105
@@ -40,3 +48,31 @@ export const closeNotificationWindow = () => {
     return browser.windows.remove(windowDetails.id || -1);
   });
 };
+
+const getEnvironmentTypeMemo = memoize((url: string) => {
+  const parsedUrl = new URL(url);
+  if (parsedUrl.pathname === '/popup.html') {
+    return ExtensionEnvType.Popup;
+  } else if (['/home.html', '/phishing.html'].includes(parsedUrl.pathname)) {
+    return ExtensionEnvType.Fullscreen;
+  } else if (parsedUrl.pathname === '/notification.html') {
+    return ExtensionEnvType.Notification;
+  }
+  return ExtensionEnvType.Background;
+});
+
+/**
+ * Returns the window type for the application
+ *
+ *  - `popup` refers to the extension opened through the browser app icon (in top right corner in chrome and firefox)
+ *  - `fullscreen` refers to the main browser window
+ *  - `notification` refers to the popup that appears in its own window when taking action outside of metamask
+ *  - `background` refers to the background page
+ *
+ * NOTE: This should only be called on internal URLs.
+ *
+ * @param {string} [url] - the URL of the window
+ * @returns {string} the environment ENUM
+ */
+const getEnvironmentType = (url = window.location.href) =>
+  getEnvironmentTypeMemo(url);

@@ -1,11 +1,5 @@
-import React from 'react';
 import { MantineProvider } from '@mantine/core';
-import {
-  configureChains,
-  createClient,
-  defaultChains,
-  WagmiConfig,
-} from 'wagmi';
+import { configureChains, createClient, WagmiConfig } from 'wagmi';
 import { Provider as StoreProvider } from 'react-redux';
 import VoyageProvider from '@components/VoyageProvider';
 import { publicProvider } from 'wagmi/providers/public';
@@ -13,23 +7,21 @@ import { MemoryRouter } from 'react-router-dom';
 import './app.css';
 import Router from './routes';
 import { ExtensionConnector } from '@web3/connector';
+import { chains as voyageChains } from '@utils/chain';
 
 function App({ store }: any) {
   const { provider: web3Provider, controller } = globalThis;
-  const { chains, provider } = configureChains(defaultChains, [
+  const { chains, provider } = configureChains(voyageChains, [
     publicProvider(),
   ]);
   const client = createClient({
     autoConnect: true,
     provider,
-    connectors: [new ExtensionConnector({ provider: web3Provider })],
+    connectors: [new ExtensionConnector({ provider: web3Provider, chains })],
   });
   return (
     <StoreProvider store={store}>
-      <WagmiConfig
-        client={client}
-        // connectors={[new ExtensionConnector({ provider })]}
-      >
+      <WagmiConfig client={client}>
         <VoyageProvider controller={controller}>
           <MantineProvider
             withGlobalStyles
@@ -37,18 +29,18 @@ function App({ store }: any) {
             theme={{
               colorScheme: 'dark',
               colors: {
-                dark: [
-                  '#2B2F53',
-                  '#282C4B',
-                  '#252843',
-                  '#22253C',
-                  '#202236',
-                  '#1D2031',
-                  '#1B1D2C',
-                  '#181A28',
-                  '#151724',
-                  '#131421',
-                ],
+                // dark: [
+                //   '#2B2F53',
+                //   '#282C4B',
+                //   '#252843',
+                //   '#22253C',
+                //   '#202236',
+                //   '#1D2031',
+                //   '#1B1D2C',
+                //   '#181A28',
+                //   '#151724',
+                //   '#131421',
+                // ],
                 brand: [
                   '#FFFBF8',
                   '#FFE2C9',
