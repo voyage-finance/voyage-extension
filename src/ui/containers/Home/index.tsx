@@ -1,9 +1,7 @@
 import React, { useEffect } from 'react';
 import { ActionIcon, Button, Code } from '@mantine/core';
 import { Unlink } from 'tabler-icons-react';
-import { useAccount, useConnect } from 'wagmi';
-import { ReactComponent as MetaMaskFox } from '@images/metamask-fox.svg';
-import { ReactComponent as CrabadaLogo } from '@images/crabada-logo.svg';
+import { useAccount, useSwitchNetwork } from 'wagmi';
 import { useAppSelector } from '@hooks/useRedux';
 import styles from './index.module.scss';
 import { Link, useNavigate } from 'react-router-dom';
@@ -19,6 +17,7 @@ const truncateAddress = (address?: string) => {
 const Home: React.FC = () => {
   const { address, isConnected } = useAccount();
   const { chain } = useNetwork();
+  const { chains, switchNetwork } = useSwitchNetwork();
   console.log('current chain: ', chain);
 
   const approvals = useAppSelector((state) => {
@@ -37,25 +36,9 @@ const Home: React.FC = () => {
 
   return (
     <div className={styles.root}>
-      {isConnected && (
-        <div className={styles.statusBar}>
-          <div className={styles.metaMaskFox}>
-            <MetaMaskFox />
-          </div>
-          <div className={styles.address}>
-            <Code color="teal">{truncateAddress(address)}</Code>
-          </div>
-          {/* <ActionIcon color="red" onClick={disconnect} variant="transparent">
-            <Unlink size={18} />
-          </ActionIcon> */}
-        </div>
-      )}
-      {/* TODO: fetch actual vaults here */}
       <div className={styles.vault}>
         <div>
-          <div>
-            <CrabadaLogo />
-          </div>
+          <div>{/* <CrabadaLogo /> */}</div>
           <div>CrabaDAO Main Vault</div>
           <div>
             <Code>0xc494...5c43</Code>
@@ -65,6 +48,9 @@ const Home: React.FC = () => {
       <Button component={Link} to="/connect">
         Link to WC
       </Button>
+      {/* <Button component="button" onClick={() => switchNetwork?.(73772)}>
+        Switch network
+      </Button> */}
     </div>
   );
 };

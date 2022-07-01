@@ -1,0 +1,82 @@
+.root {
+  display: flex;
+  flex-direction: row;
+  height: 50px;
+  background-color: rgba(27, 29, 44, 0.8);
+  align-items: center;
+
+  .voyageLogo {
+    padding-left: 22px;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    flex: 0 0 145px;
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .accountInfo {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0 18px;
+    height: 100%;
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+    width: 165px;
+
+    .wrapper {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      min-width: 0;
+      .mmLogo {
+        height: 26px;
+        width: 26px;
+        margin-right: 10px;
+        flex: 0 0 auto;
+      }
+
+      .connectionInfo {
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        .address {
+          color: #fff;
+          font-size: 14px;
+          line-height: 16px;
+        }
+        .network {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          .status {
+            flex: 1 0 auto;
+            height: 6px;
+            width: 6px;
+            margin-right: 5px;
+            border-radius: 50%;
+            &.ok {
+              background-color: #0ccdaa;
+            }
+            &.bad {
+              background-color: #f4501b;
+            }
+          }
+          .name {
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            color: #fff;
+            font-size: 11px;
+            line-height: 12px;
+          }
+        }
+      }
+    }
+  }
+  .connectionOptions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1 0 auto;
+  }
+}
