@@ -17,7 +17,13 @@ function App({ store }: any) {
   const client = createClient({
     autoConnect: true,
     provider,
-    connectors: [new ExtensionConnector({ provider: web3Provider, chains })],
+    connectors: [
+      new ExtensionConnector({
+        provider: web3Provider,
+        chains,
+        options: { shimDisconnect: true },
+      }),
+    ],
   });
   return (
     <StoreProvider store={store}>

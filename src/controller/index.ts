@@ -107,6 +107,8 @@ export class VoyageController extends SafeEventEmitter {
 
     await connector.createSession();
 
+    // at this point, the session can be persisted.
+    // session is available on the `WalletConnect` instance.
     console.log('wc client: ', connector);
 
     return new Promise<{ peerMeta: PeerMeta; peerId: string }>(
