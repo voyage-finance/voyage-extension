@@ -14,6 +14,7 @@ import {
   SwitchChainError,
   UserRejectedRequestError,
 } from 'wagmi';
+import { isEmpty } from 'lodash';
 import browser from 'webextension-polyfill';
 
 export interface ExtensionConnectorOptions {
@@ -65,6 +66,22 @@ export class ExtensionConnector extends Connector<
         provider.on('disconnect', this.onDisconnect);
       }
       this.emit('message', { type: 'connecting' });
+      const isConnected = await browser.storage.local
+        .get(SHIM_KEY)
+        .then((v) => !isEmpty(v));
+      if (this.options?.shimDisconnect && !isConnected) {
+        const accounts: any = await provider
+          .request({
+            method: 'eth_accounts',
+          })
+          .catch(() => []);
+        const isConnected = !!accounts[0];
+        if (isConnected)
+          await provider.request({
+            method: 'wallet_requestPermissions',
+            params: [{ eth_accounts: {} }],
+          });
+      }
 
       const account = await this.getAccount();
       let id = await this.getChainId();

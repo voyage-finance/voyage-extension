@@ -1,18 +1,21 @@
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router-dom';
 import Connect from '@containers/Connect';
 import Link from '@containers/Link';
 import styles from './index.module.scss';
 import Approval from '@containers/Approval';
 import Home from '@containers/Home';
 import MenuBar from '@components/MenuBar/MenuBar';
+import Settings from '@containers/Settings';
 
 const Router: React.FC = () => {
+  const location = useLocation();
   return (
     <div className={styles.root}>
-      <MenuBar />
+      {location.pathname !== '/' && <MenuBar />}
       <Routes>
         <Route path="/" element={<Link />} />
         <Route path="/home" element={<Home />} />
+        <Route path="/settings" element={<Settings />} />
         <Route path="/connect" element={<Connect />} />
         <Route path="/approval/:requestId" element={<Approval />} />
       </Routes>

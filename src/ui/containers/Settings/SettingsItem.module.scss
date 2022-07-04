@@ -1,0 +1,39 @@
+.root {
+  display: flex;
+  flex-direction: row;
+  padding: 12.5px 16px;
+  align-items: center;
+  border: 0.5px solid;
+  background: rgba(27, 29, 44, 0.6);
+  //opacity: 0.5;
+  border-radius: 10px;
+  border-image-source: linear-gradient(180deg, #575B79 0%, rgba(27, 29, 44, 0) 100%);
+  .sectionLeft {
+    display: flex;
+    flex-direction: row;
+    flex: 1 0 auto;
+    align-items: center;
+    cursor: pointer;
+
+    .copy {
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 16px;
+      color: #fff;
+    }
+    .icon {
+      color: rgba(255, 255, 255, 0.3);
+      margin-right: 4px;
+    }
+  }
+
+  .sectionRight {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    cursor: pointer;
+    .icon {
+      color: rgba(255, 255, 255, 0.3);
+    }
+  }
+}

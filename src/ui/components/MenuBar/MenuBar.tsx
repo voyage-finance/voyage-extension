@@ -4,10 +4,11 @@ import { ReactComponent as MM } from '@images/logo-metamask.svg';
 import { truncate } from '@utils/address';
 import styles from './index.module.scss';
 import { useAccount, useNetwork } from 'wagmi';
-import { chains, switchAccounts } from '@utils/chain';
+import { chains } from '@utils/chain';
 import cn from 'classnames';
-import { ActionIcon, Menu } from '@mantine/core';
+import { ActionIcon } from '@mantine/core';
 import { DotsVertical } from 'tabler-icons-react';
+import { useNavigate } from 'react-router-dom';
 
 interface Props {}
 
@@ -15,6 +16,7 @@ const MenuBar = (props: PropsWithChildren<Props>) => {
   const { address } = useAccount();
   const { chain } = useNetwork();
   const isSupportedChain = chains.some(({ id }) => id === chain?.id);
+  const navigate = useNavigate();
 
   return (
     <div className={styles.root}>
@@ -43,15 +45,9 @@ const MenuBar = (props: PropsWithChildren<Props>) => {
         </div>
       </div>
       <div className={styles.connectionOptions}>
-        <Menu
-          control={
-            <ActionIcon variant="transparent">
-              <DotsVertical color="#9e9e9e" />
-            </ActionIcon>
-          }
-        >
-          <Menu.Item onClick={switchAccounts}>Switch Account</Menu.Item>
-        </Menu>
+        <ActionIcon variant="transparent" onClick={() => navigate('/settings')}>
+          <DotsVertical color="#9e9e9e" />
+        </ActionIcon>
       </div>
     </div>
   );
