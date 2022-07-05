@@ -5,20 +5,25 @@ import { getMetaMaskExtensionId, setupMultiplex } from '../utils';
 import pump from 'pump';
 import {
   createAsyncMiddleware,
+  createIdRemapMiddleware,
   JsonRpcEngine,
   JsonRpcRequest,
 } from 'json-rpc-engine';
 import {
   createEngineStream,
   createStreamMiddleware,
-} from 'json-rpc-middleware-stream';
+} from '@voyage-finance/json-rpc-middleware-stream';
 import createMetaRPCHandler from '../rpc/virtual/server';
 import WalletConnect from '@walletconnect/client';
 import ControllerState from './state';
 import { IReactionDisposer, reaction, toJS } from 'mobx';
 import SafeEventEmitter from '@metamask/safe-event-emitter';
 import { nanoid } from 'nanoid';
-import { openNotificationWindow } from '../utils/extension';
+import { openNotificationWindow } from '@utils/extension';
+import ExtensionSessionStorage from './storage';
+import { BaseProvider } from '@voyage-finance/providers';
+import { createWcStream } from './wcStream';
+import VoyageService from './voyage';
 
 interface WalletConnectSessionRequest {
   chainId: number | null;
@@ -26,7 +31,7 @@ interface WalletConnectSessionRequest {
   peerMeta: PeerMeta;
 }
 
-interface PeerMeta {
+export interface PeerMeta {
   description?: string;
   icons?: string[];
   name: string;
@@ -35,19 +40,24 @@ interface PeerMeta {
 
 export class VoyageController extends SafeEventEmitter {
   engine: JsonRpcEngine;
+  provider: BaseProvider;
   store: ControllerState;
+  voyage: VoyageService;
   private disposer: IReactionDisposer;
 
   constructor() {
     super();
     this.engine = this.createRpcEngine();
-    const state = new ControllerState();
-    this.store = state;
+    this.provider = new BaseProvider(
+      createEngineStream({ engine: this.engine }) as Duplex
+    );
+    this.voyage = new VoyageService(this.provider);
+    this.store = new ControllerState(
+      new ExtensionSessionStorage(),
+      this.provider
+    );
     this.disposer = reaction(
-      () => {
-        console.log('approvals: ', state.state);
-        return this.store.state;
-      },
+      () => this.store.state,
       (state) => {
         console.log('[controller] updated state: ', state);
         this.sendUpdate(state);
@@ -79,10 +89,11 @@ export class VoyageController extends SafeEventEmitter {
   };
 
   /**
-   * Sets up a connection to the Voyage provider.
-   * This provider intercepts certain RPC methods, such as eth_requestAccounts.
+   * Sets up a connection to the Voyage service via the middleware.
+   * This provider intercepts and forwards certain RPC methods, such as eth_requestAccounts, to the Voyage instance.
+   * Other methods are directly forwarded to Metamask, or after approval is given.
    * Used by external clients, a.k.a., games, dApps, guild management software via WC or window.voyage.
-   * @param stream
+   * @param stream - duplex stream to pipe to the underlying provider
    */
   setupVoyageProviderConnection = (stream: Duplex) => {
     // connect the voyage provider stream to the rpc engine
@@ -104,14 +115,9 @@ export class VoyageController extends SafeEventEmitter {
         name: 'Voyage Finance',
       },
     });
-
     await connector.createSession();
 
-    // at this point, the session can be persisted.
-    // session is available on the `WalletConnect` instance.
-    console.log('wc client: ', connector);
-
-    return new Promise<{ peerMeta: PeerMeta; peerId: string }>(
+    return new Promise<{ id: string; peerMeta: PeerMeta; peerId: string }>(
       (resolve, reject) => {
         connector.on(
           'session_request',
@@ -124,23 +130,41 @@ export class VoyageController extends SafeEventEmitter {
               return reject(error);
             }
             console.log('payload from wc?: ', payload);
-            // connector.approveSession({ chainId: 1337, accounts: ['0x12345'] });
             try {
               const [req] = payload.params!;
-              const approval = this.store.add({
-                id: nanoid(),
+              const id = nanoid();
+              this.store.add({
+                id,
                 origin: req.peerMeta.url,
                 type: 'wc',
                 metadata: req.peerMeta,
+                onApprove: async () => {
+                  const chain = this.provider.chainId;
+                  console.log('chain id: ', chain);
+                  const vault = await this.voyage.getVault();
+                  console.log('vault: ', vault);
+                  if (!vault) {
+                    connector.rejectSession(
+                      new Error('User does not have any vaults')
+                    );
+                    return;
+                  }
+                  connector.approveSession({
+                    chainId: parseInt(chain!, 16),
+                    accounts: [vault!],
+                  });
+                  const wcStream = createWcStream(connector);
+                  this.setupVoyageProviderConnection(wcStream as Duplex);
+                  await this.store.addConnection(req.peerId, connector);
+                },
+                onReject: async () => {
+                  connector.rejectSession(
+                    new Error('User rejected session request')
+                  );
+                },
               });
-              await this.openNotificationWindow();
-              await approval;
 
-              connector.approveSession({
-                chainId: 1337,
-                accounts: ['0x12345'],
-              });
-              resolve({ peerMeta: req.peerMeta, peerId: req.peerId });
+              resolve({ id, peerMeta: req.peerMeta, peerId: req.peerId });
             } catch (err) {
               console.log('error in wc connect bg: ', JSON.stringify(err));
             }
@@ -163,9 +187,9 @@ export class VoyageController extends SafeEventEmitter {
     };
   }
 
-  approveApprovalRequest = (id: string) => {
+  approveApprovalRequest = async (id: string) => {
     console.log('approving id: ', id);
-    this.store.approve(id);
+    await this.store.approve(id);
   };
 
   rejectApprovalRequest = (id: string) => {
@@ -190,6 +214,9 @@ export class VoyageController extends SafeEventEmitter {
     return mux.createStream('metamask-provider');
   };
 
+  /**
+   * Creates a JSON-RPC engine interface to the raw MetaMask provider connection
+   */
   private createRpcEngine = () => {
     const metaMaskStream = this.createMetaMaskConnection();
     const metaMaskMiddleware = createStreamMiddleware();
@@ -200,6 +227,7 @@ export class VoyageController extends SafeEventEmitter {
       () => console.log('disconnected from metamask provider')
     );
     const engine = new JsonRpcEngine();
+    engine.push(createIdRemapMiddleware());
     engine.push(metaMaskMiddleware.middleware);
     return engine;
   };
@@ -216,7 +244,7 @@ export class VoyageController extends SafeEventEmitter {
 
   private createVoyageMiddleware = () => {
     return createAsyncMiddleware(async (req, res, next) => {
-      console.log('processing request from inpage provider: ', req);
+      console.log('voyage processing rpc request: ', req);
       if (req.method === 'eth_requestAccounts') {
         res.result = ['0x12345'];
         return;

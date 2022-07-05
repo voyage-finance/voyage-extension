@@ -15,13 +15,13 @@ const Home: React.FC = () => {
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (Object.keys(approvals)?.length > 0) {
-      const [approvalId] = Object.keys(approvals);
-      navigate(`/approval/${approvalId}`);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // useEffect(() => {
+  //   if (Object.keys(approvals)?.length > 0) {
+  //     const [approvalId] = Object.keys(approvals);
+  //     navigate(`/approval/${approvalId}`);
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
   return (
     <div className={styles.root}>
