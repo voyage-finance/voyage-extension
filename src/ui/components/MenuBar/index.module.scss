@@ -12,6 +12,10 @@
     height: 100%;
     flex: 0 0 145px;
     border-right: 1px solid rgba(255, 255, 255, 0.08);
+    min-width: 0;
+    & > svg {
+      width: 80px;
+    }
   }
 
   .accountInfo {
