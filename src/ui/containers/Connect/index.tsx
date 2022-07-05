@@ -5,16 +5,39 @@ import { connectWithWC } from '@state/modules/connect';
 import { BrowserQRCodeReader } from '@zxing/browser';
 import browser from 'webextension-polyfill';
 import { useAppDispatch, useAppSelector } from '@hooks/useRedux';
+import useVoyageController from '@hooks/useVoyageController';
+import { PeerMeta } from '../../../controller';
 
 interface Props {}
+
+interface Approval {
+  id: string;
+  peerId: string;
+  peerMeta: PeerMeta;
+}
 
 const Connect: React.FC<Props> = () => {
   const dispatch = useAppDispatch();
   const [wcUri, setWcUri] = useState('');
   const [qrError, setQrError] = useState<string>();
-  const { connected, session } = useAppSelector((state) => {
-    return state.wc;
+  const sessions = useAppSelector((state) => {
+    return state.core.sessions;
   });
+  const [pendingSession, setPendingSession] = useState<Approval>();
+  const voyageController = useVoyageController();
+  const handleCreateSession = async (uri: string) => {
+    const res = await voyageController.connectWithWC(uri);
+    setPendingSession(res);
+  };
+  const handleApproveSession = async (id: string) => {
+    await voyageController.approveApprovalRequest(id);
+    console.log('[ui] approved');
+    setPendingSession(undefined);
+  };
+  const handleRejectSession = async (id: string) => {
+    await voyageController.rejectApprovalRequest(id);
+    setPendingSession(undefined);
+  };
 
   const scanForQR = async () => {
     try {
@@ -24,7 +47,8 @@ const Connect: React.FC<Props> = () => {
       });
       const reader = new BrowserQRCodeReader();
       const res = await reader.decodeFromImageUrl(dataUrl);
-      dispatch(connectWithWC(res.getText()));
+      console.log('wc uri: ', res.getText());
+      await handleCreateSession(res.getText());
     } catch (e) {
       console.error('Failed to get a QR code: ', e);
       setQrError('Could not find a QR code');
@@ -34,35 +58,41 @@ const Connect: React.FC<Props> = () => {
   return (
     <div className={styles.root}>
       <div>Connect your Vault to games with WalletConnect.</div>
-      {/* TODO: get the actual vault address from store */}
-      <div>Vault address: 0x12345</div>
-      <div>Network: Avalanche-C</div>
-      {qrError && (
-        <Alert
-          title={qrError}
-          withCloseButton
-          color="red"
-          onClose={() => setQrError(undefined)}
-        >
-          We didn't find a QR code on the page. Try again or enter the URI
-          manually.
-        </Alert>
+      {pendingSession ? (
+        <div>
+          {JSON.stringify(pendingSession, null, 4)}
+          <Button onClick={() => handleApproveSession(pendingSession.id)}>
+            Approve
+          </Button>
+          <Button onClick={() => handleRejectSession(pendingSession.id)}>
+            Reject
+          </Button>
+        </div>
+      ) : (
+        <>
+          {qrError && (
+            <Alert
+              title={qrError}
+              withCloseButton
+              color="red"
+              onClose={() => setQrError(undefined)}
+            >
+              We didn't find a QR code on the page. Try again or enter the URI
+              manually.
+            </Alert>
+          )}
+          <TextInput
+            placeholder="WC URI"
+            value={wcUri}
+            onChange={(evt) => setWcUri(evt.currentTarget.value)}
+          />
+          <Button onClick={() => dispatch(connectWithWC(wcUri))}>
+            Connect with WC
+          </Button>
+          <Button onClick={scanForQR}>Scan WC QR code</Button>
+          {JSON.stringify(sessions, null, 4)}
+        </>
       )}
-      <TextInput
-        placeholder="WC URI"
-        value={wcUri}
-        onChange={(evt) => setWcUri(evt.currentTarget.value)}
-      />
-      <Button onClick={() => dispatch(connectWithWC(wcUri))}>
-        Connect with WC
-      </Button>
-      <Button onClick={scanForQR}>Scan WC QR code</Button>
-      {connected ? (
-        <pre>
-          {`Peer ID: ${session?.peerId}`}
-          {JSON.stringify(session)}
-        </pre>
-      ) : null}
     </div>
   );
 };

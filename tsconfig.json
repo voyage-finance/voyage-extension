@@ -24,12 +24,13 @@
     "paths": {
       "@components/*": ["ui/components/*"],
       "@containers/*": ["ui/containers/*"],
+      "@contracts": ["contracts"],
       "@state/*": ["ui/state/*"],
       "@web3/*": ["ui/web3/*"],
       "@images/*": ["assets/img/*"],
       "@hooks/*": ["ui/hooks/*"],
-      "@utils/*": ["utils/*"]
+      "@utils/*": ["utils/*"],
     }
   },
-  "include": [ "src" ]
+  "include": [ "src"]
 }
