@@ -1,4 +1,5 @@
 import { Chain } from 'wagmi';
+import { ReactComponent as Avax } from '@images/logo-avax.svg';
 
 export const chains: Chain[] = [
   {
@@ -48,3 +49,8 @@ export const switchAccounts = async () => {
     params: [{ eth_accounts: {} }],
   });
 };
+
+export const networks = chains.map((chain) => ({
+  ...chain,
+  icon: <Avax />,
+}));
