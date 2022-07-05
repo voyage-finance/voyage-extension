@@ -180,7 +180,12 @@ export class ExtensionConnector extends Connector<
       );
     } catch (error) {
       // Indicates chain is not added to MetaMask
-      if ((error as ProviderRpcError).code === 4902) {
+      if (
+        (error as ProviderRpcError).code === 4902 ||
+        // https://github.com/MetaMask/metamask-mobile/issues/2944#issuecomment-976988719
+        (<RpcError<{ originalError?: { code: number } }>>error)?.data
+          ?.originalError?.code === 4902
+      ) {
         try {
           const chain = this.chains.find((x) => x.id === chainId);
           if (!chain) throw new ChainNotConfiguredError();
@@ -191,7 +196,7 @@ export class ExtensionConnector extends Connector<
                 chainId: id,
                 chainName: chain.name,
                 nativeCurrency: chain.nativeCurrency,
-                rpcUrls: chain.rpcUrls,
+                rpcUrls: [chain.rpcUrls.public ?? chain.rpcUrls.default],
                 blockExplorerUrls: this.getBlockExplorerUrls(chain),
               },
             ],

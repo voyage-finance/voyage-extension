@@ -6,9 +6,12 @@ import Approval from '@containers/Approval';
 import Home from '@containers/Home';
 import MenuBar from '@components/MenuBar/MenuBar';
 import Settings from '@containers/Settings';
+import SwitchNetwork from '@containers/SwitchNetwork';
+import { networks } from '@utils/chain';
 
 const Router: React.FC = () => {
   const location = useLocation();
+  console.log('location: ', location);
   return (
     <div className={styles.root}>
       {location.pathname !== '/' && <MenuBar />}
@@ -16,6 +19,10 @@ const Router: React.FC = () => {
         <Route path="/" element={<Link />} />
         <Route path="/home" element={<Home />} />
         <Route path="/settings" element={<Settings />} />
+        <Route
+          path="/settings/network"
+          element={<SwitchNetwork networks={networks} />}
+        />
         <Route path="/connect" element={<Connect />} />
         <Route path="/approval/:requestId" element={<Approval />} />
       </Routes>

@@ -1,0 +1,48 @@
+.root {
+  .itemWrapper {
+    padding: 6px 18px;
+    &>:not(:last-child) {
+      margin-bottom: 5px;
+    }
+  }
+
+  .divider {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 12px;
+    background: rgba(27, 29, 44, 0.6);
+  }
+
+  .copy {
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 16px;
+    color: #fff;
+  }
+
+  .network {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .status {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    .indicator {
+      flex: 1 0 auto;
+      height: 6px;
+      width: 6px;
+      margin-right: 5px;
+      border-radius: 50%;
+      background-color: #0ccdaa;
+    }
+    .connectedText {
+      color: #fff;
+      font-size: 11px;
+      line-height: 12px;
+    }
+  }
+}
