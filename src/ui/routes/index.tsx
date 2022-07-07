@@ -8,6 +8,7 @@ import MenuBar from '@components/MenuBar/MenuBar';
 import Settings from '@containers/Settings';
 import SwitchNetwork from '@containers/SwitchNetwork';
 import { networks } from '@utils/chain';
+import Connections from '@containers/Connections';
 
 const Router: React.FC = () => {
   const location = useLocation();
@@ -24,6 +25,7 @@ const Router: React.FC = () => {
           element={<SwitchNetwork networks={networks} />}
         />
         <Route path="/connect" element={<Connect />} />
+        <Route path="/connections" element={<Connections />} />
         <Route path="/approval/:requestId" element={<Approval />} />
       </Routes>
     </div>

@@ -1,0 +1,56 @@
+.root {
+  display: flex;
+  flex-direction: row;
+  padding: 12px;
+  .inner {
+    display: flex;
+    flex: 1;
+    flex-direction: row;
+    align-items: center;
+  }
+  .icon {
+    display: flex;
+    flex: 0 0 auto;
+    height: 30px;
+    min-height: 0;
+    margin-right: 6px;
+    & > * {
+      height: 100%;
+      width: auto;
+    }
+  }
+
+  .info {
+    display: flex;
+    flex-direction: column;
+    flex: 1 0 auto;
+    .name {
+      font-weight: 700;
+    }
+    .connectionInfo {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      .statusIndicator {
+        height: 6px;
+        width: 6px;
+        margin-right: 5px;
+        border-radius: 50%;
+        &.ok {
+          background-color: #0ccdaa;
+        }
+        &.bad {
+          background-color: #f4501b;
+        }
+      }
+      .connectionStatus {
+        line-height: 12px;
+      }
+    }
+  }
+
+  .connectButton {
+    height: 24px !important;
+    border-radius: 4px !important;
+  }
+}

@@ -1,0 +1,23 @@
+.root {
+  .itemWrapper {
+    padding: 6px 18px;
+    &>:not(:last-child) {
+      margin-bottom: 5px;
+    }
+  }
+
+  .divider {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 12px;
+    background: rgba(27, 29, 44, 0.6);
+  }
+
+  .copy {
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 16px;
+    color: #fff;
+  }
+}

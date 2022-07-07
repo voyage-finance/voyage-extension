@@ -50,8 +50,7 @@ const Settings = () => {
         </SettingsItem>
         <SettingsItem
           iconLeft={<Share />}
-          // TODO
-          handleClick={() => null}
+          handleClick={() => navigate('/connections')}
           iconRight={<ChevronRight />}
         >
           <Text className={styles.copy} weight={700}>

@@ -3,27 +3,12 @@
   flex-direction: column;
   height: 100%;
   width: 100%;
+  padding: 6px 18px;
 
-  .statusBar {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
-    padding: 16px 24px;
-
-    .metaMaskFox {
-      height: 28px;
-      width: 28px;
-      margin-right: 6px;
-    }
-
-    .address {
-      color: #ffffff;
-      flex: 0 1 auto;
-      line-height: 28px;
-    }
+  .appConnector {
+    margin-bottom: 6px;
   }
-
-  .vault {
-    padding: 18px 24px;
+  .main {
+    padding: 12px;
   }
 }
