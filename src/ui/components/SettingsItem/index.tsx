@@ -1,6 +1,5 @@
-import { Text } from '@mantine/core';
 import styles from './index.module.scss';
-import { FC, PropsWithChildren, ReactElement } from 'react';
+import { PropsWithChildren, ReactElement } from 'react';
 
 interface Props {
   iconLeft: ReactElement;
@@ -18,7 +17,6 @@ const Index = ({
     <div className={styles.root} onClick={handleClick}>
       <div className={styles.sectionLeft}>
         <div className={styles.icon}>{iconLeft}</div>
-        {/*<IconLeft className={styles.icon} />*/}
         {children}
       </div>
       {iconRight && <div className={styles.sectionRight}>{iconRight}</div>}

@@ -44,6 +44,7 @@ const SwitchNetwork = (props: Props) => {
         {networks.map((network) => {
           return (
             <SettingsItem
+              key={network.id}
               iconLeft={network.icon}
               handleClick={() => handleSwitchNetwork(network.id)}
             >
