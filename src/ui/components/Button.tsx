@@ -72,6 +72,7 @@ function Button<C = ButtonType>({
         '&:before': {
           display: 'none',
         },
+        ...sx,
       }}
       loaderPosition="right"
       radius="md"

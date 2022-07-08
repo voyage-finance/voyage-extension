@@ -1,7 +1,8 @@
-import { Chain } from 'wagmi';
+import { Chain, defaultChains } from 'wagmi';
 import { ReactComponent as Avax } from '@images/logo-avax.svg';
 
 export enum ChainID {
+  Mainnet = 1,
   Fuji = 43_113,
   Avalanche = 43_114,
 }
@@ -46,6 +47,7 @@ export const chains: Chain[] = [
       },
     },
   },
+  ...defaultChains,
 ];
 
 export const switchAccounts = async () => {

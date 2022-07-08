@@ -22,6 +22,9 @@ function bootstrapSW() {
       controller.setupVoyageProviderConnection(
         mux.createStream('voyage-provider') as Duplex
       );
+      controller.setupDomEventConnection(
+        mux.createStream('voyage-dom') as Duplex
+      );
     }
   });
 }

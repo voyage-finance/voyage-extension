@@ -12,10 +12,6 @@ pageStream.on('data', (data) =>
   console.log('[content-script] got data from injector: ', data)
 );
 
-const script = document.createElement('script');
-script.src = chrome.runtime.getURL('injector.bundle.js');
-document.head.appendChild(script);
-
 const bgPort = chrome.runtime.connect({ name: 'voyage-contentscript' });
 const bgStream = new PortStream(bgPort as Runtime.Port);
 

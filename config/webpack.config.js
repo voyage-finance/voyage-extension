@@ -548,6 +548,7 @@ module.exports = function (webpackEnv) {
         patterns: [
           { from: path.resolve(paths.appSrc, 'assets/img/icon.png') },
           { from: path.resolve(paths.appSrc, 'manifest.json') },
+          { from: path.resolve(paths.appSrc, 'scripts/inject.css') },
         ],
       }),
       isEnvDevelopment &&

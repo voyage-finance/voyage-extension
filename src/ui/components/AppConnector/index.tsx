@@ -23,12 +23,12 @@ const AppConnector = (props: Props) => {
     <Card className={styles.root}>
       <div className={styles.inner}>
         <div className={styles.icon}>
-          <img alt="todo" src={session?.peerMeta?.icons[0] ?? app.icon} />
+          <img alt="todo" src={session?.peerMeta?.icons[0] ?? app?.icon} />
         </div>
         <div className={styles.info}>
           <div>
             <Text color="white" size="md" className={styles.name}>
-              {session?.peerMeta?.name ?? app.name}
+              {session?.peerMeta?.name ?? app?.name}
             </Text>
           </div>
           <div className={styles.connectionInfo}>
