@@ -4,6 +4,8 @@ import { ReactComponent as ChevronLeft } from '@images/chevron-left-icon.svg';
 import styles from './index.module.scss';
 import { useNavigate } from 'react-router-dom';
 import { useAppSelector } from '@hooks/useRedux';
+import AppConnector from '@components/AppConnector';
+import { getDappForSession } from '@utils/dapps';
 
 const Connections = () => {
   const navigate = useNavigate();
@@ -24,6 +26,15 @@ const Connections = () => {
         <Text className={styles.copy} weight={700}>
           Active Wallet Connect Sessions
         </Text>
+      </div>
+      <div className={styles.connections}>
+        {Object.keys(sessions).map((id) => {
+          const session = sessions[id];
+          const dapp = getDappForSession(session);
+          return (
+            <AppConnector app={dapp} key={id} session={session} canDisconnect />
+          );
+        })}
       </div>
     </div>
   );

@@ -4174,16 +4174,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@voyage-finance/json-rpc-middleware-stream@npm:^3.0.1":
-  version: 3.0.1
-  resolution: "@voyage-finance/json-rpc-middleware-stream@npm:3.0.1"
-  dependencies:
-    "@metamask/safe-event-emitter": ^2.0.0
-    readable-stream: ^2.3.3
-  checksum: 8b009f4636962dfd409b91a89e3197747c6b9305928aacc965182b15c058e0c994470edabddbfdc2f7e108db4a59ada6ef93a78ebb670f92dd8dcf2a84baafa5
-  languageName: node
-  linkType: hard
-
 "@voyage-finance/providers@npm:^9.1.0":
   version: 9.1.0
   resolution: "@voyage-finance/providers@npm:9.1.0"
@@ -4535,6 +4525,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@walletconnect/utils@npm:1.7.8, @walletconnect/utils@npm:^1.7.8":
+  version: 1.7.8
+  resolution: "@walletconnect/utils@npm:1.7.8"
+  dependencies:
+    "@walletconnect/browser-utils": ^1.7.8
+    "@walletconnect/encoding": ^1.0.1
+    "@walletconnect/jsonrpc-utils": ^1.0.0
+    "@walletconnect/types": ^1.7.8
+    bn.js: 4.11.8
+    js-sha3: 0.8.0
+    query-string: 6.13.5
+  checksum: 272f49bcf1a725147088e897b1a504fe45bc72d176f5e16166c8858da0288aed4294638d187db37ef8f0e10673c8d8ea7ee0769615c6d24cfe2dba8407402b25
+  languageName: node
+  linkType: hard
+
 "@walletconnect/utils@npm:^1.7.7":
   version: 1.7.7
   resolution: "@walletconnect/utils@npm:1.7.7"
@@ -4547,21 +4552,6 @@ __metadata:
     js-sha3: 0.8.0
     query-string: 6.13.5
   checksum: 5a96d7ba094665f7713fe5ef5f80aaa43692bacae859ebc0479f788ba745bad8f2ca390f0f9d2b7bcf9bca18f861daef9b4e972a119238bebe6f55c93beaa29b
-  languageName: node
-  linkType: hard
-
-"@walletconnect/utils@npm:^1.7.8":
-  version: 1.7.8
-  resolution: "@walletconnect/utils@npm:1.7.8"
-  dependencies:
-    "@walletconnect/browser-utils": ^1.7.8
-    "@walletconnect/encoding": ^1.0.1
-    "@walletconnect/jsonrpc-utils": ^1.0.0
-    "@walletconnect/types": ^1.7.8
-    bn.js: 4.11.8
-    js-sha3: 0.8.0
-    query-string: 6.13.5
-  checksum: 272f49bcf1a725147088e897b1a504fe45bc72d176f5e16166c8858da0288aed4294638d187db37ef8f0e10673c8d8ea7ee0769615c6d24cfe2dba8407402b25
   languageName: node
   linkType: hard
 
@@ -16382,13 +16372,13 @@ __metadata:
     "@types/react-redux": ^7.1.24
     "@types/readable-stream": ^2.3.13
     "@types/webextension-polyfill": ^0.8.3
-    "@voyage-finance/json-rpc-middleware-stream": ^3.0.1
     "@voyage-finance/providers": ^9.1.0
     "@voyage-finance/webpack-ext-reloader": ^1.2.0
     "@wagmi/core": ^0.4.4
     "@walletconnect/client": ^1.7.7
     "@walletconnect/encoding": ^1.0.1
     "@walletconnect/types": ^1.7.8
+    "@walletconnect/utils": 1.7.8
     "@zxing/browser": ^0.1.1
     "@zxing/library": ^0.19.1
     babel-jest: ^27.4.2
@@ -16425,6 +16415,7 @@ __metadata:
     jest-resolve: ^27.4.2
     jest-watch-typeahead: ^1.0.0
     json-rpc-engine: ^6.1.0
+    json-rpc-middleware-stream: ^3.0.0
     lodash: ^4.17.21
     mini-css-extract-plugin: ^2.4.5
     mobx: ^6.5.0

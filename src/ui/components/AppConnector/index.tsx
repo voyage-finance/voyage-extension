@@ -1,91 +1,71 @@
 import Card from '@components/Card';
 import cn from 'classnames';
-import { useNetwork } from 'wagmi';
-import { ReactElement } from 'react';
-import { useAppSelector } from '@hooks/useRedux';
 import Button from '@components/Button';
 import { Text } from '@mantine/core';
 import { useNavigate } from 'react-router-dom';
 import styles from './index.module.scss';
+import { IWalletConnectSession } from '@walletconnect/types';
+import { App } from '@utils/dapps';
+import useVoyageController from '@hooks/useVoyageController';
 
-interface App {
-  uri: string;
-  name: string;
-  icon: ReactElement;
+interface Props {
+  app: App;
+  session?: IWalletConnectSession;
+  canDisconnect?: boolean;
 }
 
-const Chains = {
-  fuji: {
-    chainId: 43113,
-  },
-};
-
-const SupportedApps: { [key: number]: App } = {
-  [Chains.fuji.chainId]: {
-    uri: 'https://example.walletconnect.org',
-    name: 'Wallet Connect Example',
-    icon: (
-      <img alt="todo" src="https://example.walletconnect.org/favicon.ico" />
-    ),
-  },
-};
-
-const AppConnector = () => {
-  const { chain } = useNetwork();
-  const chainId = chain?.id ?? 0;
-  const app = SupportedApps[chainId];
-  const sessions = useAppSelector((state) => {
-    return state.core.sessions;
-  });
+const AppConnector = (props: Props) => {
+  const { app, session, canDisconnect = false } = props;
+  const shouldRenderDisconnect = canDisconnect && !!session;
+  const controller = useVoyageController();
   const navigate = useNavigate();
-  const [connected] = Object.keys(sessions)
-    .map((id) => sessions[id])
-    .filter(({ peerMeta }) => {
-      return peerMeta?.url === app?.uri;
-    });
   return (
     <Card className={styles.root}>
-      {chainId === 0 ? (
-        'loading'
-      ) : (
-        <div className={styles.inner}>
-          <div className={styles.icon}>{app?.icon}</div>
-          <div className={styles.info}>
+      <div className={styles.inner}>
+        <div className={styles.icon}>
+          <img alt="todo" src={session?.peerMeta?.icons[0] ?? app.icon} />
+        </div>
+        <div className={styles.info}>
+          <div>
+            <Text color="white" size="md" className={styles.name}>
+              {session?.peerMeta?.name ?? app.name}
+            </Text>
+          </div>
+          <div className={styles.connectionInfo}>
+            <div
+              className={cn(
+                styles.statusIndicator,
+                !!session ? styles.ok : styles.bad
+              )}
+            />
             <div>
-              <Text color="white" size="md" className={styles.name}>
-                {app?.name}
+              <Text color="white" size="sm" className={styles.connectionStatus}>
+                {session ? 'Connected' : 'Not connected'}
               </Text>
             </div>
-            <div className={styles.connectionInfo}>
-              <div
-                className={cn(
-                  styles.statusIndicator,
-                  !!connected ? styles.ok : styles.bad
-                )}
-              />
-              <div>
-                <Text
-                  color="white"
-                  size="sm"
-                  className={styles.connectionStatus}
-                >
-                  {connected ? 'Connected' : 'Not connected'}
-                </Text>
-              </div>
-            </div>
           </div>
-          <div>
+        </div>
+        <div>
+          {shouldRenderDisconnect ? (
+            <Button
+              className={styles.connectButton}
+              component="button"
+              onClick={() => controller.disconnectWC(session?.peerId)}
+            >
+              Disconnect
+            </Button>
+          ) : (
             <Button
               className={styles.connectButton}
               component="button"
               onClick={() => navigate('/connect')}
-              disabled={!!connected}
+              disabled={!!session}
             >
               Connect
             </Button>
-          </div>
+          )}
         </div>
-      )}
+      </div>
     </Card>
   );
 };

@@ -19,8 +19,8 @@ const core = createSlice({
   initialState,
   reducers: {
     updateState(state, action) {
-      console.log('received state update: ', JSON.stringify(action));
-      return { ...state, ...action.payload };
+      console.log('received state update: ', action);
+      return action.payload;
     },
   },
 });
@@ -28,9 +28,12 @@ const core = createSlice({
 const { controller } = initWeb3();
 
 controller.onNotification((update: any) => {
+  console.log('[ui] store received update: ', update);
   if (update.method === 'sendUpdate') {
     store.dispatch(core.actions.updateState(update.params[0]));
   }
 });
 
-export default core.reducer;
+const { actions, reducer } = core;
+export const { updateState } = actions;
+export default reducer;

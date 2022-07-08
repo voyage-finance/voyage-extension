@@ -1,47 +1,62 @@
 import React, { useState } from 'react';
-import { Alert, Button, TextInput } from '@mantine/core';
+import { Alert, Text, TextInput } from '@mantine/core';
 import styles from './index.module.scss';
-import { connectWithWC } from '@state/modules/connect';
 import { BrowserQRCodeReader } from '@zxing/browser';
 import browser from 'webextension-polyfill';
-import { useAppDispatch, useAppSelector } from '@hooks/useRedux';
 import useVoyageController from '@hooks/useVoyageController';
-import { PeerMeta } from '../../../controller';
+import SettingsItem from '@components/SettingsItem';
+import { ReactComponent as ChevronLeft } from '@images/chevron-left-icon.svg';
+import { useNavigate } from 'react-router-dom';
+import VoyagePaper from '@components/Card';
+import Button from '@components/Button';
+import { useForm } from '@mantine/form';
+import { parseWalletConnectUri } from '@walletconnect/utils';
 
 interface Props {}
 
-interface Approval {
-  id: string;
-  peerId: string;
-  peerMeta: PeerMeta;
-}
-
 const Connect: React.FC<Props> = () => {
-  const dispatch = useAppDispatch();
-  const [wcUri, setWcUri] = useState('');
-  const [qrError, setQrError] = useState<string>();
-  const sessions = useAppSelector((state) => {
-    return state.core.sessions;
+  const form = useForm({
+    initialValues: { wcURI: '' },
+    validate: {
+      wcURI(value) {
+        const res = parseWalletConnectUri(value);
+        const isValid =
+          res.key && res.bridge && res.handshakeTopic && res.version === 1;
+        return isValid ? null : 'Invalid WC URI.';
+      },
+    },
   });
-  const [pendingSession, setPendingSession] = useState<Approval>();
+  const hasError = Object.keys(form.errors).length > 0;
+  const [creatingSession, setCreatingSession] = useState(false);
+  const handleConfirmURI = async () => {
+    const validationResult = form.validate();
+    if (validationResult.hasErrors) {
+      return;
+    }
+    const { wcURI } = form.values;
+    await handleCreateSession(wcURI);
+  };
+  const [scanningQR, setScanningQR] = useState(false);
+  const [qrError, setQrError] = useState<string>();
+  const navigate = useNavigate();
   const voyageController = useVoyageController();
   const handleCreateSession = async (uri: string) => {
-    const res = await voyageController.connectWithWC(uri);
-    setPendingSession(res);
+    try {
+      setCreatingSession(true);
+      const res = await voyageController.connectWithWC(uri);
+      setTimeout(() => {
+        navigate(`/approval/${res.id}`);
+      }, 0);
+    } catch {
+      console.error('failed to initiate session request.');
+    } finally {
+      setCreatingSession(false);
+    }
   };
-  const handleApproveSession = async (id: string) => {
-    await voyageController.approveApprovalRequest(id);
-    console.log('[ui] approved');
-    setPendingSession(undefined);
-  };
-  const handleRejectSession = async (id: string) => {
-    await voyageController.rejectApprovalRequest(id);
-    setPendingSession(undefined);
-  };
-
   const scanForQR = async () => {
     try {
       if (qrError) setQrError(undefined);
+      setScanningQR(true);
       const dataUrl = await browser.tabs.captureVisibleTab(undefined, {
         format: 'jpeg',
       });
@@ -52,24 +67,25 @@ const Connect: React.FC<Props> = () => {
     } catch (e) {
       console.error('Failed to get a QR code: ', e);
       setQrError('Could not find a QR code');
+    } finally {
+      setScanningQR(false);
     }
   };
 
   return (
     <div className={styles.root}>
-      <div>Connect your Vault to games with WalletConnect.</div>
-      {pendingSession ? (
-        <div>
-          {JSON.stringify(pendingSession, null, 4)}
-          <Button onClick={() => handleApproveSession(pendingSession.id)}>
-            Approve
-          </Button>
-          <Button onClick={() => handleRejectSession(pendingSession.id)}>
-            Reject
-          </Button>
-        </div>
-      ) : (
-        <>
+      <div className={styles.itemWrapper}>
+        <SettingsItem
+          iconLeft={<ChevronLeft />}
+          handleClick={() => navigate(-1)}
+        >
+          <Text className={styles.copy} weight={700}>
+            Back
+          </Text>
+        </SettingsItem>
+      </div>
+      <div className={styles.cardWrapper}>
+        <VoyagePaper className={styles.card}>
           {qrError && (
             <Alert
               title={qrError}
@@ -81,18 +97,51 @@ const Connect: React.FC<Props> = () => {
               manually.
             </Alert>
           )}
-          <TextInput
-            placeholder="WC URI"
-            value={wcUri}
-            onChange={(evt) => setWcUri(evt.currentTarget.value)}
-          />
-          <Button onClick={() => dispatch(connectWithWC(wcUri))}>
-            Connect with WC
+          <Text className={styles.title} size="md" color="white">
+            Option 1 <strong>| Scan WalletConnect QR code</strong>
+          </Text>
+          <Text className={styles.copy} size="sm" color="white">
+            This option will automatically locate a WC QR on your screen. Please
+            ensure the WC QR code is visible on your current tab before
+            proceeding with this option.
+          </Text>
+          <Button
+            className={styles.button}
+            loading={scanningQR || creatingSession}
+            loaderPosition="right"
+            onClick={scanForQR}
+          >
+            {scanningQR ? 'Scanning' : 'Scan QR code'}
           </Button>
-          <Button onClick={scanForQR}>Scan WC QR code</Button>
-          {JSON.stringify(sessions, null, 4)}
-        </>
-      )}
+        </VoyagePaper>
+      </div>
+      <div className={styles.cardWrapper}>
+        <VoyagePaper className={styles.card}>
+          <Text className={styles.title} size="md" color="white">
+            Option 2 <strong>| Enter WalletConnect URI</strong>
+          </Text>
+          <Text className={styles.copy} size="sm" color="white">
+            Alternatively, you may manually enter the URI to connect to the game
+            Marketplace.
+          </Text>
+          <div className={styles.inputWrapper}>
+            <TextInput
+              className={styles.input}
+              placeholder="WC URI"
+              {...form.getInputProps('wcURI')}
+            />
+          </div>
+          <Button
+            className={styles.button}
+            loading={creatingSession}
+            loaderPosition="right"
+            onClick={handleConfirmURI}
+            disabled={hasError}
+          >
+            Confirm
+          </Button>
+        </VoyagePaper>
+      </div>
     </div>
   );
 };

@@ -2,7 +2,7 @@ export interface ApprovalRequest {
   id: string;
   origin: string;
   type: string;
-  metadata: Record<string, any>;
+  metadata: any;
   onApprove: () => Promise<void>;
   onReject: () => Promise<void>;
 }
