@@ -11,14 +11,16 @@ type Props<C> = Omit<SharedButtonProps, 'size'> & {
   kind?: 'primary' | 'secondary' | 'cancel';
 } & PolymorphicComponentProps<C>;
 
-const Button = <C,>({
+type ButtonType = 'button';
+
+function Button<C = ButtonType>({
   kind,
   children,
   size,
   style,
   sx,
   ...rest
-}: PropsWithChildren<Props<C>>) => {
+}: PropsWithChildren<Props<C>>) {
   const { other } = useMantineTheme();
 
   const variant = kind === 'primary' ? 'gradient' : 'outline';
@@ -78,7 +80,7 @@ const Button = <C,>({
       {children}
     </MaintineButton>
   );
-};
+}
 
 Button.defaultProps = {
   size: 'regular',

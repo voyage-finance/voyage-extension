@@ -20,4 +20,11 @@
     line-height: 16px;
     color: #fff;
   }
+
+  .connections {
+    padding: 6px 18px;
+    &>:not(:last-child) {
+      margin-bottom: 5px;
+    }
+  }
 }

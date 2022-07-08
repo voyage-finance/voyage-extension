@@ -11,19 +11,7 @@ const Home: React.FC = () => {
   const { isConnected } = useAccount();
   const { connect, connectors } = useConnect();
 
-  const approvals = useAppSelector((state) => {
-    return state.core.pendingApprovals;
-  });
-
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (Object.keys(approvals)?.length > 0) {
-      const [approvalId] = Object.keys(approvals);
-      navigate(`/approval/${approvalId}`);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   useEffect(() => {
     if (isConnected) navigate('/home');

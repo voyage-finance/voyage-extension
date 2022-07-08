@@ -21,8 +21,7 @@ class ExtensionSessionStorage {
 
   async getSession(key: string): Promise<IWalletConnectSession | undefined> {
     const sessions = await this.getSessions();
-    const { [key]: session } = sessions;
-    return session;
+    return sessions[key];
   }
 
   async setSession(key: string, session: IWalletConnectSession) {

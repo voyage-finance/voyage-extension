@@ -12,7 +12,7 @@ import {
 import {
   createEngineStream,
   createStreamMiddleware,
-} from '@voyage-finance/json-rpc-middleware-stream';
+} from 'json-rpc-middleware-stream';
 import createMetaRPCHandler from '../rpc/virtual/server';
 import WalletConnect from '@walletconnect/client';
 import ControllerState from './state';
@@ -174,6 +174,18 @@ export class VoyageController extends SafeEventEmitter {
     );
   };
 
+  disconnectWC = async (id: string) => {
+    const connection = await this.store.getConnection(id);
+    connection.killSession();
+    // TODO: add a timeout
+    return new Promise<void>(async (resolve, reject) => {
+      connection.on('disconnect', () => {
+        console.log('handling manual disconnect');
+        resolve();
+      });
+    });
+  };
+
   getState = () => {
     return this.store.state;
   };
@@ -182,6 +194,7 @@ export class VoyageController extends SafeEventEmitter {
     return {
       getState: this.getState,
       connectWithWC: this.connectWithWC,
+      disconnectWC: this.disconnectWC,
       approveApprovalRequest: this.approveApprovalRequest,
       rejectApprovalRequest: this.rejectApprovalRequest,
     };

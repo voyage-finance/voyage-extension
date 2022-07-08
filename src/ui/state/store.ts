@@ -1,18 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 import wc from './modules/connect';
-import core from './modules/core';
+import core, { updateState } from './modules/core';
 
-export const getStore = async () => {
+export const initStore = async () => {
   const initialState = await globalThis.controller.getState();
-  return configureStore({
-    reducer: {
-      wc,
-      core,
-    },
-    preloadedState: {
-      core: initialState,
-    },
-  });
+  store.dispatch(updateState(initialState));
+  return store;
 };
 
 export const store = configureStore({

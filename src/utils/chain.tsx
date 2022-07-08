@@ -1,9 +1,14 @@
 import { Chain } from 'wagmi';
 import { ReactComponent as Avax } from '@images/logo-avax.svg';
 
+export enum ChainID {
+  Fuji = 43_113,
+  Avalanche = 43_114,
+}
+
 export const chains: Chain[] = [
   {
-    id: 43_113,
+    id: ChainID.Fuji,
     name: 'Avalanche FUJI C-Chain',
     network: 'avalanche',
     nativeCurrency: {
@@ -23,7 +28,7 @@ export const chains: Chain[] = [
     testnet: true,
   },
   {
-    id: 43_114,
+    id: ChainID.Avalanche,
     name: 'Avalanche Network',
     network: 'avalanche',
     nativeCurrency: {

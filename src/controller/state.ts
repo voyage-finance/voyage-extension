@@ -1,5 +1,5 @@
 import { ethErrors } from 'eth-rpc-errors';
-import { makeAutoObservable, runInAction } from 'mobx';
+import { makeAutoObservable, runInAction, toJS } from 'mobx';
 import { ApprovalRequest } from './types';
 import { IWalletConnectSession } from '@walletconnect/types';
 import WalletConnect from '@walletconnect/client';
@@ -40,7 +40,7 @@ class ControllerState {
 
   get state() {
     return {
-      pendingApprovals: this.pendingApprovals,
+      pendingApprovals: toJS(this.pendingApprovals),
       sessions: this.sessions,
     };
   }
@@ -54,6 +54,10 @@ class ControllerState {
     await this.sessionStorage.setSession(id, connection.session);
     this.handleDisconnect(connection);
     runInAction(() => (this.connections[id] = connection));
+  }
+
+  async getConnection(id: string) {
+    return this.connections[id];
   }
 
   private handleDisconnect = (connection: WalletConnect) => {

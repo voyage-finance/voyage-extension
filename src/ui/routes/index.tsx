@@ -12,7 +12,6 @@ import Connections from '@containers/Connections';
 
 const Router: React.FC = () => {
   const location = useLocation();
-  console.log('location: ', location);
   return (
     <div className={styles.root}>
       {location.pathname !== '/' && <MenuBar />}
@@ -26,7 +25,7 @@ const Router: React.FC = () => {
         />
         <Route path="/connect" element={<Connect />} />
         <Route path="/connections" element={<Connections />} />
-        <Route path="/approval/:requestId" element={<Approval />} />
+        <Route path="/approval/:approvalId" element={<Approval />} />
       </Routes>
     </div>
   );

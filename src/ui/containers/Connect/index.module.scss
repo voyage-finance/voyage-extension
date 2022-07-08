@@ -1,7 +1,71 @@
 .root {
   display: flex;
   flex-direction: column;
-  width: 100%;
+
+  .itemWrapper {
+    margin: 6px 0;
+    padding: 0 18px;
+
+    & > :not(:last-child) {
+      margin-bottom: 5px;
+    }
+
+    .copy {
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 16px;
+      color: #fff;
+    }
+
+  }
+
+  .cardWrapper {
+    display: flex;
+    flex-direction: column;
+    padding: 0 18px;
+    margin-bottom: 6px;
+
+    .card {
+      padding: 20px 18px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+
+      .title {
+        margin-bottom: 14px;
+      }
+
+      .copy {
+        font-weight: normal;
+        margin-bottom: 14px;
+      }
+
+      .inputWrapper {
+        width: 100%;
+
+        .input {
+          flex: 1;
+          text-align: left;
+
+          :global(.mantine-TextInput-input) {
+            height: 58px;
+            padding: 20px 24px;
+            color: #fff;
+            &::placeholder {
+              color: rgba(255, 255, 255, 0.35)
+            }
+          }
+        }
+
+        margin-bottom: 14px;
+      }
+
+      .button {
+        width: 100%;
+      }
+    }
+  }
 
   .address {
     white-space: pre;
