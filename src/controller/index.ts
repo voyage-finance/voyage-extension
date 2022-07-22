@@ -24,6 +24,9 @@ import ExtensionSessionStorage from './storage';
 import { BaseProvider } from '@voyage-finance/providers';
 import { createWcStream } from './wcStream';
 import VoyageService from './voyage';
+import { WebAuth } from 'auth0-js';
+
+const CLIENT_SECRET = '';
 
 interface WalletConnectSessionRequest {
   chainId: number | null;
@@ -43,6 +46,7 @@ export class VoyageController extends SafeEventEmitter {
   provider: BaseProvider;
   store: ControllerState;
   voyage: VoyageService;
+  auth0: WebAuth;
   private disposer: IReactionDisposer;
 
   constructor() {
@@ -57,6 +61,12 @@ export class VoyageController extends SafeEventEmitter {
       new ExtensionSessionStorage(),
       this.provider
     );
+    this.auth0 = new WebAuth({
+      domain: 'dev-tqbcqe09.us.auth0.com',
+      clientID: 'DzmlVbHqcvCOX9igHxaBI0cNqsF4pa0o',
+      responseType: 'token',
+      redirectUri: 'https://pkgdckljbklfglahipfjjpccebmiboak.chromiumapp.org/',
+    });
     this.disposer = reaction(
       () => this.store.state,
       (state) => {
@@ -195,11 +205,51 @@ export class VoyageController extends SafeEventEmitter {
     return this.store.state;
   };
 
+  startLogin = async (email: string) => {
+    console.log('logging in');
+    const res = await fetch(
+      'https://dev-tqbcqe09.us.auth0.com/passwordless/start',
+      {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          client_id: 'DzmlVbHqcvCOX9igHxaBI0cNqsF4pa0o',
+          client_secret: CLIENT_SECRET,
+          connection: 'email',
+          email,
+          send: 'code',
+        }),
+      }
+    );
+    console.log('res: ', res);
+  };
+
+  completeLogin = async (otp: string) => {
+    const res = await fetch('https://dev-tqbcqe09.us.auth0.com/oauth/token', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        grant_type: 'http://auth0.com/oauth/grant-type/passwordless/otp',
+        client_id: 'DzmlVbHqcvCOX9igHxaBI0cNqsF4pa0o',
+        client_secret: CLIENT_SECRET,
+        username: 'ian.tan@voyage.finance',
+        otp,
+        realm: 'email',
+        scope: 'openid profile email',
+      }),
+    });
+    const body = await res.json();
+    console.log('res: ', body);
+    return body;
+  };
+
   get api() {
     return {
       getState: this.getState,
       connectWithWC: this.connectWithWC,
       disconnectWC: this.disconnectWC,
+      startLogin: this.startLogin,
+      completeLogin: this.completeLogin,
       approveApprovalRequest: this.approveApprovalRequest,
       rejectApprovalRequest: this.rejectApprovalRequest,
     };

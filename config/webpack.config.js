@@ -264,6 +264,7 @@ module.exports = function (webpackEnv) {
         // This is only used in production mode
         new CssMinimizerPlugin(),
       ],
+      splitChunks: false,
     },
     resolve: {
       // This allows you to set a fallback for where webpack should look for modules.
@@ -307,6 +308,12 @@ module.exports = function (webpackEnv) {
         stream: require.resolve('stream-browserify'),
         util: require.resolve('util/'),
         string_decoder: require.resolve('string_decoder'),
+        crypto: require.resolve('crypto-browserify'),
+        assert: require.resolve('assert/'),
+        http: require.resolve('stream-http'),
+        https: require.resolve('https-browserify'),
+        os: require.resolve('os-browserify'),
+        url: require.resolve('url'),
       },
     },
     module: {
@@ -632,6 +639,7 @@ module.exports = function (webpackEnv) {
             },
           },
         }),
+      new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
       new webpack.ProvidePlugin({
         Buffer: [require.resolve('buffer/'), 'Buffer'],
         process: require.resolve('process/browser'),

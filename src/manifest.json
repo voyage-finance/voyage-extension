@@ -14,6 +14,6 @@
   }],
   "host_permissions": ["http://*/*", "https://*/*"],
   "icons": { "128": "icon.png" },
-  "permissions": ["activeTab", "storage", "scripting", "tabs"],
+  "permissions": ["activeTab", "storage", "scripting", "tabs", "identity"],
   "web_accessible_resources": [{ "resources": ["injector.bundle.js"], "matches": ["<all_urls>"] }]
 }
