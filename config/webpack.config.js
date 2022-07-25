@@ -183,7 +183,6 @@ module.exports = function (webpackEnv) {
         paths.appJs,
       ].filter(Boolean),
       background: paths.appBackground,
-      injector: paths.appInjector,
       contentScript: paths.appContentScript,
     },
     output: {
