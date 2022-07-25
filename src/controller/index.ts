@@ -26,7 +26,8 @@ import { createWcStream } from './wcStream';
 import VoyageService from './voyage';
 import { WebAuth } from 'auth0-js';
 
-const CLIENT_SECRET = '';
+const CLIENT_SECRET =
+  'Nej9H6qrJOkmeKwt0etZw9exyEEI2IAIdrRlypRulL2KntdWWPgHJwp605Mum3hc';
 
 interface WalletConnectSessionRequest {
   chainId: number | null;
@@ -79,6 +80,7 @@ export class VoyageController extends SafeEventEmitter {
   /**
    * Sets up a direct pass through stream to the MetaMask provider backend.
    * This provider is exclusively used internally by the Voyage extension (UI and background).
+   * @deprecated
    * @param stream
    */
   setupMetaMaskProviderConnection = (stream: Duplex) => {
@@ -114,10 +116,6 @@ export class VoyageController extends SafeEventEmitter {
     engine.push(this.engine.asMiddleware());
     const engineStream = createEngineStream({ engine });
     pump(stream, engineStream, stream);
-  };
-
-  setupDomEventConnection = (stream: Duplex) => {
-    this.onTabUpdate(stream);
   };
 
   connectWithWC = async (uri: string) => {
@@ -280,37 +278,6 @@ export class VoyageController extends SafeEventEmitter {
     // metamask background script pushes legacy data on this stream. ignore it.
     mux.ignoreStream('publicConfig');
     return mux.createStream('metamask-provider');
-  };
-
-  private onTabUpdate = (stream: Duplex) => {
-    const handleTabUpdated = (tabId: any, changeInfo: any, tab: any) => {
-      if (changeInfo.status === 'complete') {
-        if (tab.active) {
-          console.log('setup dom connection');
-          chrome.scripting.executeScript({
-            target: { tabId },
-            files: ['injector.bundle.js'],
-          });
-          chrome.scripting.insertCSS({
-            target: { tabId },
-            files: ['inject.css'],
-          });
-        }
-        console.log(
-          `tab has been updated: ${tabId}, ${JSON.stringify(
-            changeInfo,
-            null,
-            4
-          )}`
-        );
-        stream.write({ msg: 'changed stuff', tabId, tab });
-      }
-    };
-    browser.tabs.onUpdated.addListener(handleTabUpdated);
-    stream.on('end', () => {
-      console.log('dom stream ended');
-      browser.tabs.onUpdated.removeListener(handleTabUpdated);
-    });
   };
 
   /**

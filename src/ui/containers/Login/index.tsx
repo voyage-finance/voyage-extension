@@ -11,6 +11,7 @@ import { Web3AuthCore } from '@web3auth/core';
 import { OpenloginAdapter } from '@web3auth/openlogin-adapter';
 import TorusDirectSdk from '@toruslabs/customauth';
 import { importX509, jwtVerify } from 'jose';
+import { sendMagicLink } from '@utils/firebase';
 
 export const CHAIN_CONFIG = {
   mainnet: {
@@ -29,6 +30,7 @@ export type CHAIN_CONFIG_TYPE = keyof typeof CHAIN_CONFIG;
 const Login = () => {
   const controller = useVoyageController();
   const [isPendingOTP, setIsPendingOTP] = useState(false);
+  const [email, setEmail] = useState<string>();
   const [otp, setOtp] = useState<string>();
   const [web3Auth, setWeb3Auth] = useState<Web3AuthCore>();
   const [torus, setTorus] = useState<TorusDirectSdk>();
@@ -74,11 +76,6 @@ const Login = () => {
   console.log('otp: ', otp);
 
   const generateKeys = async (token: string) => {
-    // const res = await torus?.triggerLogin({
-    //   typeOfLogin: 'jwt',
-    //   verifier: 'voyage-auth0-testnet',
-    //   clientId: 'DzmlVbHqcvCOX9igHxaBI0cNqsF4pa0o',
-    // });
     const res = await web3Auth?.connectTo(WALLET_ADAPTERS.OPENLOGIN, {
       relogin: true,
       loginProvider: 'jwt',
@@ -89,6 +86,15 @@ const Login = () => {
       },
     });
     console.log('logged in: ', res);
+  };
+
+  const loginWithMagicLink = async () => {
+    if (!email) {
+      console.error('no email, cannot send link');
+      return;
+    }
+    await sendMagicLink(email);
+    console.log('sent magic link to email');
   };
 
   const login = async () => {
@@ -143,8 +149,13 @@ oqe+Fp9fUcRJPbhNSgrdbM4=
 
   return (
     <div>
-      <Button onClick={login}>Login Directly</Button>
-      <Button onClick={logout}>Logout Directly</Button>
+      <Input
+        onChange={(evt: ChangeEvent<HTMLInputElement>) =>
+          setEmail(evt.target.value)
+        }
+      />
+      <Button onClick={loginWithMagicLink}>Send MagicLink</Button>
+      {/*<Button onClick={logout}>Logout Directly</Button>*/}
       {!isPendingOTP ? (
         <Button onClick={startLogin}>Login</Button>
       ) : (
