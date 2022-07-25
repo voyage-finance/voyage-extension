@@ -122,7 +122,7 @@ export class ExtensionConnector extends Connector<
     const accounts: any = await provider.request({
       method: 'eth_accounts',
     });
-    return utils.getAddress(accounts[0]);
+    return accounts[0] ? utils.getAddress(accounts[0]) : '';
   }
 
   async getChainId() {

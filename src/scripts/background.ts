@@ -11,21 +11,12 @@ function bootstrapSW() {
     const mux = setupMultiplex(stream, 'bootstrap');
     const endStream = () => stream.end();
     port.onDisconnect.addListener(endStream);
-    if (port.name === 'voyage-popup') {
-      controller.setupMetaMaskProviderConnection(
-        mux.createStream('provider') as Duplex
-      );
-      controller.setupControllerConnection(
-        mux.createStream('controller') as Duplex
-      );
-    } else {
-      controller.setupVoyageProviderConnection(
-        mux.createStream('voyage-provider') as Duplex
-      );
-      controller.setupDomEventConnection(
-        mux.createStream('voyage-dom') as Duplex
-      );
-    }
+    controller.setupControllerConnection(
+      mux.createStream('controller') as Duplex
+    );
+    controller.setupMetaMaskProviderConnection(
+      mux.createStream('provider') as Duplex
+    );
   });
 }
 
