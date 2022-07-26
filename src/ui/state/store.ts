@@ -1,5 +1,4 @@
 import { configureStore } from '@reduxjs/toolkit';
-import wc from './modules/connect';
 import core, { updateState } from './modules/core';
 
 export const initStore = async () => {
@@ -10,7 +9,6 @@ export const initStore = async () => {
 
 export const store = configureStore({
   reducer: {
-    wc,
     core,
   },
   preloadedState: {},
