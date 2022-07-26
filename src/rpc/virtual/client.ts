@@ -77,7 +77,8 @@ export class MetaRPCClient {
   }
 }
 
-export type ControllerClient = PromisifyObj<VoyageController> & MetaRPCClient;
+export type ControllerClient = PromisifyObj<VoyageController['api']> &
+  MetaRPCClient;
 
 type Promisify<T> = T extends (...args: infer A) => infer R
   ? (...args: A) => R extends Promise<any> ? R : Promise<R>

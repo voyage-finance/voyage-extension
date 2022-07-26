@@ -4175,8 +4175,8 @@ __metadata:
   linkType: hard
 
 "@voyage-finance/providers@npm:^9.1.0":
-  version: 9.1.0
-  resolution: "@voyage-finance/providers@npm:9.1.0"
+  version: 9.1.1
+  resolution: "@voyage-finance/providers@npm:9.1.1"
   dependencies:
     "@metamask/object-multiplex": ^1.1.0
     "@metamask/safe-event-emitter": ^2.0.0
@@ -4190,7 +4190,7 @@ __metadata:
     json-rpc-middleware-stream: ^3.0.0
     pump: ^3.0.0
     webextension-polyfill-ts: ^0.25.0
-  checksum: 57ab1953defcda24ff5b99bd65fbb9f607a466bb1b7d24adfedf676b380371ac29fffb0dc251e3c44f8b69b678028b5635f08c6f48d5d150ae873a49e6ca3bf0
+  checksum: 0afadf98404b3f57e06c8ccf520a2dbaa97ac3b14b9f6a725862fecc8967923af6bbcf396f5f965dc0cf8bfaed7af0c2342b6fbec90ca90bf577cd0b1b24d665
   languageName: node
   linkType: hard
 

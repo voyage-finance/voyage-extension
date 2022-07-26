@@ -1,6 +1,5 @@
 import { Route, Routes, useLocation } from 'react-router-dom';
 import Connect from '@containers/Connect';
-import Link from '@containers/Link';
 import styles from './index.module.scss';
 import Approval from '@containers/Approval';
 import Home from '@containers/Home';
@@ -14,10 +13,9 @@ const Router: React.FC = () => {
   const location = useLocation();
   return (
     <div className={styles.root}>
-      {location.pathname !== '/' && <MenuBar />}
+      {location.pathname !== '/login' && <MenuBar />}
       <Routes>
-        <Route path="/" element={<Link />} />
-        <Route path="/home" element={<Home />} />
+        <Route path="/" element={<Home />} />
         <Route path="/settings" element={<Settings />} />
         <Route
           path="/settings/network"

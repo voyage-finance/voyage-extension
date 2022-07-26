@@ -1,4 +1,4 @@
-# Overview
+## Overview
 
 This repository contains the code for the Voyage core web extension. For details, refer to the [RFC](https://www.notion.so/RFC-003-Voyage-Extension-v1-3cb5e310977442e08d1f3f0ea137207f).
 
@@ -37,3 +37,15 @@ Builds the app for production to the `build` folder.\
 It correctly bundles React in production mode and optimizes the build for the best performance.
 
 The build is minified and the filenames include the hashes.\
+
+## Architecture
+
+![architecture](docs/architecture.svg)
+
+Voyage Extension has a few major components:
+* UI -- React code that powers the popup and tab views. Communicates with background using `PortStream` + `ObjectMultiplex`
+* Background -- houses `VoyageController`, the central API for both UI and `contentscript`
+* ContentScript -- enables the extension to manipulate the DOM. Communicates with backgound using `PortStream` + `ObjectMultiplex`
+
+### Voyage Controller
+
