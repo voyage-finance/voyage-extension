@@ -59,7 +59,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/react-redux", "npm:7.1.24"],\
             ["@types/readable-stream", "npm:2.3.13"],\
             ["@types/webextension-polyfill", "npm:0.8.3"],\
-            ["@voyage-finance/providers", "npm:9.1.0"],\
+            ["@voyage-finance/providers", "npm:9.1.1"],\
             ["@voyage-finance/webpack-ext-reloader", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:1.2.0"],\
             ["@wagmi/core", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:0.4.4"],\
             ["@walletconnect/client", "npm:1.7.7"],\
@@ -6317,10 +6317,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@voyage-finance/providers", [\
-        ["npm:9.1.0", {\
-          "packageLocation": "./.yarn/cache/@voyage-finance-providers-npm-9.1.0-a8132cb47e-57ab1953de.zip/node_modules/@voyage-finance/providers/",\
+        ["npm:9.1.1", {\
+          "packageLocation": "./.yarn/cache/@voyage-finance-providers-npm-9.1.1-53e3d0e4e4-0afadf9840.zip/node_modules/@voyage-finance/providers/",\
           "packageDependencies": [\
-            ["@voyage-finance/providers", "npm:9.1.0"],\
+            ["@voyage-finance/providers", "npm:9.1.1"],\
             ["@metamask/object-multiplex", "npm:1.2.0"],\
             ["@metamask/safe-event-emitter", "npm:2.0.0"],\
             ["@types/chrome", "npm:0.0.136"],\
@@ -21517,7 +21517,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/react-redux", "npm:7.1.24"],\
             ["@types/readable-stream", "npm:2.3.13"],\
             ["@types/webextension-polyfill", "npm:0.8.3"],\
-            ["@voyage-finance/providers", "npm:9.1.0"],\
+            ["@voyage-finance/providers", "npm:9.1.1"],\
             ["@voyage-finance/webpack-ext-reloader", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:1.2.0"],\
             ["@wagmi/core", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:0.4.4"],\
             ["@walletconnect/client", "npm:1.7.7"],\

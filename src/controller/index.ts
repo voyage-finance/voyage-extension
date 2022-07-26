@@ -1,7 +1,5 @@
 import { Duplex } from 'stream';
-import browser from 'webextension-polyfill';
-import PortStream from 'extension-port-stream';
-import { getMetaMaskExtensionId, setupMultiplex } from '../utils';
+import { ethers } from 'ethers';
 import pump from 'pump';
 import {
   createAsyncMiddleware,
@@ -9,21 +7,17 @@ import {
   JsonRpcEngine,
   JsonRpcRequest,
 } from 'json-rpc-engine';
-import {
-  createEngineStream,
-  createStreamMiddleware,
-} from 'json-rpc-middleware-stream';
+import { createEngineStream } from 'json-rpc-middleware-stream';
 import createMetaRPCHandler from '../rpc/virtual/server';
 import WalletConnect from '@walletconnect/client';
-import ControllerState from './state';
+import { ControllerStore } from './store';
 import { IReactionDisposer, reaction, toJS } from 'mobx';
 import SafeEventEmitter from '@metamask/safe-event-emitter';
 import { nanoid } from 'nanoid';
 import { openNotificationWindow } from '@utils/extension';
-import ExtensionSessionStorage from './storage';
-import { BaseProvider } from '@voyage-finance/providers';
 import { createWcStream } from './wcStream';
-import VoyageService from './voyage';
+import { Network } from './types';
+import { createProviderMiddleware } from './rpc';
 
 interface WalletConnectSessionRequest {
   chainId: number | null;
@@ -39,24 +33,19 @@ export interface PeerMeta {
 }
 
 export class VoyageController extends SafeEventEmitter {
+  provider: ethers.providers.JsonRpcProvider;
   engine: JsonRpcEngine;
-  provider: BaseProvider;
-  store: ControllerState;
-  voyage: VoyageService;
+  store: ControllerStore;
   private disposer: IReactionDisposer;
 
   constructor() {
     super();
-    console.log('background script started');
+    this.provider = new ethers.providers.AlchemyProvider(
+      Network.Rinkeby,
+      '2rkHcv3Pdg7j3iHPWUu9cDsEOtSoXtoB'
+    );
     this.engine = this.createRpcEngine();
-    this.provider = new BaseProvider(
-      createEngineStream({ engine: this.engine }) as Duplex
-    );
-    this.voyage = new VoyageService(this.provider);
-    this.store = new ControllerState(
-      new ExtensionSessionStorage(),
-      this.provider
-    );
+    this.store = new ControllerStore(this.provider);
     this.disposer = reaction(
       () => this.store.state,
       (state) => {
@@ -65,16 +54,6 @@ export class VoyageController extends SafeEventEmitter {
       }
     );
   }
-
-  /**
-   * Sets up a direct pass through stream to the MetaMask provider backend.
-   * This provider is exclusively used internally by the Voyage extension (UI and background).
-   * @param stream
-   */
-  setupMetaMaskProviderConnection = (stream: Duplex) => {
-    const engineStream = createEngineStream({ engine: this.engine });
-    pump(stream, engineStream, stream);
-  };
 
   setupControllerConnection = (stream: Duplex) => {
     stream.on('data', createMetaRPCHandler(this.api, stream));
@@ -97,18 +76,25 @@ export class VoyageController extends SafeEventEmitter {
    * @param stream - duplex stream to pipe to the underlying provider
    */
   setupVoyageProviderConnection = (stream: Duplex) => {
-    // connect the voyage provider stream to the rpc engine
-    const engine = new JsonRpcEngine();
-    // intercept and handle some methods
-    engine.push(this.createVoyageMiddleware());
-    engine.push(this.engine.asMiddleware());
-    const engineStream = createEngineStream({ engine });
+    const engineStream = createEngineStream({ engine: this.engine });
     pump(stream, engineStream, stream);
   };
 
-  setupDomEventConnection = (stream: Duplex) => {
-    this.onTabUpdate(stream);
+  getState = () => {
+    return this.store.state;
   };
+
+  get api() {
+    return {
+      getState: this.getState,
+      connectWithWC: this.connectWithWC,
+      disconnectWC: this.disconnectWC,
+      approveWalletConnectSession:
+        this.store.walletConnectStore.approveConnectionRequest,
+      rejectWalletConnectionSession:
+        this.store.walletConnectStore.rejectConnectionRequest,
+    };
+  }
 
   connectWithWC = async (uri: string) => {
     const connector = new WalletConnect({
@@ -138,15 +124,15 @@ export class VoyageController extends SafeEventEmitter {
             try {
               const [req] = payload.params!;
               const id = nanoid();
-              this.store.add({
+              this.store.walletConnectStore.addConnectionRequest({
                 id,
                 origin: req.peerMeta.url,
                 type: 'wc',
                 metadata: req.peerMeta,
                 onApprove: async () => {
-                  const chain = this.provider.chainId;
-                  console.log('chain id: ', chain);
-                  const vault = await this.voyage.getVault();
+                  const { chainId } = await this.provider.getNetwork();
+                  console.log('chain id: ', chainId);
+                  const vault = await this.store.voyageStore.getVault();
                   console.log('vault: ', vault);
                   if (!vault) {
                     connector.rejectSession(
@@ -155,12 +141,15 @@ export class VoyageController extends SafeEventEmitter {
                     return;
                   }
                   connector.approveSession({
-                    chainId: parseInt(chain!, 16),
+                    chainId: chainId,
                     accounts: [vault!],
                   });
                   const wcStream = createWcStream(connector);
                   this.setupVoyageProviderConnection(wcStream as Duplex);
-                  await this.store.addConnection(req.peerId, connector);
+                  await this.store.walletConnectStore.addConnection(
+                    req.peerId,
+                    connector
+                  );
                 },
                 onReject: async () => {
                   connector.rejectSession(
@@ -180,7 +169,7 @@ export class VoyageController extends SafeEventEmitter {
   };
 
   disconnectWC = async (id: string) => {
-    const connection = await this.store.getConnection(id);
+    const connection = await this.store.walletConnectStore.getConnection(id);
     connection.killSession();
     // TODO: add a timeout
     return new Promise<void>(async (resolve, reject) => {
@@ -191,94 +180,32 @@ export class VoyageController extends SafeEventEmitter {
     });
   };
 
-  getState = () => {
-    return this.store.state;
-  };
-
-  get api() {
-    return {
-      getState: this.getState,
-      connectWithWC: this.connectWithWC,
-      disconnectWC: this.disconnectWC,
-      approveApprovalRequest: this.approveApprovalRequest,
-      rejectApprovalRequest: this.rejectApprovalRequest,
-    };
-  }
-
-  approveApprovalRequest = async (id: string) => {
-    console.log('approving id: ', id);
-    await this.store.approve(id);
-  };
-
-  rejectApprovalRequest = (id: string) => {
-    this.store.reject(id);
-  };
-
   private sendUpdate = (state: unknown) => {
     this.emit('update', toJS(state));
   };
 
   /**
-   * Create a raw duplex stream to the MetaMask extension provider
-   */
-  private createMetaMaskConnection = () => {
-    const currentMetaMaskId = getMetaMaskExtensionId();
-    const metaMaskPort = browser.runtime.connect(currentMetaMaskId);
-    const metaMaskStream = new PortStream(metaMaskPort) as unknown as Duplex;
-    // the multiplexer is a necessity, as the metamask provider only listens on the 'metamask-provider' substream
-    const mux = setupMultiplex(metaMaskStream);
-    // metamask background script pushes legacy data on this stream. ignore it.
-    mux.ignoreStream('publicConfig');
-    return mux.createStream('metamask-provider');
-  };
-
-  private onTabUpdate = (stream: Duplex) => {
-    const handleTabUpdated = (tabId: any, changeInfo: any, tab: any) => {
-      if (changeInfo.status === 'complete') {
-        if (tab.active) {
-          console.log('setup dom connection');
-          chrome.scripting.executeScript({
-            target: { tabId },
-            files: ['injector.bundle.js'],
-          });
-          chrome.scripting.insertCSS({
-            target: { tabId },
-            files: ['inject.css'],
-          });
-        }
-        console.log(
-          `tab has been updated: ${tabId}, ${JSON.stringify(
-            changeInfo,
-            null,
-            4
-          )}`
-        );
-        stream.write({ msg: 'changed stuff', tabId, tab });
-      }
-    };
-    browser.tabs.onUpdated.addListener(handleTabUpdated);
-    stream.on('end', () => {
-      console.log('dom stream ended');
-      browser.tabs.onUpdated.removeListener(handleTabUpdated);
-    });
-  };
-
-  /**
-   * Creates a JSON-RPC engine interface to the raw MetaMask provider connection
+   * Creates a JSON-RPC engine interface to the user's Vault
    */
   private createRpcEngine = () => {
-    const metaMaskStream = this.createMetaMaskConnection();
-    const metaMaskMiddleware = createStreamMiddleware();
-    pump(
-      metaMaskMiddleware.stream,
-      metaMaskStream,
-      metaMaskMiddleware.stream,
-      () => console.log('disconnected from metamask provider')
-    );
     const engine = new JsonRpcEngine();
     engine.push(createIdRemapMiddleware());
-    engine.push(metaMaskMiddleware.middleware);
+    engine.push(this.createVoyageMiddleware());
+    engine.push(createProviderMiddleware(this.provider));
     return engine;
+  };
+
+  private createVoyageMiddleware = () => {
+    return createAsyncMiddleware(async (req, res, next) => {
+      console.log('voyage processing rpc request: ', req);
+      if (req.method === 'eth_accounts') {
+        res.result = ['0x7bB17c9401110D05ec39894334cC9d7721E90688'];
+        return;
+      }
+
+      await next();
+      console.log('metamask handled the request: ', req);
+    });
   };
 
   private openNotificationWindow = () =>
@@ -290,17 +217,4 @@ export class VoyageController extends SafeEventEmitter {
       left: 0,
       top: 0,
     });
-
-  private createVoyageMiddleware = () => {
-    return createAsyncMiddleware(async (req, res, next) => {
-      console.log('voyage processing rpc request: ', req);
-      if (req.method === 'eth_requestAccounts') {
-        res.result = ['0x12345'];
-        return;
-      }
-
-      await next();
-      console.log('metamask handled the request: ', req);
-    });
-  };
 }

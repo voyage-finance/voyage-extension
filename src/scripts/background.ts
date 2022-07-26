@@ -14,7 +14,7 @@ function bootstrapSW() {
     controller.setupControllerConnection(
       mux.createStream('controller') as Duplex
     );
-    controller.setupMetaMaskProviderConnection(
+    controller.setupVoyageProviderConnection(
       mux.createStream('provider') as Duplex
     );
   });

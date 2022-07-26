@@ -28,7 +28,7 @@ function WalletConnectApproval() {
   const handleApproveSession = async (id: string) => {
     try {
       setLoading(true);
-      await voyageController.approveApprovalRequest(id);
+      await voyageController.approveWalletConnectSession(id);
       navigate('/home');
     } catch {
       console.error('failed to approve');
@@ -39,7 +39,7 @@ function WalletConnectApproval() {
   const handleRejectSession = async (id: string) => {
     try {
       setLoading(true);
-      await voyageController.rejectApprovalRequest(id);
+      await voyageController.rejectWalletConnectionSession(id);
     } catch {
       console.error('failed to reject');
     } finally {
