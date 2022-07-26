@@ -2,7 +2,6 @@ import { Duplex } from 'stream';
 import { ethers } from 'ethers';
 import pump from 'pump';
 import {
-  createAsyncMiddleware,
   createIdRemapMiddleware,
   JsonRpcEngine,
   JsonRpcRequest,
@@ -17,7 +16,8 @@ import { nanoid } from 'nanoid';
 import { openNotificationWindow } from '@utils/extension';
 import { createWcStream } from './wcStream';
 import { Network } from './types';
-import { createProviderMiddleware } from './rpc';
+import { createProviderMiddleware, createVoyageMiddleware } from './rpc';
+import VoyageRpcService from './rpc/service';
 
 interface WalletConnectSessionRequest {
   chainId: number | null;
@@ -34,6 +34,7 @@ export interface PeerMeta {
 
 export class VoyageController extends SafeEventEmitter {
   provider: ethers.providers.JsonRpcProvider;
+  service: VoyageRpcService;
   engine: JsonRpcEngine;
   store: ControllerStore;
   private disposer: IReactionDisposer;
@@ -44,8 +45,9 @@ export class VoyageController extends SafeEventEmitter {
       Network.Rinkeby,
       '2rkHcv3Pdg7j3iHPWUu9cDsEOtSoXtoB'
     );
-    this.engine = this.createRpcEngine();
     this.store = new ControllerStore(this.provider);
+    this.service = new VoyageRpcService(this.store);
+    this.engine = this.createRpcEngine();
     this.disposer = reaction(
       () => this.store.state,
       (state) => {
@@ -190,22 +192,9 @@ export class VoyageController extends SafeEventEmitter {
   private createRpcEngine = () => {
     const engine = new JsonRpcEngine();
     engine.push(createIdRemapMiddleware());
-    engine.push(this.createVoyageMiddleware());
+    engine.push(createVoyageMiddleware(this.service));
     engine.push(createProviderMiddleware(this.provider));
     return engine;
-  };
-
-  private createVoyageMiddleware = () => {
-    return createAsyncMiddleware(async (req, res, next) => {
-      console.log('voyage processing rpc request: ', req);
-      if (req.method === 'eth_accounts') {
-        res.result = ['0x7bB17c9401110D05ec39894334cC9d7721E90688'];
-        return;
-      }
-
-      await next();
-      console.log('metamask handled the request: ', req);
-    });
   };
 
   private openNotificationWindow = () =>
