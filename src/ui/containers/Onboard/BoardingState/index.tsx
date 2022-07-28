@@ -15,12 +15,6 @@ const BoardingState: React.FC = () => {
     >
       <Group direction="column" align={'center'} spacing={0}>
         <LogoLoadingSvg />
-        {/* <Image
-          src={LogoLoadingSvg.src}
-          alt="Voyage logo"
-          height={94}
-          width={87}
-        /> */}
         <Text sx={{ fontSize: 24 }} mt={36} weight={'bold'} type="gradient">
           Boarding...
         </Text>

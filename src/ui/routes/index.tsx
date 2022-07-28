@@ -14,6 +14,7 @@ import cn from 'classnames';
 import BoardingState from '@containers/Onboard/BoardingState';
 import CheckEmailStep from '@containers/Onboard/CheckEmail';
 import { useAppSelector } from '@hooks/useRedux';
+import Onboard from '@containers/Onboard';
 
 const Router: React.FC = () => {
   const location = useLocation();
@@ -28,11 +29,10 @@ const Router: React.FC = () => {
   useEffect(() => {
     console.log('[isLoggingIn, isLoggedIn]', isLoggingIn, isLoggedIn);
     if (isLoggingIn) {
-      console.log('isLoggingIn => nagivate');
       navigate('/onboard/checkemail');
     } else {
       if (!isLoggedIn) {
-        navigate('/onboard/signin');
+        navigate('/onboard/login');
       } else {
         navigate('/onboard/boarding');
       }
@@ -52,10 +52,11 @@ const Router: React.FC = () => {
         <Route path="/connect" element={<Connect />} />
         <Route path="/connections" element={<Connections />} />
         <Route path="/approval/:approvalId" element={<Approval />} />
-
-        <Route path="/onboard/signin" element={<EnterEmailStep />} />
-        <Route path="/onboard/boarding" element={<BoardingState />} />
-        <Route path="/onboard/checkemail" element={<CheckEmailStep />} />
+        <Route path="/onboard/" element={<Onboard />}>
+          <Route path="login" element={<EnterEmailStep />} />
+          <Route path="boarding" element={<BoardingState />} />
+          <Route path="checkemail" element={<CheckEmailStep />} />
+        </Route>
       </Routes>
     </div>
   );
