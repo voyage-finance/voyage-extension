@@ -7,11 +7,15 @@ import { IWalletConnectSession } from '@walletconnect/types';
 interface CoreState {
   pendingApprovals: Record<string, ApprovalRequest>;
   sessions: Record<string, IWalletConnectSession>;
+  isLoggedIn: boolean;
+  isLoggingIn: boolean;
 }
 
 const initialState: CoreState = {
   pendingApprovals: {},
   sessions: {},
+  isLoggedIn: false,
+  isLoggingIn: false,
 };
 
 const core = createSlice({

@@ -23,6 +23,7 @@ class ControllerStore {
   get state() {
     return {
       ...this.walletConnectStore.state,
+      ...this.keyStore.state,
     };
   }
 }
