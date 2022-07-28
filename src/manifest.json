@@ -4,7 +4,6 @@
   "version": "0.1",
   "manifest_version": 3,
   "action": {
-    "default_popup": "popup.html",
     "default_icon": "icon.png"
   },
   "background": { "service_worker": "background.bundle.js" },
@@ -15,5 +14,6 @@
   "host_permissions": ["http://*/*", "https://*/*"],
   "icons": { "128": "icon.png" },
   "permissions": ["activeTab", "storage", "scripting", "tabs"],
-  "web_accessible_resources": [{ "resources": ["injector.bundle.js"], "matches": ["<all_urls>"] }]
+  "web_accessible_resources": [{ "resources": ["injector.bundle.js"], "matches": ["<all_urls>"] }],
+  "externally_connectable": { "matches": ["*://localhost/*"] }
 }

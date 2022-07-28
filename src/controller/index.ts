@@ -18,6 +18,11 @@ import { createWcStream } from './wcStream';
 import { Network } from './types';
 import { createProviderMiddleware, createVoyageMiddleware } from './rpc';
 import VoyageRpcService from './rpc/service';
+import { auth, encodeRedirectUri } from '@utils/auth';
+import { sendSignInLinkToEmail } from 'firebase/auth';
+import { runtime } from 'webextension-polyfill';
+
+const VOYAGE_WEB_URL = 'http://localhost:8080';
 
 interface WalletConnectSessionRequest {
   chainId: number | null;
@@ -82,6 +87,17 @@ export class VoyageController extends SafeEventEmitter {
     pump(stream, engineStream, stream);
   };
 
+  init() {
+    runtime.onMessageExternal.addListener((msg, params) => {
+      console.log('--- onMessageExternal ---', msg, params);
+      if (params.url?.startsWith(VOYAGE_WEB_URL)) {
+        if (msg.action === 'auth_success') {
+          this.store.keyStore.finishLogin(msg.idToken);
+        }
+      }
+    });
+  }
+
   getState = () => {
     return this.store.state;
   };
@@ -91,6 +107,7 @@ export class VoyageController extends SafeEventEmitter {
       getState: this.getState,
       connectWithWC: this.connectWithWC,
       disconnectWC: this.disconnectWC,
+      sendMagicLinkToEmail: this.sendMagicLinkToEmail,
       approveWalletConnectSession:
         this.store.walletConnectStore.approveConnectionRequest,
       rejectWalletConnectionSession:
@@ -180,6 +197,15 @@ export class VoyageController extends SafeEventEmitter {
         resolve();
       });
     });
+  };
+
+  sendMagicLinkToEmail = async (email: string, fingerPrint: string) => {
+    // const _encodedRedirectUri = encodeRedirectUri(email, fingerPrint);
+    await sendSignInLinkToEmail(auth, email, {
+      url: 'http://localhost:3000/auth?return_ui=encodedEmailAndFingerprint',
+      handleCodeInApp: true,
+    });
+    this.store.keyStore.startLogin(email);
   };
 
   private sendUpdate = (state: unknown) => {

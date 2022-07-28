@@ -2,8 +2,6 @@ import Input from '@components/Input';
 import { Group } from '@mantine/core';
 import * as React from 'react';
 import { useState } from 'react';
-import { auth } from 'utils/firestore';
-import { sendSignInLinkToEmail } from 'firebase/auth';
 import { useForm, yupResolver } from '@mantine/form';
 import { ReactComponent as Voyage } from '@images/logo-menu.svg';
 
@@ -11,16 +9,14 @@ import * as Yup from 'yup';
 import Text from '@components/Text';
 import Button from '@components/Button';
 import Card from '@components/Card';
-
-const actionCodeSettings = {
-  // TODO: make host address based on environment
-  url: 'http://localhost:3000/auth',
-  handleCodeInApp: true,
-};
+import useVoyageController from '@hooks/useVoyageController';
+import { useNavigate } from 'react-router-dom';
 
 const EnterEmailStep: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const controller = useVoyageController();
+
   const form = useForm({
     initialValues: {
       email: '',
@@ -34,7 +30,8 @@ const EnterEmailStep: React.FC = () => {
 
   const onFormSubmit = () => {
     setIsLoading(true);
-    sendSignInLinkToEmail(auth, form.values.email, actionCodeSettings)
+    controller
+      .sendMagicLinkToEmail(form.values.email, 'abcdef')
       .catch((error) => {
         setError(error.message);
       })

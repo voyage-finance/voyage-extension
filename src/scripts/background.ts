@@ -6,6 +6,7 @@ import { setupMultiplex } from '../utils';
 
 function bootstrapSW() {
   const controller = new VoyageController();
+  controller.init();
   browser.runtime.onConnect.addListener((port) => {
     const stream = new PortStream(port as Runtime.Port) as unknown as Duplex;
     const mux = setupMultiplex(stream, 'bootstrap');
@@ -17,7 +18,21 @@ function bootstrapSW() {
     controller.setupVoyageProviderConnection(
       mux.createStream('provider') as Duplex
     );
+    // browser.action.onClicked.addListener(() => {
+    //   browser.tabs.create({ url: 'popup.html' });
+    // });
   });
 }
 
+function checkForSignIn() {
+  console.log('------- checkForSignIn -------');
+  // check if user signup
+  // if (browser.action && browser.action.onClicked)
+  browser.action.onClicked.addListener(() => {
+    browser.tabs.create({ url: 'popup.html' });
+  });
+  // browser.action.setPopup({ popup: 'popup.html' });
+}
+
+checkForSignIn();
 bootstrapSW();

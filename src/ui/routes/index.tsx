@@ -13,6 +13,7 @@ import { useEffect } from 'react';
 import cn from 'classnames';
 import BoardingState from '@containers/Onboard/BoardingState';
 import CheckEmailStep from '@containers/Onboard/CheckEmail';
+import { useAppSelector } from '@hooks/useRedux';
 
 const Router: React.FC = () => {
   const location = useLocation();
@@ -21,9 +22,22 @@ const Router: React.FC = () => {
   const isOnboardingFlow = location.pathname.startsWith('/onboard');
   const needToShowMenubar = location.pathname !== '/' && !isOnboardingFlow;
 
+  const isLoggingIn = useAppSelector((state) => state.core.isLoggingIn);
+  const isLoggedIn = useAppSelector((state) => state.core.isLoggedIn);
+
   useEffect(() => {
-    navigate('/onboard/signin');
-  }, []);
+    console.log('[isLoggingIn, isLoggedIn]', isLoggingIn, isLoggedIn);
+    if (isLoggingIn) {
+      console.log('isLoggingIn => nagivate');
+      navigate('/onboard/checkemail');
+    } else {
+      if (!isLoggedIn) {
+        navigate('/onboard/signin');
+      } else {
+        navigate('/onboard/boarding');
+      }
+    }
+  }, [isLoggingIn, isLoggedIn]);
 
   return (
     <div className={cn(styles.root, isOnboardingFlow && styles.tabView)}>
