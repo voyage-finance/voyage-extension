@@ -4,9 +4,9 @@ import { Duplex } from 'stream';
 import { VoyageController } from '../controller';
 import { setupMultiplex } from '../utils';
 
-function bootstrapSW() {
+async function bootstrapSW() {
   const controller = new VoyageController();
-  controller.init();
+  await controller.init();
   browser.runtime.onConnect.addListener((port) => {
     const stream = new PortStream(port as Runtime.Port) as unknown as Duplex;
     const mux = setupMultiplex(stream, 'bootstrap');
