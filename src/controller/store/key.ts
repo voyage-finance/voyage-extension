@@ -8,19 +8,21 @@ interface KeyPair {
   privKey: string;
 }
 
+export interface PendingLogin {
+  email: string;
+  fingerprint: string;
+}
+
 class KeyStore {
   root: ControllerStore;
-  isLoggingIn: boolean;
+  pendingLogin?: PendingLogin;
   isLoggedIn: boolean;
-  email: string;
   keyPair?: KeyPair;
 
   constructor(root: ControllerStore) {
     this.root = root;
     this.keyPair = undefined;
-    this.isLoggingIn = false;
     this.isLoggedIn = false;
-    this.email = '';
     makeAutoObservable(this, { root: false });
   }
 
@@ -39,7 +41,7 @@ class KeyStore {
   get state() {
     return {
       keyPair: this.keyPair,
-      isLoggingIn: this.isLoggingIn,
+      pendingLogin: this.pendingLogin,
       isLoggedIn: this.isLoggedIn,
     };
   }
@@ -52,15 +54,18 @@ class KeyStore {
     return this.keyPair;
   }
 
-  startLogin(email: string) {
-    this.isLoggingIn = true;
-    this.email = email;
+  startLogin(email: string, fingerprint: string) {
+    // TODO generate fingerprint here
+    this.pendingLogin = {
+      email,
+      fingerprint,
+    };
   }
 
   finishLogin(idToken: string) {
     // TODO: destructure idToken into private and public key
     this.setKeyPair(idToken, idToken);
-    this.isLoggingIn = false;
+    this.pendingLogin = undefined;
     this.isLoggedIn = true;
   }
 }

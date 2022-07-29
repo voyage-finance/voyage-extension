@@ -3,19 +3,19 @@ import { store } from '../store';
 import { initWeb3 } from '@web3/init';
 import { ApprovalRequest } from '../../../controller/types';
 import { IWalletConnectSession } from '@walletconnect/types';
+import { PendingLogin } from 'controller/store/key';
 
 interface CoreState {
   pendingApprovals: Record<string, ApprovalRequest>;
   sessions: Record<string, IWalletConnectSession>;
   isLoggedIn: boolean;
-  isLoggingIn: boolean;
+  pendingLogin?: PendingLogin;
 }
 
 const initialState: CoreState = {
   pendingApprovals: {},
   sessions: {},
   isLoggedIn: false,
-  isLoggingIn: false,
 };
 
 const core = createSlice({

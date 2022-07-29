@@ -5,7 +5,9 @@ import { ReactComponent as Voyage } from '@images/logo-menu.svg';
 const Onboard: React.FC = () => {
   return (
     <Group direction="column" position="apart">
-      <Outlet />
+      <Box sx={{ zIndex: 1 }}>
+        <Outlet />
+      </Box>
       <Box
         sx={{
           position: 'absolute',

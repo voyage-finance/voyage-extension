@@ -199,13 +199,15 @@ export class VoyageController extends SafeEventEmitter {
     });
   };
 
-  sendMagicLinkToEmail = async (email: string, fingerPrint: string) => {
-    // const _encodedRedirectUri = encodeRedirectUri(email, fingerPrint);
+  sendMagicLinkToEmail = async (email: string) => {
+    // TODO: generate fingerprint
+    const generatedFingerPrint = '😇😭😤😇';
+    const _encodedRedirectUri = encodeRedirectUri(email, generatedFingerPrint);
     await sendSignInLinkToEmail(auth, email, {
-      url: 'http://localhost:3000/auth?return_ui=encodedEmailAndFingerprint',
+      url: `http://localhost:8080/onboard?encoded=${_encodedRedirectUri}`,
       handleCodeInApp: true,
     });
-    this.store.keyStore.startLogin(email);
+    this.store.keyStore.startLogin(email, generatedFingerPrint);
   };
 
   private sendUpdate = (state: unknown) => {
