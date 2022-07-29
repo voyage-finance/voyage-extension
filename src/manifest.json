@@ -15,5 +15,5 @@
   "icons": { "128": "icon.png" },
   "permissions": ["activeTab", "storage", "scripting", "tabs"],
   "web_accessible_resources": [{ "resources": ["injector.bundle.js"], "matches": ["<all_urls>"] }],
-  "externally_connectable": { "matches": ["*://localhost/*"] }
+  "externally_connectable": { "matches": ["*://localhost/*", "*://voyage.finance/*"] }
 }
