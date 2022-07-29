@@ -3,8 +3,11 @@ import { Box, Group } from '@mantine/core';
 import Card from '@components/Card';
 import Text from '@components/Text';
 import { ReactComponent as EnvelopeSvg } from 'assets/img/envelope.svg';
+import { useAppSelector } from '@hooks/useRedux';
 
 const CheckEmailStep: React.FC = () => {
+  const pendingLogin = useAppSelector((state) => state.core.pendingLogin);
+
   return (
     <Card
       style={{
@@ -20,7 +23,7 @@ const CheckEmailStep: React.FC = () => {
         </Text>
         <Text mt={17}>Click on the magic link we’ve sent to</Text>
         <Text mt={35} type="gradient">
-          supermanbatmanspiderman@gmail.com
+          {pendingLogin?.email}
         </Text>
         <Text weight={'bold'} mt={37}>
           Your Session Emojis
@@ -30,11 +33,9 @@ const CheckEmailStep: React.FC = () => {
           in your mail line up with these guys below:
         </Text>
         <Group spacing={10} mt={32} sx={{ fontSize: 25 }}>
-          <Box>😀</Box>
-          <Box>😇</Box>
-          <Box>😭</Box>
-          <Box>😤</Box>
-          <Box>👦🏻</Box>
+          {[...(pendingLogin?.fingerprint || '')].map((emoji, index) => (
+            <Box key={index}>{emoji}</Box>
+          ))}
         </Group>
       </Group>
     </Card>

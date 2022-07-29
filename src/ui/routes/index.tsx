@@ -23,12 +23,12 @@ const Router: React.FC = () => {
   const isOnboardingFlow = location.pathname.startsWith('/onboard');
   const needToShowMenubar = location.pathname !== '/' && !isOnboardingFlow;
 
-  const isLoggingIn = useAppSelector((state) => state.core.isLoggingIn);
+  const pendingLogin = useAppSelector((state) => state.core.pendingLogin);
   const isLoggedIn = useAppSelector((state) => state.core.isLoggedIn);
 
   useEffect(() => {
-    console.log('[isLoggingIn, isLoggedIn]', isLoggingIn, isLoggedIn);
-    if (isLoggingIn) {
+    console.log('[pendingLogin, isLoggedIn]', pendingLogin, isLoggedIn);
+    if (pendingLogin) {
       navigate('/onboard/checkemail');
     } else {
       if (!isLoggedIn) {
@@ -37,7 +37,7 @@ const Router: React.FC = () => {
         navigate('/onboard/boarding');
       }
     }
-  }, [isLoggingIn, isLoggedIn]);
+  }, [pendingLogin, isLoggedIn]);
 
   return (
     <div className={cn(styles.root, isOnboardingFlow && styles.tabView)}>

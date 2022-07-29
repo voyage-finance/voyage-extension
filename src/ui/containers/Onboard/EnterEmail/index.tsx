@@ -31,7 +31,7 @@ const EnterEmailStep: React.FC = () => {
   const onFormSubmit = () => {
     setIsLoading(true);
     controller
-      .sendMagicLinkToEmail(form.values.email, 'abcdef')
+      .sendMagicLinkToEmail(form.values.email)
       .catch((error) => {
         setError(error.message);
       })

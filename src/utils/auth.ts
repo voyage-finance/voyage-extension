@@ -4,12 +4,9 @@ import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 
-export const encodeRedirectUri = (
-  email: string,
-  sessionFingerprint: string
-) => {
+export const encodeRedirectUri = (email: string, fingerprint: string) => {
   // TODO: temporary
-  return base64.encode(JSON.stringify({ email, sessionFingerprint }));
+  return JSON.stringify({ email, fingerprint });
 };
 
 // Initialize Firebase
