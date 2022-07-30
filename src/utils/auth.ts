@@ -1,12 +1,12 @@
 // Import the functions you need from the SDKs you need
-import { base64 } from 'ethers/lib/utils';
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 
 export const encodeRedirectUri = (email: string, fingerprint: string) => {
-  // TODO: temporary
-  return JSON.stringify({ email, fingerprint });
+  return btoa(
+    unescape(encodeURIComponent(JSON.stringify({ email, fingerprint })))
+  );
 };
 
 // Initialize Firebase
