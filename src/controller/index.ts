@@ -21,7 +21,7 @@ import VoyageRpcService from './rpc/service';
 import { auth, encodeRedirectUri } from '@utils/auth';
 import { sendSignInLinkToEmail } from 'firebase/auth';
 import { runtime } from 'webextension-polyfill';
-import { emojiEncodeAddress } from '@utils/address';
+import { createRandomFingerprint } from '@utils/random';
 
 const VOYAGE_WEB_URL = 'http://localhost:8080';
 
@@ -201,8 +201,7 @@ export class VoyageController extends SafeEventEmitter {
   };
 
   sendMagicLinkToEmail = async (email: string) => {
-    // TODO: generate fingerprint
-    const generatedFingerPrint = emojiEncodeAddress();
+    const generatedFingerPrint = createRandomFingerprint();
     const encodedRedirectUri = encodeRedirectUri(email, generatedFingerPrint);
 
     await sendSignInLinkToEmail(auth, email, {

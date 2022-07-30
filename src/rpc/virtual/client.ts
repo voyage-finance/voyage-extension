@@ -1,7 +1,7 @@
 import { EthereumRpcError } from 'eth-rpc-errors';
 import SafeEventEmitter from '@metamask/safe-event-emitter';
 import { Duplex } from 'stream';
-import createRandomId from '../../utils/random-id';
+import createRandomId from '../../utils/random';
 import { VoyageController } from '../../controller';
 
 export class MetaRPCClient {
