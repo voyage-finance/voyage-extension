@@ -20,8 +20,8 @@ import { createProviderMiddleware, createVoyageMiddleware } from './rpc';
 import VoyageRpcService from './rpc/service';
 import { auth, encodeRedirectUri } from '@utils/auth';
 import { sendSignInLinkToEmail } from 'firebase/auth';
-import { runtime } from 'webextension-polyfill';
 import { createRandomFingerprint } from '@utils/random';
+import { registerMessageListeners } from './runtimeMessage';
 
 const VOYAGE_WEB_URL = 'http://localhost:8080';
 
@@ -89,14 +89,7 @@ export class VoyageController extends SafeEventEmitter {
   };
 
   init() {
-    runtime.onMessageExternal.addListener((msg, params) => {
-      console.log('--- onMessageExternal ---', msg, params);
-      if (params.url?.startsWith(VOYAGE_WEB_URL)) {
-        if (msg.action === 'auth_success') {
-          this.store.keyStore.finishLogin(msg.idToken);
-        }
-      }
-    });
+    registerMessageListeners(this);
   }
 
   getState = () => {

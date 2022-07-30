@@ -17,3 +17,13 @@ export interface ApprovalRequest {
   onApprove: () => Promise<void>;
   onReject: () => Promise<void>;
 }
+
+export enum MessageAction {
+  AUTH_SUCCESS = 'auth_success',
+  GET_FINGERPRINT = 'get_fingerprint',
+}
+
+export interface RuntimeMessage {
+  action: MessageAction;
+  params: any;
+}
