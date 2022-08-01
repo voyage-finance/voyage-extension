@@ -1,7 +1,7 @@
 import { VoyageController } from 'controller';
 import { toJS } from 'mobx';
 import { runtime } from 'webextension-polyfill';
-import { MessageAction, RuntimeMessage } from './types';
+import { MessageAction, RuntimeMessage, UserInfo } from './types';
 
 const VOYAGE_WEB_URL = 'http://localhost:8080';
 
@@ -12,7 +12,8 @@ export const registerMessageListeners = (controller: VoyageController) => {
     if (params.url?.startsWith(VOYAGE_WEB_URL)) {
       switch (msg.action) {
         case MessageAction.AUTH_SUCCESS:
-          controller.store.keyStore.finishLogin(msg.params.jwt);
+          const session: UserInfo = msg.params;
+          controller.store.keyStore.finishLogin(session);
           break;
         case MessageAction.GET_FINGERPRINT:
           const pendingLogin = toJS(controller.getState().pendingLogin);
