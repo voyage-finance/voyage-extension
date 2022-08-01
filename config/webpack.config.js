@@ -306,6 +306,12 @@ module.exports = function (webpackEnv) {
         stream: require.resolve('stream-browserify'),
         util: require.resolve('util/'),
         string_decoder: require.resolve('string_decoder'),
+        crypto: false,
+        assert: false,
+        url: false,
+        os: false,
+        https: false,
+        http: false
       },
     },
     module: {

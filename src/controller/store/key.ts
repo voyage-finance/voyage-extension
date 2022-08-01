@@ -2,6 +2,8 @@ import ControllerStore from './root';
 import { Account } from '../types';
 import { ethers } from 'ethers';
 import { makeAutoObservable } from 'mobx';
+import ThresholdKey from '@tkey/core';
+import TorusServiceProvider from '@tkey/service-provider-torus';
 
 interface KeyPair {
   pubKey: string;
@@ -18,12 +20,18 @@ class KeyStore {
   pendingLogin?: PendingLogin;
   isLoggedIn: boolean;
   keyPair?: KeyPair;
+  tKey: ThresholdKey;
 
   constructor(root: ControllerStore) {
     this.root = root;
     this.keyPair = undefined;
     this.isLoggedIn = false;
     makeAutoObservable(this, { root: false });
+
+    const serviceProvider = new TorusServiceProvider({
+      customAuthArgs: { baseUrl: `http://localhost:8080/` },
+    });
+    this.tKey = new ThresholdKey({ serviceProvider });
   }
 
   // TODO: stubbed for now.
@@ -62,11 +70,25 @@ class KeyStore {
     };
   }
 
-  finishLogin(idToken: string) {
+  async finishLogin(idToken: string) {
     // TODO: destructure idToken into private and public key
     this.setKeyPair(idToken, idToken);
     this.pendingLogin = undefined;
     this.isLoggedIn = true;
+
+    await this.tKey.initialize();
+    const torusResponse = await (
+      this.tKey.serviceProvider as TorusServiceProvider
+    ).triggerLogin({
+      typeOfLogin: 'jwt',
+      verifier: 'voyage-finance-firebase-testnet',
+      clientId:
+        'BDK2U8pm2MUgfDlx2dufjuUl2YuyNMPfrPG1ehwvqC9KAqt1dmZajsiIVCRW1nQiu9zHr7MKXNQ0V9sTMpkUnzM',
+      queryParameters: {
+        id_token: idToken,
+      },
+    });
+    console.log('torusResponse', torusResponse);
   }
 }
 
