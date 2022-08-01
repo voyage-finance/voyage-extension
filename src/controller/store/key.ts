@@ -3,6 +3,7 @@ import { Account, KeyStoreStage, UserInfo } from '../types';
 import { ethers } from 'ethers';
 import { makeAutoObservable } from 'mobx';
 import Customauth from '@toruslabs/customauth';
+import { storage } from 'webextension-polyfill';
 
 interface KeyPair {
   pubKey: string;
@@ -63,6 +64,11 @@ class KeyStore {
     return this.keyPair;
   }
 
+  setUserInfo(user: UserInfo): void {
+    this.currentUser = user;
+    storage.local.set({ access_token: user.accessToken, id_token: user.jwt });
+  }
+
   startLogin(email: string, fingerprint: string) {
     // TODO generate fingerprint here
     this.pendingLogin = {
@@ -86,7 +92,7 @@ class KeyStore {
     );
     console.log('torusResponse', torusResponse);
     this.setKeyPair(torusResponse.publicAddress, torusResponse.privateKey);
-    this.currentUser = currentUser;
+    this.setUserInfo(currentUser);
     this.stage = KeyStoreStage.Initialized;
   }
 }
