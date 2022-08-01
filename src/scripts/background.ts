@@ -3,6 +3,7 @@ import browser, { Runtime } from 'webextension-polyfill';
 import { Duplex } from 'stream';
 import { VoyageController } from '../controller';
 import { setupMultiplex } from '../utils';
+import { KeyStoreStage } from 'controller/types';
 
 async function bootstrapSW() {
   const controller = new VoyageController();
@@ -21,7 +22,7 @@ async function bootstrapSW() {
   });
 
   browser.action.onClicked.addListener(() => {
-    if (controller.getState().isLoggedIn) {
+    if (controller.getState().stage === KeyStoreStage.Initialized) {
       browser.action.setPopup({ popup: 'popup.html' });
     } else {
       browser.tabs.create({ url: 'popup.html' });

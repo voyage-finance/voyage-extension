@@ -1,9 +1,8 @@
 import ControllerStore from './root';
-import { Account } from '../types';
+import { Account, KeyStoreStage, UserInfo } from '../types';
 import { ethers } from 'ethers';
 import { makeAutoObservable } from 'mobx';
-import ThresholdKey from '@tkey/core';
-import TorusServiceProvider from '@tkey/service-provider-torus';
+import Customauth from '@toruslabs/customauth';
 
 interface KeyPair {
   pubKey: string;
@@ -18,20 +17,21 @@ export interface PendingLogin {
 class KeyStore {
   root: ControllerStore;
   pendingLogin?: PendingLogin;
-  isLoggedIn: boolean;
   keyPair?: KeyPair;
-  tKey: ThresholdKey;
+  stage: KeyStoreStage;
+  torusSdk: Customauth;
+  currentUser?: UserInfo;
 
   constructor(root: ControllerStore) {
     this.root = root;
     this.keyPair = undefined;
-    this.isLoggedIn = false;
-    makeAutoObservable(this, { root: false });
-
-    const serviceProvider = new TorusServiceProvider({
-      customAuthArgs: { baseUrl: `http://localhost:8080/` },
+    this.stage = KeyStoreStage.Uninitialized;
+    this.torusSdk = new Customauth({
+      // TODO: use dynamic param
+      baseUrl: `http://localhost:8080/`,
+      network: 'testnet',
     });
-    this.tKey = new ThresholdKey({ serviceProvider });
+    makeAutoObservable(this, { root: false });
   }
 
   // TODO: stubbed for now.
@@ -50,7 +50,8 @@ class KeyStore {
     return {
       keyPair: this.keyPair,
       pendingLogin: this.pendingLogin,
-      isLoggedIn: this.isLoggedIn,
+      currentUser: this.currentUser,
+      stage: this.stage,
     };
   }
 
@@ -68,27 +69,25 @@ class KeyStore {
       email,
       fingerprint,
     };
+    this.stage = KeyStoreStage.WaitingConfirm;
   }
 
-  async finishLogin(idToken: string) {
-    // TODO: destructure idToken into private and public key
-    this.setKeyPair(idToken, idToken);
+  async finishLogin(currentUser: UserInfo) {
+    this.stage = KeyStoreStage.Initializing;
     this.pendingLogin = undefined;
-    this.isLoggedIn = true;
 
-    await this.tKey.initialize();
-    const torusResponse = await (
-      this.tKey.serviceProvider as TorusServiceProvider
-    ).triggerLogin({
-      typeOfLogin: 'jwt',
-      verifier: 'voyage-finance-firebase-testnet',
-      clientId:
-        'BDK2U8pm2MUgfDlx2dufjuUl2YuyNMPfrPG1ehwvqC9KAqt1dmZajsiIVCRW1nQiu9zHr7MKXNQ0V9sTMpkUnzM',
-      queryParameters: {
-        id_token: idToken,
+    const torusResponse = await this.torusSdk.getTorusKey(
+      'voyage-finance-firebase-testnet',
+      currentUser.uid,
+      {
+        verifier_id: currentUser.uid,
       },
-    });
+      currentUser.jwt
+    );
     console.log('torusResponse', torusResponse);
+    this.setKeyPair(torusResponse.publicAddress, torusResponse.privateKey);
+    this.currentUser = currentUser;
+    this.stage = KeyStoreStage.Initialized;
   }
 }
 

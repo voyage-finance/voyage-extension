@@ -15,6 +15,7 @@ import BoardingState from '@containers/Onboard/BoardingState';
 import CheckEmailStep from '@containers/Onboard/CheckEmail';
 import { useAppSelector } from '@hooks/useRedux';
 import Onboard from '@containers/Onboard';
+import { KeyStoreStage } from 'controller/types';
 
 const Router: React.FC = () => {
   const location = useLocation();
@@ -23,21 +24,25 @@ const Router: React.FC = () => {
   const isOnboardingFlow = location.pathname.startsWith('/onboard');
   const needToShowMenubar = location.pathname !== '/' && !isOnboardingFlow;
 
-  const pendingLogin = useAppSelector((state) => state.core.pendingLogin);
-  const isLoggedIn = useAppSelector((state) => state.core.isLoggedIn);
+  const stage = useAppSelector((state) => state.core.stage);
 
   useEffect(() => {
-    console.log('[pendingLogin, isLoggedIn]', pendingLogin, isLoggedIn);
-    if (pendingLogin) {
-      navigate('/onboard/checkemail');
-    } else {
-      if (!isLoggedIn) {
-        navigate('/onboard/login');
-      } else {
+    console.log('[stage]', stage);
+    switch (stage) {
+      case KeyStoreStage.WaitingConfirm:
+        navigate('/onboard/checkemail');
+        break;
+      case KeyStoreStage.Initializing:
         navigate('/onboard/boarding');
-      }
+        break;
+      case KeyStoreStage.Uninitialized:
+        navigate('/onboard/login');
+        break;
+      case KeyStoreStage.Initialized:
+        navigate('/');
+        break;
     }
-  }, [pendingLogin, isLoggedIn]);
+  }, [stage]);
 
   return (
     <div className={cn(styles.root, isOnboardingFlow && styles.tabView)}>
