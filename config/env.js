@@ -72,6 +72,7 @@ function getClientEnvironment(publicUrl) {
         // Useful for determining whether we’re running in production mode.
         // Most importantly, it switches React into the correct mode.
         NODE_ENV: process.env.NODE_ENV || 'development',
+        NETWORK_ENV: process.env.NETWORK_ENV || 'RINKEBY',
         // Useful for resolving the correct path to static assets in `public`.
         // For example, <img src={process.env.PUBLIC_URL + '/img/logo.png'} />.
         // This should only be used as an escape hatch. Normally you would put
@@ -88,6 +89,17 @@ function getClientEnvironment(publicUrl) {
         // Whether or not react-refresh is enabled.
         // It is defined here so it is available in the webpackHotDevClient.
         FAST_REFRESH: process.env.FAST_REFRESH !== 'false',
+        RINKEBY_API_KEY: process.env.RINKEBY_API_KEY,
+        MAINNET_API_KEY: process.env.MAINNET_API_KEY,
+        VOYAGE_ADDRESS: process.env.VOYAGE_ADDRESS,
+
+        FIREBASE_API_KEY: process.env.FIREBASE_API_KEY,
+        FIREBASE_AUTH_DOMAIN: process.env.FIREBASE_AUTH_DOMAIN,
+        FIREBASE_PROJECT_ID: process.env.FIREBASE_PROJECT_ID,
+        FIREBASE_STORAGE_BUCKET: process.env.FIREBASE_STORAGE_BUCKET,
+        FIREBASE_MESSAGAING_SENDER_ID: process.env.FIREBASE_MESSAGAING_SENDER_ID,
+        FIREBASE_APP_ID: process.env.FIREBASE_APP_ID,
+        FIREBASE_MEASUREMENT_ID: process.env.FIREBASE_MEASUREMENT_ID
       }
     );
   // Stringify all values so we can feed into webpack DefinePlugin

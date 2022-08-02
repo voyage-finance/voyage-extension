@@ -3,6 +3,8 @@ import VoyageStore from './voyage';
 import { ethers } from 'ethers';
 import KeyStore from './key';
 
+const DEFAULT_VOYAGE_ADDRESS = '0xf8e1932cdedf2D8b4cbA0Ece5D79BD4ad5033DfC';
+
 class ControllerStore {
   provider: ethers.providers.Provider;
   walletConnectStore: WalletConnectStore;
@@ -14,8 +16,7 @@ class ControllerStore {
     this.walletConnectStore = new WalletConnectStore(this);
     this.voyageStore = new VoyageStore(
       this,
-      // TODO: this should be retrieved from a remote server, or, at least, passed in via configuration.
-      '0xf8e1932cdedf2D8b4cbA0Ece5D79BD4ad5033DfC'
+      process.env.VOYAGE_ADDRESS || DEFAULT_VOYAGE_ADDRESS
     );
     this.keyStore = new KeyStore(this);
   }

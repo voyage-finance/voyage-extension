@@ -47,10 +47,15 @@ export class VoyageController extends SafeEventEmitter {
 
   constructor() {
     super();
-    this.provider = new ethers.providers.AlchemyProvider(
-      Network.Rinkeby,
-      '2rkHcv3Pdg7j3iHPWUu9cDsEOtSoXtoB'
-    );
+    const network =
+      process.env.NETWORK_ENV === 'MAINNET' ? Network.Mainnet : Network.Rinkeby;
+
+    const apiKey =
+      process.env.NETWORK_ENV === 'MAINNET'
+        ? process.env.MAINNET_API_KEY
+        : process.env.RINKEBY_API_KEY;
+
+    this.provider = new ethers.providers.AlchemyProvider(network, apiKey);
     this.store = new ControllerStore(this.provider);
     this.service = new VoyageRpcService(this.store);
     this.engine = this.createRpcEngine();
