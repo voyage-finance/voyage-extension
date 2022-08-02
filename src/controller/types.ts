@@ -1,6 +1,6 @@
 export enum Network {
   Mainnet = 'homestead',
-  Rinkeby = 'rinkeby',
+  Goerli = 'goerli',
 }
 
 export interface Account {

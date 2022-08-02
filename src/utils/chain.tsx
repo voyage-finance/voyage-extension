@@ -3,7 +3,6 @@ import { ReactComponent as Avax } from '@images/logo-avax.svg';
 
 export enum ChainID {
   Mainnet = 1,
-  Rinkeby = 4,
   Goerli = 5,
 }
 

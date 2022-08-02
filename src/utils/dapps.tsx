@@ -8,11 +8,6 @@ export interface App {
 }
 
 export const SupportedApps: { [key: number]: App } = {
-  [ChainID.Rinkeby]: {
-    uri: 'https://example.walletconnect.org',
-    name: 'Wallet Connect Example',
-    icon: 'https://example.walletconnect.org/favicon.ico',
-  },
   [ChainID.Goerli]: {
     uri: 'https://example.walletconnect.org',
     name: 'Wallet Connect Example',
