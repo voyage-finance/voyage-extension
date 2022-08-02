@@ -48,12 +48,12 @@ export class VoyageController extends SafeEventEmitter {
   constructor() {
     super();
     const network =
-      process.env.NETWORK_ENV === 'MAINNET' ? Network.Mainnet : Network.Rinkeby;
+      process.env.NETWORK_ENV === 'MAINNET' ? Network.Mainnet : Network.Goerli;
 
     const apiKey =
       process.env.NETWORK_ENV === 'MAINNET'
         ? process.env.MAINNET_API_KEY
-        : process.env.RINKEBY_API_KEY;
+        : process.env.GOERLI_API_KEY;
 
     this.provider = new ethers.providers.AlchemyProvider(network, apiKey);
     this.store = new ControllerStore(this.provider);
