@@ -10,7 +10,6 @@ import Text from '@components/Text';
 import Button from '@components/Button';
 import Card from '@components/Card';
 import useVoyageController from '@hooks/useVoyageController';
-import { useNavigate } from 'react-router-dom';
 
 const EnterEmailStep: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);

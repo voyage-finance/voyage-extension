@@ -16,6 +16,7 @@ import CheckEmailStep from '@containers/Onboard/CheckEmail';
 import { useAppSelector } from '@hooks/useRedux';
 import Onboard from '@containers/Onboard';
 import { KeyStoreStage } from 'controller/types';
+import SignTermsStep from '@containers/Onboard/SignTermsState';
 
 const Router: React.FC = () => {
   const location = useLocation();
@@ -25,6 +26,7 @@ const Router: React.FC = () => {
   const needToShowMenubar = location.pathname !== '/' && !isOnboardingFlow;
 
   const stage = useAppSelector((state) => state.core.stage);
+  const isTermsSigned = useAppSelector((state) => state.core.isTermsSigned);
 
   useEffect(() => {
     console.log('[stage]', stage);
@@ -39,10 +41,11 @@ const Router: React.FC = () => {
         navigate('/onboard/login');
         break;
       case KeyStoreStage.Initialized:
-        navigate('/');
+        if (isTermsSigned) navigate('/');
+        else navigate('/onboard/terms');
         break;
     }
-  }, [stage]);
+  }, [stage, isTermsSigned]);
 
   return (
     <div className={cn(styles.root, isOnboardingFlow && styles.tabView)}>
@@ -61,6 +64,7 @@ const Router: React.FC = () => {
           <Route path="login" element={<EnterEmailStep />} />
           <Route path="boarding" element={<BoardingState />} />
           <Route path="checkemail" element={<CheckEmailStep />} />
+          <Route path="terms" element={<SignTermsStep />} />
         </Route>
       </Routes>
     </div>

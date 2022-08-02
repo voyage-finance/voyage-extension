@@ -22,11 +22,13 @@ class KeyStore {
   stage: KeyStoreStage;
   torusSdk: Customauth;
   currentUser?: UserInfo;
+  isTermSigned: boolean;
 
   constructor(root: ControllerStore) {
     this.root = root;
     this.keyPair = undefined;
     this.stage = KeyStoreStage.Uninitialized;
+    this.isTermSigned = false;
     this.torusSdk = new Customauth({
       // TODO: use dynamic param
       baseUrl: `http://localhost:8080/`,
@@ -53,6 +55,7 @@ class KeyStore {
       pendingLogin: this.pendingLogin,
       currentUser: this.currentUser,
       stage: this.stage,
+      isTermSigned: this.isTermSigned,
     };
   }
 
@@ -62,6 +65,10 @@ class KeyStore {
 
   getKeyPair(): KeyPair | undefined {
     return this.keyPair;
+  }
+
+  setTermsSigned(): void {
+    this.isTermSigned = true;
   }
 
   setUserInfo(user: UserInfo): void {
