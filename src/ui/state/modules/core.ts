@@ -15,12 +15,14 @@ interface CoreState {
   pendingLogin?: PendingLogin;
   stage: KeyStoreStage;
   currentUser?: UserInfo;
+  isTermsSigned: boolean;
 }
 
 const initialState: CoreState = {
   pendingApprovals: {},
   sessions: {},
   stage: KeyStoreStage.Uninitialized,
+  isTermsSigned: false,
 };
 
 const core = createSlice({
@@ -29,7 +31,7 @@ const core = createSlice({
   reducers: {
     updateState(state, action) {
       console.log('received state update: ', action);
-      return action.payload;
+      return { ...state, ...action.payload };
     },
   },
 });
@@ -44,5 +46,5 @@ controller.onNotification((update: any) => {
 });
 
 const { actions, reducer } = core;
-export const { updateState } = actions;
+export const { updateState, setTermsSigned } = actions;
 export default reducer;

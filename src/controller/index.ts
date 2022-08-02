@@ -107,6 +107,7 @@ export class VoyageController extends SafeEventEmitter {
       connectWithWC: this.connectWithWC,
       disconnectWC: this.disconnectWC,
       sendMagicLinkToEmail: this.sendMagicLinkToEmail,
+      setTermsAgreed: this.setTermsAgreed,
       approveWalletConnectSession:
         this.store.walletConnectStore.approveConnectionRequest,
       rejectWalletConnectionSession:
@@ -207,6 +208,10 @@ export class VoyageController extends SafeEventEmitter {
       handleCodeInApp: true,
     });
     this.store.keyStore.startLogin(email, generatedFingerPrint);
+  };
+
+  setTermsAgreed = () => {
+    this.store.keyStore.setTermsSigned();
   };
 
   private sendUpdate = (state: unknown) => {
