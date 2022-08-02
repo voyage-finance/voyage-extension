@@ -10,15 +10,14 @@ export const encodeRedirectUri = (email: string, fingerprint: string) => {
 };
 
 // Initialize Firebase
-// TODO: move keys in .env file
 const firebaseConfig = {
-  apiKey: 'AIzaSyABpOcsIRxfQgftb9MDADME2HGLlTcYwJY',
-  authDomain: 'voyage-protocol.firebaseapp.com',
-  projectId: 'voyage-protocol',
-  storageBucket: 'voyage-protocol.appspot.com',
-  messagingSenderId: '590897144911',
-  appId: '1:590897144911:web:f0d2442b29e23f9ac0f63a',
-  measurementId: 'G-82BKGD1FTE',
+  apiKey: process.env.FIREBASE_API_KEY,
+  authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.FIREBASE_PROJECT_ID,
+  storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.FIREBASE_MESSAGAING_SENDER_ID,
+  appId: process.env.FIREBASE_APP_ID,
+  measurementId: process.env.FIREBASE_MEASUREMENT_ID,
 };
 
 const app = initializeApp(firebaseConfig);
