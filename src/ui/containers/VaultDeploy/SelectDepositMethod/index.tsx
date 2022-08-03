@@ -1,8 +1,8 @@
 import Card from '@components/Card';
 import Text from '@components/Text';
-import { Box, Group, useMantineTheme } from '@mantine/core';
+import { Box, Group } from '@mantine/core';
 import * as React from 'react';
-import { ReactComponent as EthSvg } from 'assets/img/eth.svg';
+import { ReactComponent as EthSvg } from 'assets/img/eth-icon.svg';
 import Button from '@components/Button';
 
 const SelectDepositMethod: React.FC = () => {
@@ -53,7 +53,6 @@ const InfoCard: React.FC<{ onClick: () => void }> = ({ onClick }) => {
 };
 
 const MethodsCard = () => {
-  const { other } = useMantineTheme();
   return (
     <Card
       style={{
