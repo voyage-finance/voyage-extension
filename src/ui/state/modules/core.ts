@@ -46,5 +46,5 @@ controller.onNotification((update: any) => {
 });
 
 const { actions, reducer } = core;
-export const { updateState, setTermsSigned } = actions;
+export const { updateState } = actions;
 export default reducer;
