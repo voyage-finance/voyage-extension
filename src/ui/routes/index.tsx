@@ -17,6 +17,7 @@ import { useAppSelector } from '@hooks/useRedux';
 import Onboard from '@containers/Onboard';
 import { KeyStoreStage } from 'controller/types';
 import SignTermsStep from '@containers/Onboard/SignTermsState';
+import SelectDepositMethod from '@containers/VaultDeploy/SelectDepositMethod';
 
 const Router: React.FC = () => {
   const location = useLocation();
@@ -30,6 +31,7 @@ const Router: React.FC = () => {
 
   useEffect(() => {
     console.log('[stage]', stage);
+    // navigate('/vault/deposit/method');
     switch (stage) {
       case KeyStoreStage.WaitingConfirm:
         navigate('/onboard/checkemail');
@@ -65,6 +67,9 @@ const Router: React.FC = () => {
           <Route path="boarding" element={<BoardingState />} />
           <Route path="checkemail" element={<CheckEmailStep />} />
           <Route path="terms" element={<SignTermsStep />} />
+        </Route>
+        <Route path="/vault/" element={<Onboard />}>
+          <Route path="deposit/method" element={<SelectDepositMethod />} />
         </Route>
       </Routes>
     </div>
