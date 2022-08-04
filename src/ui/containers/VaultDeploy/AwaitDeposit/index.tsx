@@ -7,10 +7,23 @@ import { ReactComponent as EthSvg } from 'assets/img/eth-icon.svg';
 import { ReactComponent as DangerSvg } from 'assets/img/danger-icon.svg';
 import { ReactComponent as CheckSvg } from 'assets/img/circle-check-icon.svg';
 import Button from '@components/Button';
+import { keccak256, toUtf8Bytes } from 'ethers/lib/utils';
+import browser from 'webextension-polyfill';
 
 const AwaitDeposit: React.FC = () => {
   const [deposited] = React.useState(false);
   const address = '0x4C616d9377Fa8d928385F0b11Ab16D4bf0f2d544';
+
+  const copyAddress = async () => {
+    await navigator.clipboard.writeText(address);
+    browser.notifications.create({
+      type: 'basic',
+      iconUrl: 'icon.png',
+      title: 'Address copied',
+      message: 'Address was copied to your clipboard',
+    });
+  };
+
   return (
     <Card
       style={{
@@ -43,7 +56,7 @@ const AwaitDeposit: React.FC = () => {
           px={25}
         >
           <Text type="gradient">{address}</Text>
-          <Box sx={{ cursor: 'pointer' }}>
+          <Box sx={{ cursor: 'pointer' }} onClick={copyAddress}>
             <CopySvg />
           </Box>
         </Group>
