@@ -7,12 +7,14 @@ import { ReactComponent as EthSvg } from 'assets/img/eth-icon.svg';
 import { ReactComponent as DangerSvg } from 'assets/img/danger-icon.svg';
 import { ReactComponent as CheckSvg } from 'assets/img/circle-check-icon.svg';
 import Button from '@components/Button';
-import { keccak256, toUtf8Bytes } from 'ethers/lib/utils';
 import browser from 'webextension-polyfill';
+import useVoyageController from '@hooks/useVoyageController';
 
 const AwaitDeposit: React.FC = () => {
+  const controller = useVoyageController();
+  const [isLoading, setIsLoading] = React.useState(false);
   const [deposited] = React.useState(false);
-  const address = '0x4C616d9377Fa8d928385F0b11Ab16D4bf0f2d544';
+  const [address, setAddress] = React.useState('');
 
   const copyAddress = async () => {
     await navigator.clipboard.writeText(address);
@@ -23,6 +25,18 @@ const AwaitDeposit: React.FC = () => {
       message: 'Address was copied to your clipboard',
     });
   };
+
+  const fetchVaultAddress = async () => {
+    setIsLoading(true);
+    const address = await controller.computeCounterfactualAddress();
+    setAddress(address || '');
+    console.log('address', address);
+    setIsLoading(false);
+  };
+
+  React.useEffect(() => {
+    fetchVaultAddress();
+  }, []);
 
   return (
     <Card
@@ -55,10 +69,12 @@ const AwaitDeposit: React.FC = () => {
           py={17}
           px={25}
         >
-          <Text type="gradient">{address}</Text>
-          <Box sx={{ cursor: 'pointer' }} onClick={copyAddress}>
-            <CopySvg />
-          </Box>
+          <Text type="gradient">{isLoading ? 'Loading...' : address}</Text>
+          {address && (
+            <Box sx={{ cursor: 'pointer' }} onClick={copyAddress}>
+              <CopySvg />
+            </Box>
+          )}
         </Group>
         <Group direction="column" mt={23} align="center" spacing={0}>
           <Text>Minimum ETH Required</Text>

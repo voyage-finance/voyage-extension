@@ -18,19 +18,22 @@ import Onboard from '@containers/Onboard';
 import { KeyStoreStage } from 'controller/types';
 import SignTermsStep from '@containers/Onboard/SignTermsState';
 import SelectDepositMethod from '@containers/VaultDeploy/SelectDepositMethod';
+import AwaitDeposit from '@containers/VaultDeploy/AwaitDeposit';
 
 const Router: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const isOnboardingFlow = location.pathname.startsWith('/onboard');
+  const isOnboardingFlow =
+    location.pathname.startsWith('/onboard') ||
+    location.pathname.startsWith('/vault/deposit');
   const needToShowMenubar = location.pathname !== '/' && !isOnboardingFlow;
 
   const stage = useAppSelector((state) => state.core.stage);
   const isTermsSigned = useAppSelector((state) => state.core.isTermsSigned);
 
   useEffect(() => {
-    console.log('[stage]', stage);
+    console.log('[stage, isTermsSigned]', stage, isTermsSigned);
     // navigate('/vault/deposit/method');
     switch (stage) {
       case KeyStoreStage.WaitingConfirm:
@@ -43,8 +46,9 @@ const Router: React.FC = () => {
         navigate('/onboard/login');
         break;
       case KeyStoreStage.Initialized:
-        if (isTermsSigned) navigate('/');
-        else navigate('/onboard/terms');
+        if (isTermsSigned) {
+          navigate('/vault/deposit/method');
+        } else navigate('/onboard/terms');
         break;
     }
   }, [stage, isTermsSigned]);
@@ -70,6 +74,7 @@ const Router: React.FC = () => {
         </Route>
         <Route path="/vault/" element={<Onboard />}>
           <Route path="deposit/method" element={<SelectDepositMethod />} />
+          <Route path="deposit/await" element={<AwaitDeposit />} />
         </Route>
       </Routes>
     </div>

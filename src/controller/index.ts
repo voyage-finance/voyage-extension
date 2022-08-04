@@ -108,6 +108,7 @@ export class VoyageController extends SafeEventEmitter {
       disconnectWC: this.disconnectWC,
       sendMagicLinkToEmail: this.sendMagicLinkToEmail,
       setTermsAgreed: this.setTermsAgreed,
+      computeCounterfactualAddress: this.computeCounterfactualAddress,
       approveWalletConnectSession:
         this.store.walletConnectStore.approveConnectionRequest,
       rejectWalletConnectionSession:
@@ -212,6 +213,10 @@ export class VoyageController extends SafeEventEmitter {
 
   setTermsAgreed = () => {
     this.store.keyStore.setTermsSigned();
+  };
+
+  computeCounterfactualAddress = () => {
+    return this.store.voyageStore.computeCounterfactualAddress();
   };
 
   private sendUpdate = (state: unknown) => {

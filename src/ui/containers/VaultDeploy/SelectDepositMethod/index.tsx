@@ -4,9 +4,10 @@ import { Box, Group } from '@mantine/core';
 import * as React from 'react';
 import { ReactComponent as EthSvg } from 'assets/img/eth-icon.svg';
 import Button from '@components/Button';
+import { useNavigate } from 'react-router-dom';
 
 const SelectDepositMethod: React.FC = () => {
-  const [isInfoCardShown, setIsInfoCardShown] = React.useState(false);
+  const [isInfoCardShown, setIsInfoCardShown] = React.useState(true);
   return isInfoCardShown ? (
     <InfoCard onClick={() => setIsInfoCardShown(false)} />
   ) : (
@@ -53,6 +54,12 @@ const InfoCard: React.FC<{ onClick: () => void }> = ({ onClick }) => {
 };
 
 const MethodsCard = () => {
+  const navigate = useNavigate();
+
+  const onDepositClick = async () => {
+    navigate('/vault/deposit/await');
+  };
+
   return (
     <Card
       style={{
@@ -91,7 +98,7 @@ const MethodsCard = () => {
           If you’ve already got ETH, this is the quickest way to fund your
           Voyage Wallet.
         </Text>
-        <Button mt={23} sx={{ width: 300 }}>
+        <Button mt={23} sx={{ width: 300 }} onClick={onDepositClick}>
           Deposit ETH
         </Button>
         <Text mt={33} sx={{ fontSize: 24 }}>

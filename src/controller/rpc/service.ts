@@ -11,8 +11,8 @@ class VoyageRpcService {
   }
 
   handleEthAccounts = async () => {
-    const { address } = await this.store.keyStore.getAccount();
-    return [address];
+    const { address } = (await this.store.keyStore.getAccount()) || {};
+    return address ? [address] : [];
   };
 }
 
