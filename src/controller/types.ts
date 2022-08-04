@@ -7,6 +7,7 @@ export interface Account {
   privateKey: string;
   publicKey: string;
   address: string;
+  email: string;
 }
 
 export interface ApprovalRequest {

@@ -22,13 +22,14 @@ class KeyStore {
   stage: KeyStoreStage;
   torusSdk: Customauth;
   currentUser?: UserInfo;
-  isTermSigned: boolean;
+  isTermsSigned: boolean;
+  account?: Account;
 
   constructor(root: ControllerStore) {
     this.root = root;
     this.keyPair = undefined;
     this.stage = KeyStoreStage.Uninitialized;
-    this.isTermSigned = false;
+    this.isTermsSigned = false;
     this.torusSdk = new Customauth({
       // TODO: use dynamic param
       baseUrl: `http://localhost:8080/`,
@@ -37,16 +38,8 @@ class KeyStore {
     makeAutoObservable(this, { root: false });
   }
 
-  // TODO: stubbed for now.
-  getAccount(): Account {
-    return {
-      publicKey: ethers.utils.computePublicKey(
-        '0x974fa6e246e2effa69150996571896bbfd54a502ff2b1e85f51fb132764d8055'
-      ),
-      privateKey:
-        '0x974fa6e246e2effa69150996571896bbfd54a502ff2b1e85f51fb132764d8055',
-      address: '0x7bB17c9401110D05ec39894334cC9d7721E90688',
-    };
+  getAccount(): Account | undefined {
+    return this.account;
   }
 
   get state() {
@@ -55,7 +48,7 @@ class KeyStore {
       pendingLogin: this.pendingLogin,
       currentUser: this.currentUser,
       stage: this.stage,
-      isTermSigned: this.isTermSigned,
+      isTermsSigned: this.isTermsSigned,
     };
   }
 
@@ -68,7 +61,7 @@ class KeyStore {
   }
 
   setTermsSigned(): void {
-    this.isTermSigned = true;
+    this.isTermsSigned = true;
   }
 
   setUserInfo(user: UserInfo): void {
@@ -98,7 +91,14 @@ class KeyStore {
       currentUser.jwt
     );
     console.log('torusResponse', torusResponse);
+    // TODO: get pubKey as a string
     this.setKeyPair(torusResponse.publicAddress, torusResponse.privateKey);
+    this.account = {
+      privateKey: torusResponse.privateKey,
+      publicKey: torusResponse.publicAddress,
+      address: torusResponse.publicAddress,
+      email: currentUser.email,
+    };
     this.setUserInfo(currentUser);
     this.stage = KeyStoreStage.Initialized;
   }
