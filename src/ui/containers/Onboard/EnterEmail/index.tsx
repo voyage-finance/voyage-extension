@@ -56,6 +56,7 @@ const EnterEmailStep: React.FC = () => {
             placeholder="Enter Yar Email"
             {...form.getInputProps('email')}
             required
+            type="email"
             width={300}
             mt={32}
           />
