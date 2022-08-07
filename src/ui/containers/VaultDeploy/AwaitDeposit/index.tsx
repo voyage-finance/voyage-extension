@@ -1,14 +1,14 @@
 import Card from '@components/Card';
 import Text from '@components/Text';
-import { Box, Group } from '@mantine/core';
+import { Group } from '@mantine/core';
 import * as React from 'react';
-import { ReactComponent as CopySvg } from 'assets/img/copy-icon.svg';
 import { ReactComponent as EthSvg } from 'assets/img/eth-icon.svg';
 import { ReactComponent as DangerSvg } from 'assets/img/danger-icon.svg';
 import { ReactComponent as CheckSvg } from 'assets/img/circle-check-icon.svg';
 import Button from '@components/Button';
-import browser from 'webextension-polyfill';
 import useVoyageController from '@hooks/useVoyageController';
+import QrCode from '@components/QrCode';
+import CopyButton from '@components/CopyButton';
 
 const AwaitDeposit: React.FC = () => {
   const controller = useVoyageController();
@@ -16,21 +16,10 @@ const AwaitDeposit: React.FC = () => {
   const [deposited] = React.useState(false);
   const [address, setAddress] = React.useState('');
 
-  const copyAddress = async () => {
-    await navigator.clipboard.writeText(address);
-    browser.notifications.create({
-      type: 'basic',
-      iconUrl: 'icon.png',
-      title: 'Address copied',
-      message: 'Address was copied to your clipboard',
-    });
-  };
-
   const fetchVaultAddress = async () => {
     setIsLoading(true);
     const address = await controller.computeCounterfactualAddress();
     setAddress(address || '');
-    console.log('address', address);
     setIsLoading(false);
   };
 
@@ -58,6 +47,7 @@ const AwaitDeposit: React.FC = () => {
         <Text mt={23}>
           Your Voyage Wallet | <strong>Ethereum Network</strong>
         </Text>
+        <QrCode mt={14} isLoading={isLoading} address={address} />
         <Group
           mt={14}
           sx={{
@@ -70,11 +60,7 @@ const AwaitDeposit: React.FC = () => {
           px={25}
         >
           <Text type="gradient">{isLoading ? 'Loading...' : address}</Text>
-          {address && (
-            <Box sx={{ cursor: 'pointer' }} onClick={copyAddress}>
-              <CopySvg />
-            </Box>
-          )}
+          {address && <CopyButton text={address} />}
         </Group>
         <Group direction="column" mt={23} align="center" spacing={0}>
           <Text>Minimum ETH Required</Text>
@@ -99,7 +85,7 @@ const AwaitDeposit: React.FC = () => {
           </Group>
         </Group>
         <Button mt={34} sx={{ width: 380 }} disabled={!deposited}>
-          Create Vault
+          {deposited ? 'Create Vault' : 'Insufficient Balace to Deploy Vault'}
         </Button>
       </Group>
     </Card>
