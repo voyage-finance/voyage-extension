@@ -16,6 +16,7 @@ interface CoreState {
   stage: KeyStoreStage;
   currentUser?: UserInfo;
   isTermsSigned: boolean;
+  vaultAddress?: string;
 }
 
 const initialState: CoreState = {
