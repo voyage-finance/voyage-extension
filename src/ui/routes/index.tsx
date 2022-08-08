@@ -19,6 +19,7 @@ import { KeyStoreStage } from 'controller/types';
 import SignTermsStep from '@containers/Onboard/SignTermsState';
 import SelectDepositMethod from '@containers/VaultDeploy/SelectDepositMethod';
 import AwaitDeposit from '@containers/VaultDeploy/AwaitDeposit';
+import VaultDeployed from '@containers/VaultDeploy/Deployed';
 
 const Router: React.FC = () => {
   const location = useLocation();
@@ -31,10 +32,11 @@ const Router: React.FC = () => {
 
   const stage = useAppSelector((state) => state.core.stage);
   const isTermsSigned = useAppSelector((state) => state.core.isTermsSigned);
+  const vault = useAppSelector((state) => state.core.vaultAddress);
 
   useEffect(() => {
     console.log('[stage, isTermsSigned]', stage, isTermsSigned);
-    // navigate('/vault/deposit/method');
+    // navigate('/vault/deposit/deployed');
     switch (stage) {
       case KeyStoreStage.WaitingConfirm:
         navigate('/onboard/checkemail');
@@ -46,12 +48,16 @@ const Router: React.FC = () => {
         navigate('/onboard/login');
         break;
       case KeyStoreStage.Initialized:
-        if (isTermsSigned) {
-          navigate('/vault/deposit/method');
-        } else navigate('/onboard/terms');
+        if (vault) {
+          navigate('/');
+        } else {
+          if (isTermsSigned) {
+            navigate('/vault/deposit/method');
+          } else navigate('/onboard/terms');
+        }
         break;
     }
-  }, [stage, isTermsSigned]);
+  }, [stage, isTermsSigned, vault]);
 
   return (
     <div className={cn(styles.root, isOnboardingFlow && styles.tabView)}>
@@ -75,6 +81,7 @@ const Router: React.FC = () => {
         <Route path="/vault/" element={<Onboard />}>
           <Route path="deposit/method" element={<SelectDepositMethod />} />
           <Route path="deposit/await" element={<AwaitDeposit />} />
+          <Route path="deposit/deployed" element={<VaultDeployed />} />
         </Route>
       </Routes>
     </div>

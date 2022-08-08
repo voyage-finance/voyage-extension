@@ -5,9 +5,11 @@ import { ethers } from 'ethers';
 import { Voyage, Voyage__factory } from '@contracts';
 import { ControllerStore } from './index';
 import { keccak256, toUtf8Bytes } from 'ethers/lib/utils';
+import { makeAutoObservable } from 'mobx';
 
 class VoyageStore {
   root: ControllerStore;
+  vaultAddress?: string;
   #voyage: Voyage;
 
   constructor(root: ControllerStore, voyageDiamondAddress: string) {
@@ -16,16 +18,24 @@ class VoyageStore {
       voyageDiamondAddress,
       this.root.provider
     );
+    makeAutoObservable(this, { root: false });
   }
 
-  async getVault() {
+  get state() {
+    return {
+      vaultAddress: this.vaultAddress,
+    };
+  }
+
+  async fetchVault() {
     const { address } = (await this.root.keyStore.getAccount()) || {};
     if (!address || address === ethers.constants.AddressZero) return;
 
-    const vault = await this.#voyage.getVault(address);
-    if (vault === ethers.constants.AddressZero) return;
+    const vaultAddress = await this.#voyage.getVault(address);
+    this.vaultAddress = vaultAddress;
 
-    return vault;
+    if (vaultAddress === ethers.constants.AddressZero) return;
+    return vaultAddress;
   }
 
   async computeCounterfactualAddress() {

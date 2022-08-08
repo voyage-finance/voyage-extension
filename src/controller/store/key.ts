@@ -99,6 +99,7 @@ class KeyStore {
       address: torusResponse.publicAddress,
       email: currentUser.email,
     };
+    await this.root.voyageStore.fetchVault();
     this.setUserInfo(currentUser);
     this.stage = KeyStoreStage.Initialized;
   }

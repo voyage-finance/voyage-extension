@@ -152,7 +152,7 @@ export class VoyageController extends SafeEventEmitter {
                 onApprove: async () => {
                   const { chainId } = await this.provider.getNetwork();
                   console.log('chain id: ', chainId);
-                  const vault = await this.store.voyageStore.getVault();
+                  const vault = await this.store.voyageStore.fetchVault();
                   console.log('vault: ', vault);
                   if (!vault) {
                     connector.rejectSession(
