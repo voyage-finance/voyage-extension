@@ -5,6 +5,7 @@ import * as React from 'react';
 import { ReactComponent as EthSvg } from 'assets/img/eth-icon.svg';
 import Button from '@components/Button';
 import { useNavigate } from 'react-router-dom';
+import { MIN_DEPOSIT } from '@utils/bn';
 
 const SelectDepositMethod: React.FC = () => {
   const [isInfoCardShown, setIsInfoCardShown] = React.useState(true);
@@ -37,12 +38,12 @@ const InfoCard: React.FC<{ onClick: () => void }> = ({ onClick }) => {
           <Text>Minimum ETH Required</Text>
           <Group mt={5} align="center" spacing={2} ml={5}>
             <Text sx={{ fontSize: 24 }} weight={'bold'}>
-              0.25
+              {MIN_DEPOSIT.toString()}
             </Text>
             <EthSvg />
           </Group>
           <Text type="secondary" mt={4}>
-            ~$500
+            ~$100
           </Text>
         </Group>
         <Button mt={25} onClick={onClick} sx={{ width: 300 }}>
