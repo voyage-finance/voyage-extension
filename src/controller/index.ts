@@ -114,6 +114,7 @@ export class VoyageController extends SafeEventEmitter {
       rejectWalletConnectionSession:
         this.store.walletConnectStore.rejectConnectionRequest,
       getBalance: this.getBalance,
+      registerVaultWatcher: this.registerVaultWatcher,
     };
   }
 
@@ -222,6 +223,31 @@ export class VoyageController extends SafeEventEmitter {
 
   getBalance = (address: string) => {
     return this.store.voyageStore.getBalance(address);
+  };
+
+  registerVaultWatcher = async (): Promise<string> => {
+    const userAddress = this.store.keyStore.getKeyPair()?.pubKey;
+    const blockNum = await this.provider.getBlockNumber();
+    const token = this.store.keyStore.currentUser?.jwt;
+
+    if (!userAddress || !token || userAddress === ethers.constants.AddressZero)
+      return Promise.reject('token or userAddress is not set');
+
+    const data = {
+      userAddress,
+      blockNum,
+    };
+
+    const response = await fetch(`${process.env.VOYAGE_API_URL}/vault/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(data),
+    });
+    const body = await response.json();
+    return body.sentinelObj?.counterFactualAddress;
   };
 
   private sendUpdate = (state: unknown) => {
