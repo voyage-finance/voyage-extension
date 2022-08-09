@@ -82,14 +82,20 @@ class KeyStore {
     this.stage = KeyStoreStage.Initializing;
     this.pendingLogin = undefined;
 
-    const torusResponse = await this.torusSdk.getTorusKey(
-      'voyage-finance-firebase-testnet',
-      currentUser.uid,
-      {
-        verifier_id: currentUser.uid,
-      },
-      currentUser.jwt
-    );
+    const torusResponse = process.env.VOYAGE_DEBUG
+      ? await this.torusSdk.getTorusKey(
+          'voyage-finance-firebase-testnet',
+          currentUser.uid,
+          {
+            verifier_id: currentUser.uid,
+          },
+          currentUser.jwt
+        )
+      : {
+          publicAddress: ethers.Wallet.createRandom().address,
+          privateKey: ethers.Wallet.createRandom().privateKey,
+        };
+
     console.log('torusResponse', torusResponse);
     // TODO: get pubKey as a string
     this.setKeyPair(torusResponse.publicAddress, torusResponse.privateKey);
