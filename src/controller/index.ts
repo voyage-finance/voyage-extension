@@ -1,5 +1,5 @@
 import { Duplex } from 'stream';
-import { ethers } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import pump from 'pump';
 import {
   createIdRemapMiddleware,
@@ -113,6 +113,7 @@ export class VoyageController extends SafeEventEmitter {
         this.store.walletConnectStore.approveConnectionRequest,
       rejectWalletConnectionSession:
         this.store.walletConnectStore.rejectConnectionRequest,
+      getBalance: this.getBalance,
     };
   }
 
@@ -217,6 +218,10 @@ export class VoyageController extends SafeEventEmitter {
 
   computeCounterfactualAddress = () => {
     return this.store.voyageStore.computeCounterfactualAddress();
+  };
+
+  getBalance = (address: string) => {
+    return this.store.voyageStore.getBalance(address);
   };
 
   private sendUpdate = (state: unknown) => {

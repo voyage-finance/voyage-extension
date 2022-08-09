@@ -25,6 +25,7 @@ class ControllerStore {
     return {
       ...this.walletConnectStore.state,
       ...this.keyStore.state,
+      ...this.voyageStore.state,
     };
   }
 }

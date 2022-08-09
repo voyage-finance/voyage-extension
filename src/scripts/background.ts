@@ -8,6 +8,7 @@ import { KeyStoreStage } from 'controller/types';
 async function bootstrapSW() {
   const controller = new VoyageController();
   await controller.init();
+
   browser.runtime.onConnect.addListener((port) => {
     const stream = new PortStream(port as Runtime.Port) as unknown as Duplex;
     const mux = setupMultiplex(stream, 'bootstrap');
@@ -19,6 +20,10 @@ async function bootstrapSW() {
     controller.setupVoyageProviderConnection(
       mux.createStream('provider') as Duplex
     );
+  });
+
+  controller.store.voyageStore.listenVaultCreate((...args) => {
+    console.log('----- [listenVaultCreate] -------', args);
   });
 
   browser.action.onClicked.addListener(() => {
