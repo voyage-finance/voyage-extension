@@ -22,8 +22,9 @@ async function bootstrapSW() {
     );
   });
 
-  controller.store.voyageStore.listenVaultCreate((...args) => {
+  controller.store.voyageStore.listenVaultCreate((args) => {
     console.log('----- [listenVaultCreate] -------', args);
+    controller.store.voyageStore.fetchVault();
   });
 
   browser.action.onClicked.addListener(() => {

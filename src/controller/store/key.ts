@@ -82,7 +82,7 @@ class KeyStore {
     this.stage = KeyStoreStage.Initializing;
     this.pendingLogin = undefined;
 
-    const torusResponse = process.env.VOYAGE_DEBUG
+    const torusResponse = !process.env.VOYAGE_DEBUG
       ? await this.torusSdk.getTorusKey(
           'voyage-finance-firebase-testnet',
           currentUser.uid,

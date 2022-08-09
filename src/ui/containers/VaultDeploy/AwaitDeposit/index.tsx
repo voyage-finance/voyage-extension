@@ -19,7 +19,7 @@ const AwaitDeposit: React.FC = () => {
 
   const fetchVaultAddress = async () => {
     setIsLoading(true);
-    const address = await controller.computeCounterfactualAddress();
+    const address = await controller.registerVaultWatcher();
     setAddress(address || '');
     setIsLoading(false);
   };

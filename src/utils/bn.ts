@@ -22,4 +22,4 @@ export const formatAmount = (value?: BigNumber) => {
 export const Zero = new BigNumber(0);
 // TODO: make it dynamic
 export const ETHERS_DECIMALS = 18;
-export const MIN_DEPOSIT = new BigNumber(0.00005);
+export const MIN_DEPOSIT = new BigNumber(0.005);
