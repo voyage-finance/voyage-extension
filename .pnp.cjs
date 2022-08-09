@@ -77,6 +77,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["babel-plugin-named-asset-import", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:0.3.8"],\
             ["babel-preset-react-app", "npm:10.0.1"],\
             ["bfj", "npm:7.0.2"],\
+            ["bignumber.js", "npm:9.0.2"],\
             ["browserslist", "npm:4.20.2"],\
             ["buffer", "npm:6.0.3"],\
             ["camelcase", "npm:6.3.0"],\
@@ -24135,6 +24136,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["babel-plugin-named-asset-import", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:0.3.8"],\
             ["babel-preset-react-app", "npm:10.0.1"],\
             ["bfj", "npm:7.0.2"],\
+            ["bignumber.js", "npm:9.0.2"],\
             ["browserslist", "npm:4.20.2"],\
             ["buffer", "npm:6.0.3"],\
             ["camelcase", "npm:6.3.0"],\
