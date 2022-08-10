@@ -109,6 +109,11 @@ class KeyStore {
     this.setUserInfo(currentUser);
     this.stage = KeyStoreStage.Initialized;
   }
+
+  cancelLogin() {
+    this.pendingLogin = undefined;
+    this.stage = KeyStoreStage.Uninitialized;
+  }
 }
 
 export default KeyStore;

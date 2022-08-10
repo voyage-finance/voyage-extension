@@ -43,7 +43,6 @@ const Router: React.FC = () => {
     switch (stage) {
       case KeyStoreStage.WaitingConfirm:
         navigate('/onboard/checkemail');
-        setWaitingDeploy(true);
         break;
       case KeyStoreStage.Initializing:
         navigate('/onboard/boarding');
@@ -54,12 +53,13 @@ const Router: React.FC = () => {
       case KeyStoreStage.Initialized:
         if (vault && vault !== ethers.constants.AddressZero) {
           waitingDeploy ? navigate('/vault/deposit/deployed') : navigate('/');
+          setWaitingDeploy(false);
         } else {
           if (isTermsSigned) {
             navigate('/vault/deposit/method');
           } else navigate('/onboard/terms');
+          setWaitingDeploy(true);
         }
-        setWaitingDeploy(false);
         break;
     }
   }, [stage, isTermsSigned, vault]);
