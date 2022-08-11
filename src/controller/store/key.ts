@@ -94,14 +94,14 @@ class KeyStore {
       : {
           publicAddress: ethers.Wallet.createRandom().address,
           privateKey: ethers.Wallet.createRandom().privateKey,
+          pubKey: undefined,
         };
 
-    console.log('torusResponse', torusResponse);
     // TODO: get pubKey as a string
     this.setKeyPair(torusResponse.publicAddress, torusResponse.privateKey);
     this.account = {
       privateKey: torusResponse.privateKey,
-      publicKey: torusResponse.publicAddress,
+      publicKey: torusResponse.pubKey?.pub_key_X,
       address: torusResponse.publicAddress,
       email: currentUser.email,
     };

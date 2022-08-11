@@ -45,7 +45,6 @@ class VoyageStore {
 
   async computeCounterfactualAddress() {
     const account = await this.root.keyStore.getAccount();
-    console.log('account', account);
     if (!account || account.address === ethers.constants.AddressZero) return;
     const salt = keccak256(toUtf8Bytes(account.email)).slice(0, 42);
     console.log('salt', salt, 'address', account.address);
