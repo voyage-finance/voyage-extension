@@ -5,7 +5,7 @@ export enum Network {
 
 export interface Account {
   privateKey: string;
-  publicKey: string;
+  publicKey?: string;
   address: string;
   email: string;
 }
