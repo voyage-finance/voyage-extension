@@ -236,7 +236,7 @@ export class VoyageController extends SafeEventEmitter {
   };
 
   registerVaultWatcher = async (): Promise<string> => {
-    const userAddress = this.store.keyStore.getKeyPair()?.pubKey;
+    const userAddress = this.store.keyStore.getAccount()?.address;
     const blockNum = await this.provider.getBlockNumber();
     const token = this.store.keyStore.currentUser?.jwt;
 
