@@ -30,14 +30,14 @@ class VoyageStore {
 
   async fetchVault() {
     const { address } = (await this.root.keyStore.getAccount()) || {};
-    console.log(
-      '🚀 ~ file: voyage.ts ~ line 33 ~ VoyageStore ~ fetchVault ~ address',
-      address
-    );
     if (!address || address === ethers.constants.AddressZero) return;
 
     const vaultAddress = await this.voyage.getVault(address);
     this.vaultAddress = vaultAddress;
+    console.log(
+      '🚀 ~ file: voyage.ts ~ line 33 ~ VoyageStore ~ fetchVault ~ vaultAddress',
+      vaultAddress
+    );
 
     if (vaultAddress === ethers.constants.AddressZero) return;
     return vaultAddress;

@@ -206,10 +206,11 @@ export class VoyageController extends SafeEventEmitter {
     const generatedFingerPrint = createRandomFingerprint();
     const encodedRedirectUri = encodeRedirectUri(email, generatedFingerPrint);
 
-    await sendSignInLinkToEmail(auth, email, {
-      url: `${process.env.VOYAGE_WEB_URL}/onboard?encoded=${encodedRedirectUri}`,
-      handleCodeInApp: true,
-    });
+    if (!process.env.VOYAGE_DEBUG)
+      await sendSignInLinkToEmail(auth, email, {
+        url: `${process.env.VOYAGE_WEB_URL}/onboard?encoded=${encodedRedirectUri}`,
+        handleCodeInApp: true,
+      });
     this.store.keyStore.startLogin(email, generatedFingerPrint);
   };
 

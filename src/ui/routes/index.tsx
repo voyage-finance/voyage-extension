@@ -21,10 +21,12 @@ import SelectDepositMethod from '@containers/VaultDeploy/SelectDepositMethod';
 import AwaitDeposit from '@containers/VaultDeploy/AwaitDeposit';
 import VaultDeployed from '@containers/VaultDeploy/Deployed';
 import { ethers } from 'ethers';
+import useVoyageController from '@hooks/useVoyageController';
 
 const Router: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const controller = useVoyageController();
 
   const isOnboardingFlow =
     location.pathname.startsWith('/onboard') ||
@@ -36,6 +38,10 @@ const Router: React.FC = () => {
   const vault = useAppSelector((state) => state.core.vaultAddress);
 
   const [waitingDeploy, setWaitingDeploy] = useState(false);
+
+  const resetStorage = () => {
+    controller.cancelLogin();
+  };
 
   useEffect(() => {
     console.log('[stage, isTermsSigned]', stage, isTermsSigned);
@@ -89,6 +95,9 @@ const Router: React.FC = () => {
           <Route path="deposit/deployed" element={<VaultDeployed />} />
         </Route>
       </Routes>
+      {process.env.VOYAGE_DEBUG && (
+        <button onClick={resetStorage}>Clear storage</button>
+      )}
     </div>
   );
 };

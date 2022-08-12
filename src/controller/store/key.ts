@@ -94,24 +94,35 @@ class KeyStore {
       email,
       fingerprint,
     };
-    this.stage = KeyStoreStage.WaitingConfirm;
+    if (process.env.VOYAGE_DEBUG) {
+      this.finishLogin({
+        jwt: 'jwt',
+        accessToken: 'accessToken',
+        uid: 'uid',
+        email,
+      });
+    } else this.stage = KeyStoreStage.WaitingConfirm;
   }
 
   async getToruskey(uid: string, jwt: string) {
-    return !process.env.VOYAGE_DEBUG
-      ? await this.torusSdk.getTorusKey(
-          'voyage-finance-firebase-testnet',
-          uid,
-          {
-            verifier_id: uid,
-          },
-          jwt
-        )
-      : {
-          publicAddress: ethers.Wallet.createRandom().address,
-          privateKey: ethers.Wallet.createRandom().privateKey,
-          pubKey: { pub_key_X: ethers.Wallet.createRandom().publicKey },
-        };
+    if (!process.env.VOYAGE_DEBUG)
+      return await this.torusSdk.getTorusKey(
+        'voyage-finance-firebase-testnet',
+        uid,
+        {
+          verifier_id: uid,
+        },
+        jwt
+      );
+    const mnemonic = process.env.DEBUG_GEORLI_MNEMONIC;
+    const wallet = mnemonic
+      ? ethers.Wallet.fromMnemonic(mnemonic)
+      : ethers.Wallet.createRandom();
+    return {
+      publicAddress: wallet.address,
+      privateKey: wallet.privateKey,
+      pubKey: { pub_key_X: wallet.publicKey },
+    };
   }
 
   async finishLogin(currentUser: AuthInfo) {
@@ -140,6 +151,9 @@ class KeyStore {
   cancelLogin() {
     this.pendingLogin = undefined;
     this.stage = KeyStoreStage.Uninitialized;
+    this.account = undefined;
+    this.isTermsSigned = false;
+    storage.local.remove('keyStore');
   }
 }
 
