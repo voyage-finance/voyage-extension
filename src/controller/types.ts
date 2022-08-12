@@ -4,9 +4,27 @@ export enum Network {
 }
 
 export interface Account {
+  address: string;
+  email: string;
+  keyPair?: KeyPair;
+  auth: Omit<AuthInfo, 'email'>;
+}
+
+export interface KeyStorePersist {
+  stage: KeyStoreStage;
+  isTermsSigned: boolean;
+  account: Omit<Account, 'keyPair'>;
+}
+
+interface KeyPair {
   privateKey: string;
   publicKey?: string;
-  address: string;
+}
+
+export interface AuthInfo {
+  jwt: string;
+  accessToken: string;
+  uid: string;
   email: string;
 }
 
@@ -27,13 +45,6 @@ export enum MessageAction {
 export interface RuntimeMessage {
   action: MessageAction;
   params: any;
-}
-
-export interface UserInfo {
-  jwt: string;
-  accessToken: string;
-  uid: string;
-  email: string;
 }
 
 export enum KeyStoreStage {

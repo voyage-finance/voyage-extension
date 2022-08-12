@@ -1,14 +1,10 @@
 import ControllerStore from './root';
-import { Account, KeyStoreStage, UserInfo } from '../types';
+import { Account, KeyStoreStage, AuthInfo, KeyStorePersist } from '../types';
 import { ethers } from 'ethers';
-import { makeAutoObservable } from 'mobx';
+import { makeAutoObservable, toJS } from 'mobx';
 import Customauth from '@toruslabs/customauth';
 import { storage } from 'webextension-polyfill';
-
-interface KeyPair {
-  pubKey: string;
-  privKey: string;
-}
+import { omit } from 'lodash';
 
 export interface PendingLogin {
   email: string;
@@ -18,24 +14,21 @@ export interface PendingLogin {
 class KeyStore {
   root: ControllerStore;
   pendingLogin?: PendingLogin;
-  keyPair?: KeyPair;
   stage: KeyStoreStage;
   torusSdk: Customauth;
-  currentUser?: UserInfo;
   isTermsSigned: boolean;
   account?: Account;
 
   constructor(root: ControllerStore) {
     this.root = root;
-    this.keyPair = undefined;
     this.stage = KeyStoreStage.Uninitialized;
     this.isTermsSigned = false;
     this.torusSdk = new Customauth({
-      // TODO: use dynamic param
-      baseUrl: `http://localhost:8080/`,
+      baseUrl: process.env.VOYAGE_WEB_URL!,
       network: 'testnet',
     });
     makeAutoObservable(this, { root: false });
+    this.initialize();
   }
 
   getAccount(): Account | undefined {
@@ -44,33 +37,59 @@ class KeyStore {
 
   get state() {
     return {
-      keyPair: this.keyPair,
       pendingLogin: this.pendingLogin,
-      currentUser: this.currentUser,
+      authInfo: this.account?.auth,
       stage: this.stage,
       isTermsSigned: this.isTermsSigned,
     };
   }
 
-  setKeyPair(pubKey: string, privKey: string): void {
-    this.keyPair = { pubKey, privKey };
+  async initialize() {
+    const stateObject = (await storage.local.get('keyStore')).keyStore as
+      | KeyStorePersist
+      | undefined;
+    if (stateObject) {
+      this.stage = stateObject.stage;
+      this.isTermsSigned = stateObject.isTermsSigned;
+      this.account = stateObject.account;
+      this.reconstructKeyPair();
+    }
   }
 
-  getKeyPair(): KeyPair | undefined {
-    return this.keyPair;
+  async reconstructKeyPair() {
+    if (!this.account) return;
+
+    const torusKeys = await this.getToruskey(
+      this.account.auth.uid,
+      this.account.auth.jwt
+    );
+
+    this.account = {
+      ...this.account,
+      keyPair: {
+        privateKey: torusKeys.privateKey,
+        publicKey: torusKeys.pubKey?.pub_key_X,
+      },
+    };
+  }
+
+  persistState() {
+    const stateObject: KeyStorePersist = {
+      stage: this.stage,
+      isTermsSigned: this.isTermsSigned,
+      account: omit(toJS(this.account!), ['keyPair']),
+    };
+    storage.local.set({
+      keyStore: stateObject,
+    });
   }
 
   setTermsSigned(): void {
     this.isTermsSigned = true;
-  }
-
-  setUserInfo(user: UserInfo): void {
-    this.currentUser = user;
-    storage.local.set({ access_token: user.accessToken, id_token: user.jwt });
+    this.persistState();
   }
 
   startLogin(email: string, fingerprint: string) {
-    // TODO generate fingerprint here
     this.pendingLogin = {
       email,
       fingerprint,
@@ -78,36 +97,44 @@ class KeyStore {
     this.stage = KeyStoreStage.WaitingConfirm;
   }
 
-  async finishLogin(currentUser: UserInfo) {
-    this.stage = KeyStoreStage.Initializing;
-    this.pendingLogin = undefined;
-
-    const torusResponse = !process.env.VOYAGE_DEBUG
+  async getToruskey(uid: string, jwt: string) {
+    return !process.env.VOYAGE_DEBUG
       ? await this.torusSdk.getTorusKey(
           'voyage-finance-firebase-testnet',
-          currentUser.uid,
+          uid,
           {
-            verifier_id: currentUser.uid,
+            verifier_id: uid,
           },
-          currentUser.jwt
+          jwt
         )
       : {
           publicAddress: ethers.Wallet.createRandom().address,
           privateKey: ethers.Wallet.createRandom().privateKey,
-          pubKey: undefined,
+          pubKey: { pub_key_X: ethers.Wallet.createRandom().publicKey },
         };
+  }
 
-    // TODO: get pubKey as a string
-    this.setKeyPair(torusResponse.publicAddress, torusResponse.privateKey);
+  async finishLogin(currentUser: AuthInfo) {
+    this.stage = KeyStoreStage.Initializing;
+    this.pendingLogin = undefined;
+
+    const torusResponse = await this.getToruskey(
+      currentUser.uid,
+      currentUser.jwt
+    );
+
     this.account = {
-      privateKey: torusResponse.privateKey,
-      publicKey: torusResponse.pubKey?.pub_key_X,
+      keyPair: {
+        privateKey: torusResponse.privateKey,
+        publicKey: torusResponse.pubKey?.pub_key_X,
+      },
       address: torusResponse.publicAddress,
       email: currentUser.email,
+      auth: currentUser,
     };
     await this.root.voyageStore.fetchVault();
-    this.setUserInfo(currentUser);
     this.stage = KeyStoreStage.Initialized;
+    this.persistState();
   }
 
   cancelLogin() {

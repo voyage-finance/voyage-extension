@@ -4,7 +4,7 @@ import { initWeb3 } from '@web3/init';
 import {
   ApprovalRequest,
   KeyStoreStage,
-  UserInfo,
+  AuthInfo,
 } from '../../../controller/types';
 import { IWalletConnectSession } from '@walletconnect/types';
 import { PendingLogin } from 'controller/store/key';
@@ -14,7 +14,7 @@ interface CoreState {
   sessions: Record<string, IWalletConnectSession>;
   pendingLogin?: PendingLogin;
   stage: KeyStoreStage;
-  currentUser?: UserInfo;
+  authInfo?: AuthInfo;
   isTermsSigned: boolean;
   vaultAddress?: string;
 }
