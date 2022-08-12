@@ -23,8 +23,6 @@ import { sendSignInLinkToEmail } from 'firebase/auth';
 import { createRandomFingerprint } from '@utils/random';
 import { registerMessageListeners } from './runtimeMessage';
 
-const VOYAGE_WEB_URL = 'http://localhost:8080';
-
 interface WalletConnectSessionRequest {
   chainId: number | null;
   peerId: string;
@@ -209,7 +207,7 @@ export class VoyageController extends SafeEventEmitter {
     const encodedRedirectUri = encodeRedirectUri(email, generatedFingerPrint);
 
     await sendSignInLinkToEmail(auth, email, {
-      url: `${VOYAGE_WEB_URL}/onboard?encoded=${encodedRedirectUri}`,
+      url: `${process.env.VOYAGE_WEB_URL}/onboard?encoded=${encodedRedirectUri}`,
       handleCodeInApp: true,
     });
     this.store.keyStore.startLogin(email, generatedFingerPrint);
@@ -238,7 +236,7 @@ export class VoyageController extends SafeEventEmitter {
   registerVaultWatcher = async (): Promise<string> => {
     const userAddress = this.store.keyStore.getAccount()?.address;
     const blockNum = await this.provider.getBlockNumber();
-    const token = this.store.keyStore.currentUser?.jwt;
+    const token = this.store.keyStore.account?.auth.jwt;
 
     if (!userAddress || !token || userAddress === ethers.constants.AddressZero)
       return Promise.reject('token or userAddress is not set');
