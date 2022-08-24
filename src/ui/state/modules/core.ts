@@ -1,11 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { store } from '../store';
 import { initWeb3 } from '@web3/init';
-import {
-  ApprovalRequest,
-  KeyStoreStage,
-  AuthInfo,
-} from '../../../controller/types';
+import { ApprovalRequest, KeyStoreStage, AuthInfo } from '../../../types';
 import { IWalletConnectSession } from '@walletconnect/types';
 import { PendingLogin } from 'controller/store/key';
 

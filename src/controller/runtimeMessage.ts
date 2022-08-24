@@ -1,7 +1,7 @@
 import { VoyageController } from 'controller';
 import { toJS } from 'mobx';
 import { runtime } from 'webextension-polyfill';
-import { MessageAction, RuntimeMessage, AuthInfo } from './types';
+import { MessageAction, RuntimeMessage, AuthInfo } from '../types';
 
 export const registerMessageListeners = (controller: VoyageController) => {
   runtime.onMessageExternal.addListener((msg: RuntimeMessage, params) => {

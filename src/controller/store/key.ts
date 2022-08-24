@@ -1,5 +1,5 @@
 import ControllerStore from './root';
-import { Account, KeyStoreStage, AuthInfo, KeyStorePersist } from '../types';
+import { Account, KeyStoreStage, AuthInfo, KeyStorePersist } from '../../types';
 import { ethers } from 'ethers';
 import { makeAutoObservable, toJS } from 'mobx';
 import Customauth from '@toruslabs/customauth';
@@ -114,7 +114,7 @@ class KeyStore {
         },
         jwt
       );
-    const mnemonic = process.env.DEBUG_GEORLI_MNEMONIC;
+    const mnemonic = process.env.DEBUG_GOERLI_MNEMONIC;
     const wallet = mnemonic
       ? ethers.Wallet.fromMnemonic(mnemonic)
       : ethers.Wallet.createRandom();

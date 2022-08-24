@@ -2,17 +2,17 @@ import { MantineProvider } from '@mantine/core';
 import { configureChains, createClient, WagmiConfig } from 'wagmi';
 import { Provider as StoreProvider } from 'react-redux';
 import VoyageProvider from '@components/VoyageProvider';
-import { publicProvider } from 'wagmi/providers/public';
 import { MemoryRouter } from 'react-router-dom';
 import './app.css';
 import Router from './routes';
 import { ExtensionConnector } from '@web3/connector';
 import { chains as voyageChains } from '@utils/chain';
+import { getAlchemyProvider } from '@utils/env';
 
 function App({ store }: any) {
   const { provider: web3Provider, controller } = globalThis;
   const { chains, provider } = configureChains(voyageChains, [
-    publicProvider(),
+    getAlchemyProvider(),
   ]);
   const client = createClient({
     autoConnect: true,
