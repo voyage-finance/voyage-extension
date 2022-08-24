@@ -32,6 +32,14 @@ export interface ApprovalRequest {
   onReject: () => Promise<void>;
 }
 
+export interface SignRequest {
+  id: string;
+  address: string;
+  message: string;
+  onApprove: () => Promise<void>;
+  onReject: () => Promise<void>;
+}
+
 export enum MessageAction {
   AUTH_SUCCESS = 'auth_success',
   GET_FINGERPRINT = 'get_fingerprint',
