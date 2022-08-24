@@ -1,5 +1,7 @@
 import { TransactionParams } from 'types/transaction';
 import { ControllerStore } from '../store';
+import { nanoid } from 'nanoid';
+import { keccak256, toUtf8Bytes } from 'ethers/lib/utils';
 
 /**
  * VoyageRpcService defines all handlers for eth RPC methods.
@@ -20,6 +22,27 @@ class VoyageRpcService {
     if (await this.isValidTx(txParams))
       return this.store.transactionStore.addNewUnconfirmedTransaction(txParams);
   };
+
+  handleEthSign = async (address: string, message: string) =>
+    new Promise<string>(async (resolve, reject) => {
+      const id = nanoid();
+      this.store.transactionStore.addSignRequest({
+        id,
+        address,
+        message,
+        onApprove: () =>
+          Promise.resolve(
+            resolve(
+              keccak256(
+                toUtf8Bytes(
+                  '\x19Ethereum Signed Message:\n' + message.length + message
+                )
+              )
+            )
+          ),
+        onReject: () => Promise.reject(reject('User rejected session request')),
+      });
+    });
 
   getUnconfirmedTransactions() {
     return this.store.transactionStore.getUnconfirmedTransactions();

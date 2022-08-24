@@ -28,6 +28,11 @@ export const createVoyageMiddleware = (service: VoyageRpcService) => {
         res.result = await service.handleEthAccounts();
         break;
       }
+      case 'eth_sign': {
+        const [address, message] = req.params as string[];
+        res.result = await service.handleEthSign(address, message);
+        break;
+      }
       case 'eth_sendTransaction': {
         console.log('----- eth_sendTransaction --------', req.params);
         const params = req.params as unknown[];
