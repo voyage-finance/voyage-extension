@@ -15,7 +15,7 @@ import BoardingState from '@containers/Onboard/BoardingState';
 import CheckEmailStep from '@containers/Onboard/CheckEmail';
 import { useAppSelector } from '@hooks/useRedux';
 import Onboard from '@containers/Onboard';
-import { KeyStoreStage } from 'controller/types';
+import { KeyStoreStage } from 'types';
 import SignTermsStep from '@containers/Onboard/SignTermsState';
 import SelectDepositMethod from '@containers/VaultDeploy/SelectDepositMethod';
 import AwaitDeposit from '@containers/VaultDeploy/AwaitDeposit';
@@ -63,8 +63,10 @@ const Router: React.FC = () => {
         } else {
           if (isTermsSigned) {
             navigate('/vault/deposit/method');
-          } else navigate('/onboard/terms');
-          setWaitingDeploy(true);
+          } else {
+            navigate('/onboard/terms');
+            setWaitingDeploy(true);
+          }
         }
         break;
     }

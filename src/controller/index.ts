@@ -15,13 +15,13 @@ import SafeEventEmitter from '@metamask/safe-event-emitter';
 import { nanoid } from 'nanoid';
 import { openNotificationWindow } from '@utils/extension';
 import { createWcStream } from './wcStream';
-import { Network } from './types';
 import { createProviderMiddleware, createVoyageMiddleware } from './rpc';
 import VoyageRpcService from './rpc/service';
 import { auth, encodeRedirectUri } from '@utils/auth';
 import { sendSignInLinkToEmail } from 'firebase/auth';
 import { createRandomFingerprint } from '@utils/random';
 import { registerMessageListeners } from './runtimeMessage';
+import { getAlchemyApiKey, getNetworkEnvironment } from '@utils/env';
 
 interface WalletConnectSessionRequest {
   chainId: number | null;
@@ -45,15 +45,11 @@ export class VoyageController extends SafeEventEmitter {
 
   constructor() {
     super();
-    const network =
-      process.env.NETWORK_ENV === 'MAINNET' ? Network.Mainnet : Network.Goerli;
 
-    const apiKey =
-      process.env.NETWORK_ENV === 'MAINNET'
-        ? process.env.MAINNET_API_KEY
-        : process.env.GOERLI_API_KEY;
-
-    this.provider = new ethers.providers.AlchemyProvider(network, apiKey);
+    this.provider = new ethers.providers.AlchemyProvider(
+      getNetworkEnvironment(),
+      getAlchemyApiKey()
+    );
     this.store = new ControllerStore(this.provider);
     this.service = new VoyageRpcService(this.store);
     this.engine = this.createRpcEngine();

@@ -1,3 +1,4 @@
+import { TransactionParams } from 'types/transaction';
 import { ControllerStore } from '../store';
 
 /**
@@ -13,6 +14,23 @@ class VoyageRpcService {
   handleEthAccounts = async () => {
     const address = this.store.voyageStore.vaultAddress;
     return address ? [address] : [];
+  };
+
+  handleEthSendTx = async (txParams: TransactionParams) => {
+    if (await this.isValidTx(txParams))
+      return this.store.transactionStore.addNewUnconfirmedTransaction(txParams);
+  };
+
+  getUnconfirmedTransactions() {
+    return this.store.transactionStore.getUnconfirmedTransactions();
+  }
+
+  private isValidTx = async (txParams: TransactionParams) => {
+    const previewResponse = await fetch(
+      `${process.env.VOYAGE_API_URL}/marketplace/preview/opensea?calldata=${txParams.data}&speed=fast`
+    );
+    const isSupported = previewResponse.status === 200;
+    return isSupported;
   };
 }
 

@@ -1,8 +1,3 @@
-export enum Network {
-  Mainnet = 'homestead',
-  Goerli = 'goerli',
-}
-
 export interface Account {
   address: string;
   email: string;

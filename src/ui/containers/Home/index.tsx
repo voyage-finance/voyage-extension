@@ -6,13 +6,14 @@ import VoyagePaper from '@components/Card';
 import styles from './index.module.scss';
 import { SupportedApps } from '@utils/dapps';
 import { useAppSelector } from '@hooks/useRedux';
-import { chains } from '@utils/chain';
+import { chains, useAutoConnect } from '@utils/chain';
 import { ReactComponent as ChevronRight } from '@images/chevron-right-gradient-icon.svg';
 import Button from '@components/Button';
 import { useNavigate } from 'react-router-dom';
 
 const Home: React.FC = () => {
   const { chain } = useNetwork();
+  useAutoConnect();
   const chainId = chain?.id ?? 0;
   const isSupportedChain = chains.some(({ id }) => id === chainId);
   const navigate = useNavigate();

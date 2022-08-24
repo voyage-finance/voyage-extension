@@ -1,6 +1,6 @@
 import { IWalletConnectSession } from '@walletconnect/types';
 import browser from 'webextension-polyfill';
-import { ApprovalRequest } from '../types';
+import { ApprovalRequest } from '../../types';
 import WalletConnect from '@walletconnect/client';
 import { makeAutoObservable, runInAction, toJS } from 'mobx';
 import { ethErrors } from 'eth-rpc-errors';

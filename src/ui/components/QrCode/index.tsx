@@ -1,5 +1,6 @@
 import { Box, BoxProps, LoadingOverlay } from '@mantine/core';
 import { ChainID } from '@utils/chain';
+import { getNetworkEnvironment, Network } from '@utils/env';
 import { BrowserQRCodeSvgWriter } from '@zxing/browser';
 import { useEffect } from 'react';
 
@@ -19,7 +20,7 @@ const QrCode: React.FC<IProps> = ({
     if (address) {
       const codeWriter = new BrowserQRCodeSvgWriter();
       let resultUri = `ethereum:${address}`;
-      if (process.env.NETWORK_ENV === 'GOERLI')
+      if (getNetworkEnvironment() === Network.Goerli)
         resultUri += `@${ChainID.Goerli}`;
       codeWriter.writeToDom('#result', resultUri, 300, 300);
     }
