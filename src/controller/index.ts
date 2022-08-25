@@ -108,9 +108,12 @@ export class VoyageController extends SafeEventEmitter {
         this.store.walletConnectStore.approveConnectionRequest,
       rejectWalletConnectionSession:
         this.store.walletConnectStore.rejectConnectionRequest,
+      approveSignRequest: this.store.transactionStore.approveSignRequest,
+      rejectSignRequest: this.store.transactionStore.rejectSignRequest,
       getBalance: this.getBalance,
       fetchVault: this.fetchVault,
       registerVaultWatcher: this.registerVaultWatcher,
+      openNotificationWindow: this.openNotificationWindow,
     };
   }
 

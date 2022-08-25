@@ -1,12 +1,18 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { store } from '../store';
 import { initWeb3 } from '@web3/init';
-import { ApprovalRequest, KeyStoreStage, AuthInfo } from '../../../types';
+import {
+  ApprovalRequest,
+  KeyStoreStage,
+  AuthInfo,
+  SignRequest,
+} from '../../../types';
 import { IWalletConnectSession } from '@walletconnect/types';
 import { PendingLogin } from 'controller/store/key';
 
 interface CoreState {
   pendingApprovals: Record<string, ApprovalRequest>;
+  pendingSignRequests: Record<string, SignRequest>;
   sessions: Record<string, IWalletConnectSession>;
   pendingLogin?: PendingLogin;
   stage: KeyStoreStage;
@@ -18,6 +24,7 @@ interface CoreState {
 const initialState: CoreState = {
   pendingApprovals: {},
   sessions: {},
+  pendingSignRequests: {},
   stage: KeyStoreStage.Uninitialized,
   isTermsSigned: false,
 };

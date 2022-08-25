@@ -80,12 +80,12 @@ class TransactionStore implements TransactionStore {
     tx.status = TransactionStatus.Rejected;
   }
 
-  approveConnectionRequest = async (id: string) => {
+  approveSignRequest = async (id: string) => {
     const { resolve } = this.deleteSignRequest(id);
     await resolve();
   };
 
-  rejectConnectionRequest = async (id: string) => {
+  rejectSignRequest = async (id: string) => {
     const { reject } = this.deleteSignRequest(id);
     await reject(ethErrors.provider.userRejectedRequest());
   };
