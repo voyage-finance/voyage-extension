@@ -2,6 +2,7 @@ import { TransactionParams } from 'types/transaction';
 import { ControllerStore } from '../store';
 import { nanoid } from 'nanoid';
 import { keccak256, toUtf8Bytes } from 'ethers/lib/utils';
+import { openNotificationWindow } from '@utils/extension';
 
 /**
  * VoyageRpcService defines all handlers for eth RPC methods.
@@ -41,6 +42,14 @@ class VoyageRpcService {
             )
           ),
         onReject: () => Promise.reject(reject('User rejected session request')),
+      });
+      openNotificationWindow({
+        url: 'notification.html',
+        type: 'popup',
+        width: 360,
+        height: 600,
+        left: 0,
+        top: 0,
       });
     });
 

@@ -2,6 +2,7 @@ import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import Connect from '@containers/Connect';
 import styles from './index.module.scss';
 import Approval from '@containers/Approval';
+import SignMessage from '@containers/SignMessage';
 import Home from '@containers/Home';
 import MenuBar from '@components/MenuBar/MenuBar';
 import Settings from '@containers/Settings';
@@ -22,6 +23,16 @@ import AwaitDeposit from '@containers/VaultDeploy/AwaitDeposit';
 import VaultDeployed from '@containers/VaultDeploy/Deployed';
 import { ethers } from 'ethers';
 import useVoyageController from '@hooks/useVoyageController';
+import {
+  DEFAULT_ROUTE,
+  ONBOARD_CHECK_EMAIL_ROUTE,
+  ONBOARD_INITIALIZING_ROUTE,
+  ONBOARD_LOGIN_ROUTE,
+  ONBOARD_TERMS_ROUTE,
+  SIGN_MESSAGE_ROUTE,
+  VAULT_DEPOSIT_DEPLOYED_ROUTE,
+  VAULT_DEPOSIT_METHODS_ROUTE,
+} from '@utils/constants';
 
 const Router: React.FC = () => {
   const location = useLocation();
@@ -36,6 +47,9 @@ const Router: React.FC = () => {
   const stage = useAppSelector((state) => state.core.stage);
   const isTermsSigned = useAppSelector((state) => state.core.isTermsSigned);
   const vault = useAppSelector((state) => state.core.vaultAddress);
+  const pendingSignRequests = useAppSelector((state) => {
+    return Object.values(state.core.pendingSignRequests);
+  });
 
   const [waitingDeploy, setWaitingDeploy] = useState(false);
 
@@ -43,28 +57,37 @@ const Router: React.FC = () => {
     controller.cancelLogin();
   };
 
+  const checkStatusAndNavigate = () => {
+    const pendingSignRequestsCount = pendingSignRequests.length;
+    if (pendingSignRequestsCount) {
+      navigate(`${SIGN_MESSAGE_ROUTE}/${pendingSignRequests[0].id}`);
+    } else {
+      navigate(DEFAULT_ROUTE);
+    }
+  };
+
   useEffect(() => {
-    console.log('[stage, isTermsSigned]', stage, isTermsSigned);
-    // navigate('/vault/deposit/await');
     switch (stage) {
       case KeyStoreStage.WaitingConfirm:
-        navigate('/onboard/checkemail');
+        navigate(ONBOARD_CHECK_EMAIL_ROUTE);
         break;
       case KeyStoreStage.Initializing:
-        navigate('/onboard/boarding');
+        navigate(ONBOARD_INITIALIZING_ROUTE);
         break;
       case KeyStoreStage.Uninitialized:
-        navigate('/onboard/login');
+        navigate(ONBOARD_LOGIN_ROUTE);
         break;
       case KeyStoreStage.Initialized:
         if (vault && vault !== ethers.constants.AddressZero) {
-          waitingDeploy ? navigate('/vault/deposit/deployed') : navigate('/');
+          waitingDeploy
+            ? navigate(VAULT_DEPOSIT_DEPLOYED_ROUTE)
+            : checkStatusAndNavigate();
           setWaitingDeploy(false);
         } else {
           if (isTermsSigned) {
-            navigate('/vault/deposit/method');
+            navigate(VAULT_DEPOSIT_METHODS_ROUTE);
           } else {
-            navigate('/onboard/terms');
+            navigate(ONBOARD_TERMS_ROUTE);
             setWaitingDeploy(true);
           }
         }
@@ -85,6 +108,7 @@ const Router: React.FC = () => {
         <Route path="/connect" element={<Connect />} />
         <Route path="/connections" element={<Connections />} />
         <Route path="/approval/:approvalId" element={<Approval />} />
+        <Route path="/sign/:signRequestId" element={<SignMessage />} />
         <Route path="/onboard/" element={<Onboard />}>
           <Route path="login" element={<EnterEmailStep />} />
           <Route path="boarding" element={<BoardingState />} />
