@@ -4,9 +4,10 @@ import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAppSelector } from '@hooks/useRedux';
 import VoyagePaper from '@components/Card';
-import { Text, Title } from '@mantine/core';
+import { Avatar, Box, Group, Title } from '@mantine/core';
 import styles from './index.module.scss';
 import { SignRequest } from 'types';
+import Text from '@components/Text';
 
 function SignMessage() {
   const voyageController = useVoyageController();
@@ -43,35 +44,44 @@ function SignMessage() {
   };
 
   return (
-    <div className={styles.root}>
-      <VoyagePaper className={styles.paper}>
-        <div className={styles.wrapper}>
-          <Title className={styles.title} order={1}>
-            Sign Message
-          </Title>
-          <VoyagePaper className={styles.uri}>
-            <Text className={styles.text} size="md" color="white">
-              {pendingSignRequest?.address}
-            </Text>
-          </VoyagePaper>
-          <div className={styles.permissions}>
-            <Text
-              size="md"
-              color="white"
-              weight="bold"
-              sx={{ marginBottom: 16 }}
-            >
-              You are signing:
-            </Text>
-            <div className={styles.items}>
-              <Text size="md" color="white">
-                {pendingSignRequest.message}
-              </Text>
-            </div>
-          </div>
-        </div>
-      </VoyagePaper>
-      <div className={styles.buttons}>
+    <Group
+      direction="column"
+      align="stretch"
+      className={styles.root}
+      spacing={0}
+    >
+      <Group align="center" spacing={11}>
+        <Title className={styles.title} order={1}>
+          Signature Request
+        </Title>
+        <span className={styles.line} />
+      </Group>
+      <Group direction="column" spacing={10} mt={15}>
+        <Text type="secondary">Origin</Text>
+        <VoyagePaper px={25} py={17} sx={{ width: 310 }}>
+          <Group direction="column" spacing={10}>
+            <Group align="center" spacing={5}>
+              <Avatar src={pendingSignRequest?.metadata.icons[0]} size={25} />
+              <Title order={3} color="white" className={styles.name}>
+                {pendingSignRequest?.metadata.name}
+              </Title>
+            </Group>
+            <Text>{pendingSignRequest?.metadata.url}</Text>
+          </Group>
+        </VoyagePaper>
+      </Group>
+      <Group direction="column" sx={{ flexGrow: 1 }} spacing={10} mt={10}>
+        <Text type="secondary">Message</Text>
+        <VoyagePaper
+          px={22}
+          py={20}
+          className={styles.messageBox}
+          sx={{ width: 310, flexGrow: 1, maxHeight: 210 }}
+        >
+          {pendingSignRequest.message}
+        </VoyagePaper>
+      </Group>
+      <Box mt={16} className={styles.buttons}>
         <Button
           className={styles.reject}
           onClick={() => handleReject(pendingSignRequest.id)}
@@ -79,7 +89,7 @@ function SignMessage() {
           disabled={loading}
           variant="outline"
         >
-          Cancel
+          Reject
         </Button>
         <Button
           loading={loading}
@@ -89,8 +99,8 @@ function SignMessage() {
         >
           Sign
         </Button>
-      </div>
-    </div>
+      </Box>
+    </Group>
   );
 }
 
