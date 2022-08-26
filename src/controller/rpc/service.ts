@@ -3,6 +3,7 @@ import { ControllerStore } from '../store';
 import { nanoid } from 'nanoid';
 import { keccak256, toUtf8Bytes } from 'ethers/lib/utils';
 import { openNotificationWindow } from '@utils/extension';
+import { IClientMeta } from '@walletconnect/types';
 
 /**
  * VoyageRpcService defines all handlers for eth RPC methods.
@@ -24,16 +25,22 @@ class VoyageRpcService {
       return this.store.transactionStore.addNewUnconfirmedTransaction(txParams);
   };
 
-  handleEthSign = async (address: string, message: string) =>
+  handleEthSign = async (
+    address: string,
+    message: string,
+    metadata: IClientMeta
+  ) =>
     new Promise<string>(async (resolve, reject) => {
       const id = nanoid();
       this.store.transactionStore.addSignRequest({
         id,
         address,
         message,
+        metadata,
         onApprove: () =>
           Promise.resolve(
             resolve(
+              // TODO: need to move the signing function inside the KeyStore controller
               keccak256(
                 toUtf8Bytes(
                   '\x19Ethereum Signed Message:\n' + message.length + message

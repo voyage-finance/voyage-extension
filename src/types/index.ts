@@ -1,3 +1,5 @@
+import { IClientMeta } from '@walletconnect/types';
+
 export interface Account {
   address: string;
   email: string;
@@ -36,6 +38,7 @@ export interface SignRequest {
   id: string;
   address: string;
   message: string;
+  metadata: IClientMeta;
   onApprove: () => Promise<void>;
   onReject: () => Promise<void>;
 }

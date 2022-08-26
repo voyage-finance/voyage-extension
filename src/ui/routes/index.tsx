@@ -59,6 +59,7 @@ const Router: React.FC = () => {
 
   const checkStatusAndNavigate = () => {
     const pendingSignRequestsCount = pendingSignRequests.length;
+
     if (pendingSignRequestsCount) {
       navigate(`${SIGN_MESSAGE_ROUTE}/${pendingSignRequests[0].id}`);
     } else {

@@ -18,7 +18,10 @@ export const createWcStream = (connection: WalletConnect) => {
       return;
     }
     console.log('call_request: ', payload);
-    stream.push(payload);
+    stream.push({
+      ...payload,
+      params: [...payload.params, connection.peerMeta],
+    });
   });
 
   const write = (res: any) => {

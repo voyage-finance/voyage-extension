@@ -29,8 +29,8 @@ export const createVoyageMiddleware = (service: VoyageRpcService) => {
         break;
       }
       case 'eth_sign': {
-        const [address, message] = req.params as string[];
-        res.result = await service.handleEthSign(address, message);
+        const [address, message, peerMeta] = req.params as any[];
+        res.result = await service.handleEthSign(address, message, peerMeta);
         break;
       }
       case 'eth_sendTransaction': {
