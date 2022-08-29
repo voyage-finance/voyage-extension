@@ -74,5 +74,5 @@ const getEnvironmentTypeMemo = memoize((url: string) => {
  * @param {string} [url] - the URL of the window
  * @returns {string} the environment ENUM
  */
-const getEnvironmentType = (url = window.location.href) =>
+export const getEnvironmentType = (url = window.location.href) =>
   getEnvironmentTypeMemo(url);

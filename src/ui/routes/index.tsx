@@ -33,6 +33,7 @@ import {
   VAULT_DEPOSIT_DEPLOYED_ROUTE,
   VAULT_DEPOSIT_METHODS_ROUTE,
 } from '@utils/constants';
+import { getEnvironmentType } from '@utils/extension';
 
 const Router: React.FC = () => {
   const location = useLocation();
@@ -59,8 +60,8 @@ const Router: React.FC = () => {
 
   const checkStatusAndNavigate = () => {
     const pendingSignRequestsCount = pendingSignRequests.length;
-
-    if (pendingSignRequestsCount) {
+    const isNotification = getEnvironmentType();
+    if (isNotification && pendingSignRequestsCount) {
       navigate(`${SIGN_MESSAGE_ROUTE}/${pendingSignRequests[0].id}`);
     } else {
       navigate(DEFAULT_ROUTE);

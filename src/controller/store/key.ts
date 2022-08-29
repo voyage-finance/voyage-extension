@@ -89,6 +89,14 @@ class KeyStore {
     this.persistState();
   }
 
+  signMessage(message: string) {
+    const wallet = this.getWallet();
+    if (wallet) {
+      return wallet.signMessage(message);
+    }
+    return Promise.reject("Can't reconstruct signer, private key not found");
+  }
+
   startLogin(email: string, fingerprint: string) {
     this.pendingLogin = {
       email,
@@ -123,6 +131,11 @@ class KeyStore {
       privateKey: wallet.privateKey,
       pubKey: { pub_key_X: wallet.publicKey },
     };
+  }
+
+  getWallet() {
+    if (this.account?.keyPair?.privateKey)
+      return new ethers.Wallet(this.account?.keyPair?.privateKey);
   }
 
   async finishLogin(currentUser: AuthInfo) {

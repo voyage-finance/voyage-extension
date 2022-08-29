@@ -37,18 +37,9 @@ class VoyageRpcService {
         address,
         message,
         metadata,
-        onApprove: () =>
-          Promise.resolve(
-            resolve(
-              // TODO: need to move the signing function inside the KeyStore controller
-              keccak256(
-                toUtf8Bytes(
-                  '\x19Ethereum Signed Message:\n' + message.length + message
-                )
-              )
-            )
-          ),
-        onReject: () => Promise.reject(reject('User rejected session request')),
+        onApprove: async () =>
+          resolve(await this.store.keyStore.signMessage(message)),
+        onReject: async () => reject('User rejected session request'),
       });
       openNotificationWindow({
         url: 'notification.html',
