@@ -43,7 +43,7 @@ const Router: React.FC = () => {
   const isOnboardingFlow =
     location.pathname.startsWith('/onboard') ||
     location.pathname.startsWith('/vault/deposit');
-  const needToShowMenubar = location.pathname !== '/' && !isOnboardingFlow;
+  const needToShowMenubar = !isOnboardingFlow;
 
   const stage = useAppSelector((state) => state.core.stage);
   const isTermsSigned = useAppSelector((state) => state.core.isTermsSigned);

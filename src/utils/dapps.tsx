@@ -13,6 +13,11 @@ export const SupportedApps: { [key: number]: App } = {
     name: 'Wallet Connect Example',
     icon: 'https://example.walletconnect.org/favicon.ico',
   },
+  [ChainID.Rinkeby]: {
+    uri: 'https://example.walletconnect.org',
+    name: 'Wallet Connect Example',
+    icon: 'https://example.walletconnect.org/favicon.ico',
+  },
 };
 
 export const getDappForSession = (session: IWalletConnectSession) => {

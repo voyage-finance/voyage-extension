@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 export enum ChainID {
   Mainnet = 1,
   Goerli = 5,
+  Rinkeby = 4,
 }
 
 export const chains: Chain[] = [...defaultChains];
