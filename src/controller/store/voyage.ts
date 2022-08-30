@@ -1,7 +1,7 @@
 /**
  * Wraps calls to the Voyage contracts and subgraph
  */
-import { BigNumber, ethers } from 'ethers';
+import { ethers } from 'ethers';
 import { Voyage, Voyage__factory } from '@contracts';
 import { ControllerStore } from './index';
 import { keccak256, toUtf8Bytes } from 'ethers/lib/utils';
