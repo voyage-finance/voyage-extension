@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { store } from '../store';
 import { initWeb3 } from '@web3/init';
 import {
@@ -10,6 +10,11 @@ import {
 import { IWalletConnectSession } from '@walletconnect/types';
 import { PendingLogin } from 'controller/store/key';
 
+export type TabInfo = {
+  origin: string;
+  url: string;
+};
+
 interface CoreState {
   pendingApprovals: Record<string, ApprovalRequest>;
   pendingSignRequests: Record<string, SignRequest>;
@@ -19,6 +24,7 @@ interface CoreState {
   authInfo?: AuthInfo;
   isTermsSigned: boolean;
   vaultAddress?: string;
+  activeTab?: TabInfo;
 }
 
 const initialState: CoreState = {
@@ -33,9 +39,13 @@ const core = createSlice({
   name: 'core',
   initialState,
   reducers: {
-    updateState(state, action) {
+    updateState(state, action): CoreState {
       console.log('received state update: ', action);
       return { ...state, ...action.payload };
+    },
+    updateActiveTab(state, action: PayloadAction<TabInfo>) {
+      console.log('received state active tab: ', action);
+      state.activeTab = action.payload;
     },
   },
 });
@@ -50,5 +60,5 @@ controller.onNotification((update: any) => {
 });
 
 const { actions, reducer } = core;
-export const { updateState } = actions;
+export const { updateState, updateActiveTab } = actions;
 export default reducer;
