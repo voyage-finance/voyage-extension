@@ -28,7 +28,10 @@ const MenuBar = (props: PropsWithChildren<Props>) => {
           <div className={styles.mmLogo}>
             <MM />
           </div>
-          <div className={styles.connectionInfo}>
+          <div
+            className={styles.connectionInfo}
+            onClick={() => navigator.clipboard.writeText(address ?? '')}
+          >
             <div className={styles.address}>{truncate(address)}</div>
             <div className={styles.network}>
               <div

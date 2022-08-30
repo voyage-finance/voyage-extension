@@ -1,7 +1,6 @@
 import { TransactionParams } from 'types/transaction';
 import { ControllerStore } from '../store';
 import { nanoid } from 'nanoid';
-import { keccak256, toUtf8Bytes } from 'ethers/lib/utils';
 import { openNotificationWindow } from '@utils/extension';
 import { IClientMeta } from '@walletconnect/types';
 

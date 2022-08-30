@@ -27,6 +27,10 @@ export const createWcStream = (connection: WalletConnect) => {
   const write = (res: any) => {
     console.log('res: ', res);
     // if we get a successful response, we should approveRequest
+    if (res.result) {
+      console.log('[wc] approving', res.id);
+      connection.approveRequest(res);
+    }
   };
   const stream = new Duplex({ objectMode: true, read: noop, write: write });
   return stream;

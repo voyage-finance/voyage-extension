@@ -28,6 +28,17 @@ export const createVoyageMiddleware = (service: VoyageRpcService) => {
         res.result = await service.handleEthAccounts();
         break;
       }
+      case 'personal_sign': {
+        const [messageBytes, address, peerMeta] = req.params as any[];
+        console.log('raw message: ', messageBytes);
+        console.log(
+          'as utf-8 from ethers: ',
+          ethers.utils.toUtf8String(messageBytes)
+        );
+        const message = ethers.utils.toUtf8String(messageBytes);
+        res.result = await service.handleEthSign(address, message, peerMeta);
+        break;
+      }
       case 'eth_sign': {
         const [address, message, peerMeta] = req.params as any[];
         res.result = await service.handleEthSign(address, message, peerMeta);

@@ -94,8 +94,8 @@ function getClientEnvironment(publicUrl) {
         // It is defined here so it is available in the webpackHotDevClient.
         FAST_REFRESH: process.env.FAST_REFRESH !== 'false',
         GOERLI_API_KEY: process.env.GOERLI_API_KEY,
+        RINKEBY_API_KEY: process.env.RINKEBY_API_KEY,
         MAINNET_API_KEY: process.env.MAINNET_API_KEY,
-        VOYAGE_ADDRESS: process.env.VOYAGE_ADDRESS,
 
         FIREBASE_API_KEY: process.env.FIREBASE_API_KEY,
         FIREBASE_AUTH_DOMAIN: process.env.FIREBASE_AUTH_DOMAIN,

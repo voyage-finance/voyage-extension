@@ -3,8 +3,7 @@ import VoyageStore from './voyage';
 import { ethers } from 'ethers';
 import KeyStore from './key';
 import TransactionStore from './transaction';
-
-const DEFAULT_VOYAGE_ADDRESS = '0xf8e1932cdedf2D8b4cbA0Ece5D79BD4ad5033DfC';
+import { getNetworkConfiguration, VoyageContracts } from '@utils/env';
 
 class ControllerStore {
   provider: ethers.providers.Provider;
@@ -18,7 +17,7 @@ class ControllerStore {
     this.walletConnectStore = new WalletConnectStore(this);
     this.voyageStore = new VoyageStore(
       this,
-      process.env.VOYAGE_ADDRESS || DEFAULT_VOYAGE_ADDRESS
+      getNetworkConfiguration().contracts[VoyageContracts.Voyage]
     );
     this.keyStore = new KeyStore(this);
     this.transactionStore = new TransactionStore(this);

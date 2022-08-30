@@ -89,10 +89,12 @@ class KeyStore {
     this.persistState();
   }
 
-  signMessage(message: string) {
+  async signMessage(message: string) {
     const wallet = this.getWallet();
     if (wallet) {
-      return wallet.signMessage(message);
+      const signature = await wallet.signMessage(message);
+      console.log('signature : ', signature);
+      return signature;
     }
     return Promise.reject("Can't reconstruct signer, private key not found");
   }
