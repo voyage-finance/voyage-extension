@@ -9,7 +9,7 @@ import { App } from '@utils/dapps';
 import useVoyageController from '@hooks/useVoyageController';
 
 interface Props {
-  app: App;
+  app?: App;
   session?: IWalletConnectSession;
   canDisconnect?: boolean;
 }
