@@ -31,7 +31,7 @@ async function bootstrapSW() {
     if (controller.getState().stage === KeyStoreStage.Initialized) {
       browser.action.setPopup({ popup: 'popup.html' });
     } else {
-      browser.tabs.create({ url: 'popup.html' });
+      browser.tabs.create({ url: 'home.html' });
     }
   });
 }

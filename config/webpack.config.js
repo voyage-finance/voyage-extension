@@ -549,6 +549,12 @@ module.exports = function (webpackEnv) {
         chunks: ['ui'],
         cache: false,
       }),
+      new HtmlWebpackPlugin({
+        template: paths.appNotificationHtml,
+        filename: 'home.html',
+        chunks: ['ui'],
+        cache: false,
+      }),
       new CopyWebpackPlugin({
         patterns: [
           { from: path.resolve(paths.appSrc, 'assets/img/icon.png') },
