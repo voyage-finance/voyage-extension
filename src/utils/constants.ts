@@ -9,3 +9,5 @@ export const VAULT_DEPOSIT_DEPLOYED_ROUTE = '/vault/deposit/deployed';
 export const VAULT_DEPOSIT_METHODS_ROUTE = '/vault/deposit/method';
 
 export const SIGN_MESSAGE_ROUTE = '/sign';
+
+export const PURCHASE_OVERVIEW_ROUTE = '/purchase';

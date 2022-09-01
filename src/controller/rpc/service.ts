@@ -3,6 +3,7 @@ import { ControllerStore } from '../store';
 import { nanoid } from 'nanoid';
 import { openNotificationWindow } from '@utils/extension';
 import { IClientMeta } from '@walletconnect/types';
+import browser from 'webextension-polyfill';
 
 /**
  * VoyageRpcService defines all handlers for eth RPC methods.
@@ -20,6 +21,7 @@ class VoyageRpcService {
   };
 
   handleEthSendTx = async (txParams: TransactionParams) => {
+    browser.tabs.create({ url: 'home.html' });
     if (await this.isValidTx(txParams))
       return this.store.transactionStore.addNewUnconfirmedTransaction(txParams);
   };
@@ -55,6 +57,7 @@ class VoyageRpcService {
   }
 
   private isValidTx = async (txParams: TransactionParams) => {
+    return true;
     const previewResponse = await fetch(
       `${process.env.VOYAGE_API_URL}/marketplace/preview/opensea?calldata=${txParams.data}&speed=fast`
     );

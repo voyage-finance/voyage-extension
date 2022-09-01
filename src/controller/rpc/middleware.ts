@@ -57,6 +57,10 @@ export const createVoyageMiddleware = (service: VoyageRpcService) => {
         // This is temporary for debugging purposes
         console.log('----- eth_signTypedData --------');
         const result = await service.getUnconfirmedTransactions();
+        console.log(
+          '🚀 ~ file: middleware.ts ~ line 60 ~ returncreateAsyncMiddleware ~ result',
+          result
+        );
         res.result = result;
         break;
       }

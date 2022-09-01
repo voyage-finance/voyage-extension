@@ -15,7 +15,7 @@ import cn from 'classnames';
 import BoardingState from '@containers/Onboard/BoardingState';
 import CheckEmailStep from '@containers/Onboard/CheckEmail';
 import { useAppSelector } from '@hooks/useRedux';
-import Onboard from '@containers/Onboard';
+import Onboard from '@containers/FullscreenContainer';
 import { KeyStoreStage } from 'types';
 import SignTermsStep from '@containers/Onboard/SignTermsState';
 import SelectDepositMethod from '@containers/VaultDeploy/SelectDepositMethod';
@@ -29,27 +29,34 @@ import {
   ONBOARD_INITIALIZING_ROUTE,
   ONBOARD_LOGIN_ROUTE,
   ONBOARD_TERMS_ROUTE,
+  PURCHASE_OVERVIEW_ROUTE,
   SIGN_MESSAGE_ROUTE,
   VAULT_DEPOSIT_DEPLOYED_ROUTE,
   VAULT_DEPOSIT_METHODS_ROUTE,
 } from '@utils/constants';
-import { getEnvironmentType } from '@utils/extension';
+import { ExtensionEnvType, getEnvironmentType } from '@utils/extension';
+import { TransactionStatus } from 'types/transaction';
+import PurchaseCart from '@containers/PurchaseCart';
 
 const Router: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const controller = useVoyageController();
 
-  const isOnboardingFlow =
+  const isFullscreenMode =
     location.pathname.startsWith('/onboard') ||
+    location.pathname.startsWith(PURCHASE_OVERVIEW_ROUTE) ||
     location.pathname.startsWith('/vault/deposit');
-  const needToShowMenubar = !isOnboardingFlow;
+  const needToShowMenubar = location.pathname !== '/' && !isFullscreenMode;
 
   const stage = useAppSelector((state) => state.core.stage);
   const isTermsSigned = useAppSelector((state) => state.core.isTermsSigned);
   const vault = useAppSelector((state) => state.core.vaultAddress);
   const pendingSignRequests = useAppSelector((state) => {
     return Object.values(state.core.pendingSignRequests);
+  });
+  const transactions = useAppSelector((state) => {
+    return Object.values(state.core.transactions);
   });
 
   const [waitingDeploy, setWaitingDeploy] = useState(false);
@@ -58,17 +65,35 @@ const Router: React.FC = () => {
     controller.cancelLogin();
   };
 
-  const checkStatusAndNavigate = () => {
-    const pendingSignRequestsCount = pendingSignRequests.length;
-    const isNotification = getEnvironmentType();
-    if (isNotification && pendingSignRequestsCount) {
-      navigate(`${SIGN_MESSAGE_ROUTE}/${pendingSignRequests[0].id}`);
+  const checkStatusAndNavigate = async () => {
+    console.log(
+      '🚀 ~ file: index.tsx ~ line 76 ~ checkStatusAndNavigate ~ checkStatusAndNavigate'
+    );
+    const [pendingSignRequest] = pendingSignRequests;
+    const [unconfirmedTx] = transactions.filter(
+      (tx) => tx.status === TransactionStatus.Unconfirmed
+    );
+    console.log(
+      '🚀 ~ file: index.tsx ~ line 64 ~ checkStatusAndNavigate ~ unconfirmedTx',
+      unconfirmedTx
+    );
+    const isNotification =
+      getEnvironmentType() === ExtensionEnvType.Notification;
+    const isTab = getEnvironmentType() === ExtensionEnvType.Fullscreen;
+    if (isNotification && pendingSignRequest) {
+      navigate(`${SIGN_MESSAGE_ROUTE}/${pendingSignRequest.id}`);
+    }
+    if (isTab && unconfirmedTx) {
+      navigate(`${PURCHASE_OVERVIEW_ROUTE}/${unconfirmedTx.id}`);
     } else {
       navigate(DEFAULT_ROUTE);
     }
   };
 
   useEffect(() => {
+    console.log('🚀 ~ file: index.tsx ~ line 82 ~ useEffect ~ stage', stage);
+    navigate(`${PURCHASE_OVERVIEW_ROUTE}/1`);
+    return;
     switch (stage) {
       case KeyStoreStage.WaitingConfirm:
         navigate(ONBOARD_CHECK_EMAIL_ROUTE);
@@ -98,7 +123,7 @@ const Router: React.FC = () => {
   }, [stage, isTermsSigned, vault]);
 
   return (
-    <div className={cn(styles.root, isOnboardingFlow && styles.tabView)}>
+    <div className={cn(styles.root, isFullscreenMode && styles.tabView)}>
       {needToShowMenubar && <MenuBar />}
       <Routes>
         <Route path="/" element={<Home />} />
@@ -111,6 +136,9 @@ const Router: React.FC = () => {
         <Route path="/connections" element={<Connections />} />
         <Route path="/approval/:approvalId" element={<Approval />} />
         <Route path="/sign/:signRequestId" element={<SignMessage />} />
+        <Route path={PURCHASE_OVERVIEW_ROUTE} element={<Onboard />}>
+          <Route path=":txId" element={<PurchaseCart />} />
+        </Route>
         <Route path="/onboard/" element={<Onboard />}>
           <Route path="login" element={<EnterEmailStep />} />
           <Route path="boarding" element={<BoardingState />} />
