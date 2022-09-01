@@ -46,6 +46,10 @@ class TransactionStore implements TransactionStore {
       metadata: txMeta,
     };
     this.transactions[id] = transaction;
+    console.log(
+      '🚀 ~ file: transaction.ts ~ line 49 ~ TransactionStore ~ this.transactions',
+      this.transactions
+    );
     return transaction;
   }
 

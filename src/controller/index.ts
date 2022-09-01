@@ -114,6 +114,7 @@ export class VoyageController extends SafeEventEmitter {
       fetchVault: this.fetchVault,
       registerVaultWatcher: this.registerVaultWatcher,
       openNotificationWindow: this.openNotificationWindow,
+      getUnconfirmedTransactions: this.getUnconfirmedTransactions,
     };
   }
 
@@ -257,6 +258,9 @@ export class VoyageController extends SafeEventEmitter {
     const body = await response.json();
     return body.sentinelObj?.counterFactualAddress;
   };
+
+  getUnconfirmedTransactions = () =>
+    this.store.transactionStore.getUnconfirmedTransactions();
 
   private sendUpdate = (state: unknown) => {
     this.emit('update', toJS(state));
