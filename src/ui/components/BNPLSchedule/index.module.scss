@@ -1,0 +1,24 @@
+.chevron {
+    transition: transform 200ms ease 0s;
+    &.up {
+        transform: rotate(180deg);
+    }
+}
+
+.activatorActivator {
+    &:hover {
+        cursor: pointer;
+        svg {
+            stroke: rgba(255, 166, 32, 1);
+        }
+    }
+}
+
+.accordionBody {
+    transition: height 400ms ease 0s;
+    height: 0px;
+    overflow: hidden;
+    &.opened {
+        height: 170px
+    }
+}

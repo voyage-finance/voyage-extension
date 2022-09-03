@@ -19,7 +19,7 @@ export type TabInfo = {
 interface CoreState {
   pendingApprovals: Record<string, ApprovalRequest>;
   pendingSignRequests: Record<string, SignRequest>;
-  transactions: Record<string, Transaction>;
+  transactions: Transaction[];
   sessions: Record<string, IWalletConnectSession>;
   pendingLogin?: PendingLogin;
   stage: KeyStoreStage;
@@ -33,7 +33,7 @@ const initialState: CoreState = {
   pendingApprovals: {},
   sessions: {},
   pendingSignRequests: {},
-  transactions: {},
+  transactions: [],
   stage: KeyStoreStage.Uninitialized,
   isTermsSigned: false,
 };
