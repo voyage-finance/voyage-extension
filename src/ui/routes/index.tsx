@@ -47,7 +47,6 @@ const Router: React.FC = () => {
     location.pathname.startsWith('/onboard') ||
     location.pathname.startsWith(PURCHASE_OVERVIEW_ROUTE) ||
     location.pathname.startsWith('/vault/deposit');
-  const needToShowMenubar = location.pathname !== '/' && !isFullscreenMode;
 
   const stage = useAppSelector((state) => state.core.stage);
   const isTermsSigned = useAppSelector((state) => state.core.isTermsSigned);
@@ -92,8 +91,8 @@ const Router: React.FC = () => {
 
   useEffect(() => {
     console.log('🚀 ~ file: index.tsx ~ line 82 ~ useEffect ~ stage', stage);
-    navigate(`${PURCHASE_OVERVIEW_ROUTE}/1`);
-    return;
+    // navigate(`${PURCHASE_OVERVIEW_ROUTE}/1`);
+    // return;
     switch (stage) {
       case KeyStoreStage.WaitingConfirm:
         navigate(ONBOARD_CHECK_EMAIL_ROUTE);
@@ -124,7 +123,7 @@ const Router: React.FC = () => {
 
   return (
     <div className={cn(styles.root, isFullscreenMode && styles.tabView)}>
-      {needToShowMenubar && <MenuBar />}
+      {!isFullscreenMode && <MenuBar />}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/settings" element={<Settings />} />
