@@ -1,19 +1,20 @@
 import Card from '@components/Card';
 import Text from '@components/Text';
-import { Box, Divider, Group, Stack, Transition } from '@mantine/core';
+import { Box, Divider, Group, Stack } from '@mantine/core';
 import * as React from 'react';
 import { ReactComponent as WalletSvg } from 'assets/img/wallet.svg';
 import { ReactComponent as EthSvg } from 'assets/img/eth-icon.svg';
 import { ReactComponent as DoodleSvg } from 'assets/img/doodle.svg';
-import { ChevronDown } from 'tabler-icons-react';
 import Button from '@components/Button';
 import BuyMethodSelect, { PaymentOption } from '@components/BuyMethodSelect';
 import PaymentHoverBoard from '@components/PaymentHoverBoard';
 import BNPLSchedule from '@components/BNPLSchedule';
 import { useAppSelector } from '@hooks/useRedux';
+import SpeedSelect, { Speed } from './SpeedSelect';
 
 const PurchaseCart: React.FC = () => {
   const [pmtOption, setPmtOption] = React.useState(PaymentOption.BNPL);
+  const [speed, setSpeed] = React.useState(Speed.FAST);
   const [transaction] = useAppSelector((state) => {
     return Object.values(state.core.transactions);
   });
@@ -150,16 +151,7 @@ const PurchaseCart: React.FC = () => {
               Estimated Gas Fee
             </Text>
           </Stack>
-          <Group
-            py={2}
-            pl={10}
-            pr={8}
-            spacing={3}
-            sx={{ borderRadius: 10, background: 'rgba(255, 255, 255, 0.1)' }}
-          >
-            ⛵<Text>Normal</Text>
-            <ChevronDown style={{ marginTop: 1 }} size={18} />
-          </Group>
+          <SpeedSelect value={speed} onChange={setSpeed} />
         </Group>
         <Group position="center" mt={22} spacing={6}>
           <Box
