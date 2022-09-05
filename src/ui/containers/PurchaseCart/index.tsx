@@ -1,6 +1,6 @@
 import Card from '@components/Card';
 import Text from '@components/Text';
-import { Box, Divider, Group, Stack } from '@mantine/core';
+import { Box, Divider, Group, Loader, Stack } from '@mantine/core';
 import * as React from 'react';
 import { ReactComponent as WalletSvg } from 'assets/img/wallet.svg';
 import { ReactComponent as EthSvg } from 'assets/img/eth-icon.svg';
@@ -11,6 +11,9 @@ import PaymentHoverBoard from '@components/PaymentHoverBoard';
 import BNPLSchedule from '@components/BNPLSchedule';
 import { useAppSelector } from '@hooks/useRedux';
 import SpeedSelect, { Speed } from './SpeedSelect';
+import { useEthBalance } from '@hooks/useEthBalance';
+import useVoyageController from '@hooks/useVoyageController';
+import { formatAmount } from '@utils/bn';
 
 const PurchaseCart: React.FC = () => {
   const [pmtOption, setPmtOption] = React.useState(PaymentOption.BNPL);
@@ -18,6 +21,14 @@ const PurchaseCart: React.FC = () => {
   const [transaction] = useAppSelector((state) => {
     return Object.values(state.core.transactions);
   });
+  const vaultAddress = useAppSelector((state) => state.core.vaultAddress);
+  const [balance, balanceLoading] = useEthBalance(vaultAddress);
+
+  const controller = useVoyageController();
+
+  React.useEffect(() => {
+    controller.fetchVault();
+  }, []);
   return (
     <Card
       style={{
@@ -28,18 +39,23 @@ const PurchaseCart: React.FC = () => {
       px={56}
     >
       <Stack spacing={0} align="stretch">
-        <Group align="center" position="apart">
+        <Group align="center" position="apart" noWrap>
           <Text sx={{ fontSize: 32 }} weight={'bold'}>
             My cart
           </Text>
           <Group
             spacing={0}
             p={5}
-            sx={{ borderRadius: 10, background: 'rgba(255, 255, 255, 0.1)' }}
+            sx={{
+              borderRadius: 10,
+              background: 'rgba(255, 255, 255, 0.1)',
+              minWidth: 98,
+            }}
+            noWrap
           >
             <WalletSvg />
-            <Text weight={'bold'} ml={36}>
-              6
+            <Text weight={'bold'} ml={'auto'}>
+              {balanceLoading ? <Loader size={14} /> : formatAmount(balance)}
             </Text>
             <EthSvg style={{ width: 24 }} />
           </Group>
