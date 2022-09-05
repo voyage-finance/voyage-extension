@@ -71,7 +71,7 @@ module.exports = {
   appJs: resolveModule(resolveApp, 'src/ui/index'),
   appPopupHtml: resolveApp('src/ui/popup.html'),
   appNotificationHtml: resolveApp('src/ui/notification.html'),
-  appNotificationHtml: resolveApp('src/ui/home.html'),
+  appHomeHtml: resolveApp('src/ui/home.html'),
   appBackground: resolveModule(resolveApp, 'src/scripts/background'),
   appInjector: resolveModule(resolveApp, 'src/scripts/injector'),
   appContentScript: resolveModule(resolveApp, 'src/scripts/contentscript'),
