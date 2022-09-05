@@ -550,7 +550,7 @@ module.exports = function (webpackEnv) {
         cache: false,
       }),
       new HtmlWebpackPlugin({
-        template: paths.appNotificationHtml,
+        template: paths.appHomeHtml,
         filename: 'home.html',
         chunks: ['ui'],
         cache: false,
