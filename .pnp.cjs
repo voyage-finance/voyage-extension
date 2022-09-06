@@ -35,7 +35,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@babel/core", "npm:7.17.9"],\
             ["@babel/runtime", "npm:7.18.9"],\
-            ["@ethereumjs/common", "npm:3.0.0"],\
+            ["@ethereumjs/common", "npm:2.4.0"],\
             ["@ethersproject/abi", "npm:5.6.4"],\
             ["@ethersproject/providers", "npm:5.6.4"],\
             ["@mantine/core", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:4.2.11"],\
@@ -106,7 +106,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["file-loader", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:6.2.0"],\
             ["firebase", "npm:9.9.1"],\
             ["fork-ts-checker-webpack-plugin", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:7.2.6"],\
-            ["fs", "npm:0.0.1-security"],\
             ["fs-extra", "npm:10.0.1"],\
             ["globalthis", "npm:1.0.2"],\
             ["html-webpack-plugin", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:5.5.0"],\
@@ -3452,30 +3451,21 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@ethereumjs/common", [\
+        ["npm:2.4.0", {\
+          "packageLocation": "./.yarn/cache/@ethereumjs-common-npm-2.4.0-d764160a05-46af371450.zip/node_modules/@ethereumjs/common/",\
+          "packageDependencies": [\
+            ["@ethereumjs/common", "npm:2.4.0"],\
+            ["crc-32", "npm:1.2.2"],\
+            ["ethereumjs-util", "npm:7.1.5"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
         ["npm:2.6.5", {\
           "packageLocation": "./.yarn/cache/@ethereumjs-common-npm-2.6.5-3cdacd49c9-0143386f26.zip/node_modules/@ethereumjs/common/",\
           "packageDependencies": [\
             ["@ethereumjs/common", "npm:2.6.5"],\
             ["crc-32", "npm:1.2.2"],\
             ["ethereumjs-util", "npm:7.1.5"]\
-          ],\
-          "linkType": "HARD"\
-        }],\
-        ["npm:3.0.0", {\
-          "packageLocation": "./.yarn/cache/@ethereumjs-common-npm-3.0.0-9191d80e99-940466b22a.zip/node_modules/@ethereumjs/common/",\
-          "packageDependencies": [\
-            ["@ethereumjs/common", "npm:3.0.0"],\
-            ["@ethereumjs/util", "npm:8.0.0"],\
-            ["crc-32", "npm:1.2.2"]\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
-      ["@ethereumjs/rlp", [\
-        ["npm:4.0.0", {\
-          "packageLocation": "./.yarn/cache/@ethereumjs-rlp-npm-4.0.0-b8f0c43c96-407dfb8b1e.zip/node_modules/@ethereumjs/rlp/",\
-          "packageDependencies": [\
-            ["@ethereumjs/rlp", "npm:4.0.0"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -3487,17 +3477,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@ethereumjs/tx", "npm:3.5.2"],\
             ["@ethereumjs/common", "npm:2.6.5"],\
             ["ethereumjs-util", "npm:7.1.5"]\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
-      ["@ethereumjs/util", [\
-        ["npm:8.0.0", {\
-          "packageLocation": "./.yarn/cache/@ethereumjs-util-npm-8.0.0-af18fc9f19-360e9795e1.zip/node_modules/@ethereumjs/util/",\
-          "packageDependencies": [\
-            ["@ethereumjs/util", "npm:8.0.0"],\
-            ["@ethereumjs/rlp", "npm:4.0.0"],\
-            ["ethereum-cryptography", "npm:1.1.2"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -5748,24 +5727,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
-      ["@noble/hashes", [\
-        ["npm:1.1.2", {\
-          "packageLocation": "./.yarn/cache/@noble-hashes-npm-1.1.2-dbc15bb44d-3c2a8cb7c2.zip/node_modules/@noble/hashes/",\
-          "packageDependencies": [\
-            ["@noble/hashes", "npm:1.1.2"]\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
-      ["@noble/secp256k1", [\
-        ["npm:1.6.3", {\
-          "packageLocation": "./.yarn/cache/@noble-secp256k1-npm-1.6.3-d06f711103-16eb324253.zip/node_modules/@noble/secp256k1/",\
-          "packageDependencies": [\
-            ["@noble/secp256k1", "npm:1.6.3"]\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
       ["@nodelib/fs.scandir", [\
         ["npm:2.1.5", {\
           "packageLocation": "./.yarn/cache/@nodelib-fs.scandir-npm-2.1.5-89c67370dd-a970d595bd.zip/node_modules/@nodelib/fs.scandir/",\
@@ -6434,38 +6395,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@rushstack-eslint-patch-npm-1.1.3-78a3592ebb-53752d1e34.zip/node_modules/@rushstack/eslint-patch/",\
           "packageDependencies": [\
             ["@rushstack/eslint-patch", "npm:1.1.3"]\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
-      ["@scure/base", [\
-        ["npm:1.1.1", {\
-          "packageLocation": "./.yarn/cache/@scure-base-npm-1.1.1-67ec4c3f95-b4fc810b49.zip/node_modules/@scure/base/",\
-          "packageDependencies": [\
-            ["@scure/base", "npm:1.1.1"]\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
-      ["@scure/bip32", [\
-        ["npm:1.1.0", {\
-          "packageLocation": "./.yarn/cache/@scure-bip32-npm-1.1.0-99716ab8b2-e6102ab903.zip/node_modules/@scure/bip32/",\
-          "packageDependencies": [\
-            ["@scure/bip32", "npm:1.1.0"],\
-            ["@noble/hashes", "npm:1.1.2"],\
-            ["@noble/secp256k1", "npm:1.6.3"],\
-            ["@scure/base", "npm:1.1.1"]\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
-      ["@scure/bip39", [\
-        ["npm:1.1.0", {\
-          "packageLocation": "./.yarn/cache/@scure-bip39-npm-1.1.0-b324fc574e-c4361406f0.zip/node_modules/@scure/bip39/",\
-          "packageDependencies": [\
-            ["@scure/bip39", "npm:1.1.0"],\
-            ["@noble/hashes", "npm:1.1.2"],\
-            ["@scure/base", "npm:1.1.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -14039,17 +13968,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["setimmediate", "npm:1.0.5"]\
           ],\
           "linkType": "HARD"\
-        }],\
-        ["npm:1.1.2", {\
-          "packageLocation": "./.yarn/cache/ethereum-cryptography-npm-1.1.2-c16cfd7e8a-0ef55f141a.zip/node_modules/ethereum-cryptography/",\
-          "packageDependencies": [\
-            ["ethereum-cryptography", "npm:1.1.2"],\
-            ["@noble/hashes", "npm:1.1.2"],\
-            ["@noble/secp256k1", "npm:1.6.3"],\
-            ["@scure/bip32", "npm:1.1.0"],\
-            ["@scure/bip39", "npm:1.1.0"]\
-          ],\
-          "linkType": "HARD"\
         }]\
       ]],\
       ["ethereumjs-abi", [\
@@ -15032,15 +14950,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/fresh-npm-0.5.2-ad2bb4c0a2-13ea8b08f9.zip/node_modules/fresh/",\
           "packageDependencies": [\
             ["fresh", "npm:0.5.2"]\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
-      ["fs", [\
-        ["npm:0.0.1-security", {\
-          "packageLocation": "./.yarn/cache/fs-npm-0.0.1-security-5060b47e87-53c6230e1f.zip/node_modules/fs/",\
-          "packageDependencies": [\
-            ["fs", "npm:0.0.1-security"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -25964,7 +25873,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["voyage-extension", "workspace:."],\
             ["@babel/core", "npm:7.17.9"],\
             ["@babel/runtime", "npm:7.18.9"],\
-            ["@ethereumjs/common", "npm:3.0.0"],\
+            ["@ethereumjs/common", "npm:2.4.0"],\
             ["@ethersproject/abi", "npm:5.6.4"],\
             ["@ethersproject/providers", "npm:5.6.4"],\
             ["@mantine/core", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:4.2.11"],\
@@ -26035,7 +25944,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["file-loader", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:6.2.0"],\
             ["firebase", "npm:9.9.1"],\
             ["fork-ts-checker-webpack-plugin", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:7.2.6"],\
-            ["fs", "npm:0.0.1-security"],\
             ["fs-extra", "npm:10.0.1"],\
             ["globalthis", "npm:1.0.2"],\
             ["html-webpack-plugin", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:5.5.0"],\
