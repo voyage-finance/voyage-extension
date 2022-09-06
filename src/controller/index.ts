@@ -123,8 +123,13 @@ export class VoyageController extends SafeEventEmitter {
       openNotificationWindow: this.openNotificationWindow,
       getUnconfirmedTransactions: this.getUnconfirmedTransactions,
       populateBuyNow: this.populateBuyNow,
+      testGsn: this.testGsn,
     };
   }
+
+  testGsn = () => {
+    this.store.keyStore.testGsn();
+  };
 
   connectWithWC = async (uri: string) => {
     const connector = new WalletConnect({
