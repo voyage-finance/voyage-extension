@@ -10,10 +10,11 @@ import BuyMethodSelect, { PaymentOption } from '@components/BuyMethodSelect';
 import PaymentHoverBoard from '@components/PaymentHoverBoard';
 import BNPLSchedule from '@components/BNPLSchedule';
 import { useAppSelector } from '@hooks/useRedux';
-import SpeedSelect, { Speed } from './SpeedSelect';
+import SpeedSelect, { LOOKS_EXCHANGE_RINKEBY, Speed } from './SpeedSelect';
 import { useEthBalance } from '@hooks/useEthBalance';
 import { formatAmount } from '@utils/bn';
 import useVoyageController from '@hooks/useVoyageController';
+import { ethers } from 'ethers';
 
 const PurchaseCart: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -35,8 +36,21 @@ const PurchaseCart: React.FC = () => {
   }, []);
 
   const handleBuyClick = async () => {
+    console.log('--------- handleBuyClick -------------', [
+      '0x6C5AE80Bcf0Ec85002FE8eb3Ce267232614127C0',
+      transaction?.metadata?.metadata?.tokenId,
+      vaultAddress!,
+      LOOKS_EXCHANGE_RINKEBY,
+      transaction?.options.data!,
+    ]);
     setIsLoading(true);
-    controller.testGsn();
+    controller.buyNow(
+      '0x6C5AE80Bcf0Ec85002FE8eb3Ce267232614127C0',
+      transaction?.metadata?.metadata?.tokenId,
+      vaultAddress!,
+      LOOKS_EXCHANGE_RINKEBY,
+      transaction?.options.data!
+    );
     // const relayTransaction = await fetch(
     //   `${process.env.VOYAGE_API_URL}/relayTransaction`,
     //   {

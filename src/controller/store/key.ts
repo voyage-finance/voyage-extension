@@ -7,6 +7,7 @@ import { storage } from 'webextension-polyfill';
 import { omit } from 'lodash';
 import HttpProvider from 'web3-providers-http';
 import { RelayProvider } from '@opengsn/provider';
+import { GsnProvider } from 'controller/gsnProvider';
 
 export interface PendingLogin {
   email: string;
@@ -20,6 +21,7 @@ class KeyStore {
   torusSdk: Customauth;
   isTermsSigned: boolean;
   account?: Account;
+  gsnProvider?: GsnProvider;
 
   constructor(root: ControllerStore) {
     this.root = root;
@@ -78,18 +80,46 @@ class KeyStore {
 
   async initGsnProvider() {
     // @ts-ignore
-    const web3Provider = new HttpProvider('http://127.0.0.1:8545');
-    const config = {
-      paymasterAddress: '0xA6e10aA9B038c9Cddea24D2ae77eC3cE38a0c016',
-      auditorsCount: 0,
-      preferredRelays: ['http://127.0.0.1:3000'],
-    };
-    const gsnProvider = RelayProvider.newProvider({
-      provider: web3Provider,
-      config,
-    });
-    await gsnProvider.init();
+    // const web3Provider = new HttpProvider('http://127.0.0.1:8545');
+    // const config = {
+    //   paymasterAddress: '0xA6e10aA9B038c9Cddea24D2ae77eC3cE38a0c016',
+    //   auditorsCount: 0,
+    //   preferredRelays: ['http://127.0.0.1:3000'],
+    // };
+    // const gsnProvider = RelayProvider.newProvider({
+    //   provider: web3Provider,
+    //   config,
+    // });
+    // await gsnProvider.init();
+    // this.gsnProvider = gsnProvider;
+
+    //  seems separate class for gsn is more convinient
+    this.gsnProvider = new GsnProvider();
+    await this.gsnProvider.init();
     console.log('initialized gsn provider');
+  }
+
+  testGsn() {
+    console.log('🚀 ~ file: key.ts ~ line 185 ~ KeyStore ~ testGsn ~ testGsn');
+    this.gsnProvider?.getVault(this.account!.address);
+  }
+
+  buyNow(
+    _collection: string,
+    _tokenId: string,
+    _vault: string,
+    _marketplace: string,
+    _data: ethers.BytesLike
+  ) {
+    console.log('🚀 ~ file: key.ts ~ line 185 ~ KeyStore ~ testGsn ~ testGsn');
+    this.gsnProvider?.buyNow(
+      this.account!.address,
+      _collection,
+      _tokenId,
+      _vault,
+      _marketplace,
+      _data
+    );
   }
 
   persistState() {
@@ -146,7 +176,7 @@ class KeyStore {
     const mnemonic = process.env.DEBUG_GOERLI_MNEMONIC;
     const wallet = mnemonic
       ? new ethers.Wallet(
-          '0f1cf871e8ef1b9246ba70e5443439ea477502d1426fa69db9d8ec27ca0232fd'
+          '0xafd746101717d4ffbb8e387164e562e6299d290979ae66b76178c8088c314e0a'
         ) //ethers.Wallet.fromMnemonic(mnemonic) //
       : ethers.Wallet.createRandom();
     return {
@@ -180,6 +210,9 @@ class KeyStore {
       auth: currentUser,
     };
     await this.root.voyageStore.fetchVault();
+    console.log('----- torusResponse.privateKey -----');
+    this.gsnProvider?.addAccount(torusResponse.privateKey);
+    console.log('----- addAccount -----');
     this.stage = KeyStoreStage.Initialized;
     this.persistState();
   }

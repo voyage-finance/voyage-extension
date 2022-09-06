@@ -124,11 +124,28 @@ export class VoyageController extends SafeEventEmitter {
       getUnconfirmedTransactions: this.getUnconfirmedTransactions,
       populateBuyNow: this.populateBuyNow,
       testGsn: this.testGsn,
+      buyNow: this.buyNow,
     };
   }
 
   testGsn = () => {
-    // this.store.keyStore.testGsn();
+    this.store.keyStore.testGsn();
+  };
+
+  buyNow = (
+    _collection: string,
+    _tokenId: string,
+    _vault: string,
+    _marketplace: string,
+    _data: ethers.BytesLike
+  ) => {
+    this.store.keyStore.buyNow(
+      _collection,
+      _tokenId,
+      _vault,
+      _marketplace,
+      _data
+    );
   };
 
   connectWithWC = async (uri: string) => {
