@@ -128,7 +128,7 @@ export class VoyageController extends SafeEventEmitter {
   }
 
   testGsn = () => {
-    this.store.keyStore.testGsn();
+    // this.store.keyStore.testGsn();
   };
 
   connectWithWC = async (uri: string) => {
