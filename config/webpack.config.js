@@ -311,7 +311,10 @@ module.exports = function (webpackEnv) {
         url: require.resolve("url"),
         os: require.resolve("os-browserify/browser"),
         https: require.resolve("https-browserify"),
-        http: require.resolve("stream-http")
+        http: require.resolve("stream-http"),
+        zlib: require.resolve("browserify-zlib"),
+        path: require.resolve("path-browserify"),
+        fs: require.resolve("browserify-fs"),
       },
     },
     module: {
