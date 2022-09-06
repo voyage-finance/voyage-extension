@@ -63,7 +63,8 @@ const SPEEDS: Record<Speed, SpeedConfig> = {
   },
 };
 
-const LOOKS_EXCHANGE_RINKEBY = '0x1AA777972073Ff66DCFDeD85749bDD555C0665dA';
+export const LOOKS_EXCHANGE_RINKEBY =
+  '0x1AA777972073Ff66DCFDeD85749bDD555C0665dA';
 
 const SpeedSelect: React.FunctionComponent<ISpeedSelectProps> = ({
   value,
@@ -71,11 +72,11 @@ const SpeedSelect: React.FunctionComponent<ISpeedSelectProps> = ({
   collection,
   tokenId,
   vault,
-  user,
   calldata,
   onRawTxChange,
   ...props
 }) => {
+  const user = '0xAD5792b1D998f607d3EEB2f357138A440B03f19f';
   const [loading, setLoading] = React.useState(false);
   const [waitTime, setWaitTime] = React.useState(0);
   const [price, setPrice] = React.useState(0);
@@ -89,6 +90,7 @@ const SpeedSelect: React.FunctionComponent<ISpeedSelectProps> = ({
       vault,
       LOOKS_EXCHANGE_RINKEBY,
     });
+
     if (collection && tokenId && vault && calldata && user) {
       setLoading(true);
       const voyageRawTx = await controller.populateBuyNow(

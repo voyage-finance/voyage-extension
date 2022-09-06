@@ -40,7 +40,7 @@ export class GsnProvider {
     this.gsnProvider.addAccount(privateKey);
   };
 
-  async buyNow(userAddress: string) {
+  async getVault(userAddress: string) {
     const provider = new ethers.providers.Web3Provider(this.gsnProvider);
     const voyage = new ethers.Contract(
       getNetworkConfiguration().contracts[VoyageContracts.Voyage],
@@ -49,8 +49,42 @@ export class GsnProvider {
     );
     const before = await voyage.getVaultAddr(userAddress);
     console.log(
-      '🚀 ~ file: gsnProvider.ts ~ line 47 ~ GsnProvider ~ buyNow ~ before',
+      '🚀 ~ file: gsnProvider.ts ~ line 47 ~ GsnProvider ~ getVault ~ before',
       before
+    );
+  }
+
+  async buyNow(
+    userAddress: string,
+    _collection: string,
+    _tokenId: string,
+    _vault: string,
+    _marketplace: string,
+    _data: ethers.BytesLike
+  ) {
+    const provider = new ethers.providers.Web3Provider(this.gsnProvider);
+    const voyage = new ethers.Contract(
+      getNetworkConfiguration().contracts[VoyageContracts.Voyage],
+      VoyageAbi,
+      provider.getSigner('0xAD5792b1D998f607d3EEB2f357138A440B03f19f')
+    );
+    console.log('---------- buyNow params ------------', {
+      _collection,
+      _tokenId,
+      _vault,
+      _marketplace,
+      _data,
+    });
+    const tx = await voyage.buyNow(
+      _collection,
+      _tokenId,
+      _vault,
+      _marketplace,
+      _data
+    );
+    console.log(
+      '🚀 ~ file: gsnProvider.ts ~ line 47 ~ GsnProvider ~ buyNow ~ before',
+      tx
     );
   }
 }
