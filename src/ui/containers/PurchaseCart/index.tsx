@@ -1,7 +1,7 @@
 import Card from '@components/Card';
 import Text from '@components/Text';
 import { Box, Divider, Group, Loader, Stack } from '@mantine/core';
-import * as React from 'react';
+import { useEffect, useState } from 'react';
 import { ReactComponent as WalletSvg } from 'assets/img/wallet.svg';
 import { ReactComponent as EthSvg } from 'assets/img/eth-icon.svg';
 import { ReactComponent as DoodleSvg } from 'assets/img/doodle.svg';
@@ -16,19 +16,26 @@ import useVoyageController from '@hooks/useVoyageController';
 import { formatAmount } from '@utils/bn';
 
 const PurchaseCart: React.FC = () => {
-  const [pmtOption, setPmtOption] = React.useState(PaymentOption.BNPL);
-  const [speed, setSpeed] = React.useState(Speed.FAST);
+  const [isLoading, setIsLoading] = useState(false);
+  const [pmtOption, setPmtOption] = useState(PaymentOption.BNPL);
+  const [speed, setSpeed] = useState(Speed.FAST);
   const [transaction] = useAppSelector((state) => {
     return Object.values(state.core.transactions);
   });
   const vaultAddress = useAppSelector((state) => state.core.vaultAddress);
   const [balance, balanceLoading] = useEthBalance(vaultAddress);
 
-  const controller = useVoyageController();
-
-  React.useEffect(() => {
+  useEffect(() => {
+    console.log('------- transaction --------', transaction);
     controller.fetchVault();
   }, []);
+
+  const handleBuyClick = async () => {
+    setIsLoading(true);
+
+    setIsLoading(false);
+  };
+
   return (
     <Card
       style={{
@@ -69,19 +76,20 @@ const PurchaseCart: React.FC = () => {
                 'undefined name'}
             </Text>
             <Text type="secondary">
-              {transaction?.metadata?.metadata?.collection ||
+              {transaction?.metadata?.metadata?.collectionName ||
                 'undefined collection'}
             </Text>
           </Stack>
           <Stack spacing={0} ml="auto" align="end">
             <Group align="center" spacing={0}>
               <Text weight={'bold'} size="lg" ml={36}>
-                {transaction?.metadata?.loanParameters?.principle || '—'}
+                {transaction?.metadata?.metadata?.loanParameters?.principle ||
+                  '—'}
               </Text>
               <EthSvg style={{ width: 24 }} />
             </Group>
             <Text type="secondary" mr={8}>
-              $12.1K
+              $ —
             </Text>
           </Stack>
         </Group>
@@ -135,40 +143,23 @@ const PurchaseCart: React.FC = () => {
           </Group>
         </Stack>
         {pmtOption === PaymentOption.BNPL && <BNPLSchedule mt={20} />}
-        <Button fullWidth mt={24}>
+        <Button fullWidth mt={24} onClick={handleBuyClick} loading={isLoading}>
           Pay 6 <EthSvg />
         </Button>
         <Button fullWidth mt={12} kind="secondary">
           Cancel
         </Button>
-        <Group position="apart" align="center" mt={12}>
-          <Stack spacing={0}>
-            <Group spacing={0}>
-              <EthSvg style={{ width: 11 }} />
-              <Text
-                size="sm"
-                sx={{ lineHeight: '12px' }}
-                ml={1}
-                weight={'bold'}
-              >
-                0.00015
-              </Text>
-              <Text
-                size="sm"
-                sx={{ lineHeight: '12px' }}
-                ml={4}
-                type="secondary"
-                weight={'bold'}
-              >
-                ~30 sec
-              </Text>
-            </Group>
-            <Text size="sm" ml={3} sx={{ lineHeight: '12px' }} type="secondary">
-              Estimated Gas Fee
-            </Text>
-          </Stack>
-          <SpeedSelect value={speed} onChange={setSpeed} />
-        </Group>
+
+        <SpeedSelect
+          value={speed}
+          onChange={setSpeed}
+          mt={12}
+          collection={'0x6C5AE80Bcf0Ec85002FE8eb3Ce267232614127C0'}
+          tokenId={transaction.metadata.metadata.tokenId}
+          vault={vaultAddress}
+          calldata={transaction.options.data}
+        />
+
         <Group position="center" mt={22} spacing={6}>
           <Box
             sx={{

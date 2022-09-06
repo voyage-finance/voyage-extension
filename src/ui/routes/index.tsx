@@ -37,6 +37,7 @@ import {
 import { ExtensionEnvType, getEnvironmentType } from '@utils/extension';
 import { TransactionStatus } from 'types/transaction';
 import PurchaseCart from '@containers/PurchaseCart';
+import PurchaseConfirmed from '@containers/PurchaseConfirmed';
 
 const Router: React.FC = () => {
   const location = useLocation();
@@ -137,6 +138,7 @@ const Router: React.FC = () => {
         <Route path="/sign/:signRequestId" element={<SignMessage />} />
         <Route path={PURCHASE_OVERVIEW_ROUTE} element={<Onboard />}>
           <Route path=":txId" element={<PurchaseCart />} />
+          <Route path="confirmed" element={<PurchaseConfirmed />} />
         </Route>
         <Route path="/onboard/" element={<Onboard />}>
           <Route path="login" element={<EnterEmailStep />} />

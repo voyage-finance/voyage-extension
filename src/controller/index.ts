@@ -1,5 +1,5 @@
 import { Duplex } from 'stream';
-import { BigNumber, ethers } from 'ethers';
+import { BigNumber, BytesLike, ethers } from 'ethers';
 import pump from 'pump';
 import {
   createIdRemapMiddleware,
@@ -46,10 +46,17 @@ export class VoyageController extends SafeEventEmitter {
   constructor() {
     super();
 
-    this.provider = new ethers.providers.AlchemyProvider(
-      getNetworkConfiguration().name,
-      getNetworkConfiguration().apiKey
+    this.provider = new ethers.providers.JsonRpcProvider(
+      'http://localhost:8545',
+      {
+        chainId: 4,
+        name: 'rinkeby-fork',
+      }
     );
+    // new ethers.providers.AlchemyProvider(
+    //   getNetworkConfiguration().name,
+    //   getNetworkConfiguration().apiKey
+    // );
     this.store = new ControllerStore(this.provider);
     this.service = new VoyageRpcService(this.store);
     this.engine = this.createRpcEngine();
@@ -115,6 +122,7 @@ export class VoyageController extends SafeEventEmitter {
       registerVaultWatcher: this.registerVaultWatcher,
       openNotificationWindow: this.openNotificationWindow,
       getUnconfirmedTransactions: this.getUnconfirmedTransactions,
+      populateBuyNow: this.populateBuyNow,
     };
   }
 
@@ -232,6 +240,22 @@ export class VoyageController extends SafeEventEmitter {
 
   getBalance = (address: string) => {
     return this.store.voyageStore.getBalance(address);
+  };
+
+  populateBuyNow = (
+    _collection: string,
+    _tokenId: string,
+    _vault: string,
+    _marketplace: string,
+    _data: BytesLike
+  ) => {
+    return this.store.voyageStore.populateBuyNow(
+      _collection,
+      _tokenId,
+      _vault,
+      _marketplace,
+      _data
+    );
   };
 
   registerVaultWatcher = async (): Promise<string> => {

@@ -1,7 +1,7 @@
 /**
  * Wraps calls to the Voyage contracts and subgraph
  */
-import { ethers } from 'ethers';
+import { ethers, BytesLike } from 'ethers';
 import { Voyage, Voyage__factory } from '@contracts';
 import { ControllerStore } from './index';
 import { keccak256, toUtf8Bytes } from 'ethers/lib/utils';
@@ -35,8 +35,9 @@ class VoyageStore {
     const vaultAddress = await this.voyage.getVault(address);
     this.vaultAddress = vaultAddress;
     console.log(
-      '🚀 ~ file: voyage.ts ~ line 33 ~ VoyageStore ~ fetchVault ~ vaultAddress',
-      vaultAddress
+      '🚀 ~ file: voyage.ts ~ line 33 ~ VoyageStore ~ fetchVault ~ vaultAddress & user address',
+      vaultAddress,
+      address
     );
 
     if (vaultAddress === ethers.constants.AddressZero) return;
@@ -53,6 +54,22 @@ class VoyageStore {
       salt
     );
     return vaultAddress;
+  }
+
+  async populateBuyNow(
+    _collection: string,
+    _tokenId: string,
+    _vault: string,
+    _marketplace: string,
+    _data: BytesLike
+  ) {
+    return this.voyage.populateTransaction.buyNow(
+      _collection,
+      _tokenId,
+      _vault,
+      _marketplace,
+      _data
+    );
   }
 
   getBalance(address: string) {
