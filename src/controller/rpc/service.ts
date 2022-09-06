@@ -65,7 +65,18 @@ class VoyageRpcService {
 
   private previewTx = async (txParams: TransactionParams) => {
     const response = await fetch(
-      `${process.env.VOYAGE_API_URL}/marketplace/preview/opensea?calldata=${txParams.data}&speed=fast`
+      `${process.env.VOYAGE_API_URL}/v1/marketplace/preview/looksrare`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          calldata: txParams.data,
+          speed: 'fast',
+          vault: this.store.voyageStore.vaultAddress,
+        }),
+      }
     );
     const data = await response.json();
     if (!response.ok) {

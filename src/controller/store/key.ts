@@ -126,7 +126,9 @@ class KeyStore {
       );
     const mnemonic = process.env.DEBUG_GOERLI_MNEMONIC;
     const wallet = mnemonic
-      ? ethers.Wallet.fromMnemonic(mnemonic)
+      ? new ethers.Wallet(
+          '0f1cf871e8ef1b9246ba70e5443439ea477502d1426fa69db9d8ec27ca0232fd'
+        ) //ethers.Wallet.fromMnemonic(mnemonic) //
       : ethers.Wallet.createRandom();
     return {
       publicAddress: wallet.address,
