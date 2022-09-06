@@ -12,18 +12,22 @@ import BNPLSchedule from '@components/BNPLSchedule';
 import { useAppSelector } from '@hooks/useRedux';
 import SpeedSelect, { Speed } from './SpeedSelect';
 import { useEthBalance } from '@hooks/useEthBalance';
-import useVoyageController from '@hooks/useVoyageController';
 import { formatAmount } from '@utils/bn';
+import useVoyageController from '@hooks/useVoyageController';
 
 const PurchaseCart: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [pmtOption, setPmtOption] = useState(PaymentOption.BNPL);
   const [speed, setSpeed] = useState(Speed.FAST);
+  const [rawTx, setRawTx] = useState('');
   const [transaction] = useAppSelector((state) => {
     return Object.values(state.core.transactions);
   });
   const vaultAddress = useAppSelector((state) => state.core.vaultAddress);
+  const userAddress = useAppSelector((state) => state.core.account?.address);
   const [balance, balanceLoading] = useEthBalance(vaultAddress);
+
+  const controller = useVoyageController();
 
   useEffect(() => {
     console.log('------- transaction --------', transaction);
@@ -32,7 +36,23 @@ const PurchaseCart: React.FC = () => {
 
   const handleBuyClick = async () => {
     setIsLoading(true);
-
+    controller.testGsn();
+    // const relayTransaction = await fetch(
+    //   `${process.env.VOYAGE_API_URL}/relayTransaction`,
+    //   {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //     },
+    //     body: JSON.stringify({
+    //       speed: 'normal',
+    //       from: userAddress,
+    //       calldata: rawTx,
+    //     }),
+    //   }
+    // );
+    // const body = await relayTransaction.json();
+    // console.log('------------ estimateGasResponse -------------', body);
     setIsLoading(false);
   };
 
@@ -155,9 +175,11 @@ const PurchaseCart: React.FC = () => {
           onChange={setSpeed}
           mt={12}
           collection={'0x6C5AE80Bcf0Ec85002FE8eb3Ce267232614127C0'}
-          tokenId={transaction.metadata.metadata.tokenId}
+          tokenId={transaction?.metadata?.metadata?.tokenId}
           vault={vaultAddress}
-          calldata={transaction.options.data}
+          user={userAddress}
+          calldata={transaction?.options.data}
+          onRawTxChange={setRawTx}
         />
 
         <Group position="center" mt={22} spacing={6}>

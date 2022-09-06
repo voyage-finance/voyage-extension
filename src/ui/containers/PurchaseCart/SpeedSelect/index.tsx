@@ -19,14 +19,16 @@ interface ISpeedSelectProps extends Omit<BoxProps<'div'>, 'onChange'> {
   collection?: string;
   tokenId?: string;
   vault?: string;
+  user?: string;
   calldata?: BytesLike;
+  onRawTxChange: (rawTx: string) => void;
   onChange: (opt: Speed) => void;
 }
 
 export enum Speed {
-  FAST,
-  NORMAL,
-  SLOW,
+  FAST = 'fast',
+  NORMAL = 'normal',
+  SLOW = 'slow',
 }
 
 export type SpeedConfig = {
@@ -69,7 +71,9 @@ const SpeedSelect: React.FunctionComponent<ISpeedSelectProps> = ({
   collection,
   tokenId,
   vault,
+  user,
   calldata,
+  onRawTxChange,
   ...props
 }) => {
   const [loading, setLoading] = React.useState(false);
@@ -85,7 +89,7 @@ const SpeedSelect: React.FunctionComponent<ISpeedSelectProps> = ({
       vault,
       LOOKS_EXCHANGE_RINKEBY,
     });
-    if (collection && tokenId && vault && calldata) {
+    if (collection && tokenId && vault && calldata && user) {
       setLoading(true);
       const voyageRawTx = await controller.populateBuyNow(
         collection, //'0x6C5AE80Bcf0Ec85002FE8eb3Ce267232614127C0',
@@ -95,6 +99,7 @@ const SpeedSelect: React.FunctionComponent<ISpeedSelectProps> = ({
         calldata
       );
       console.log('---- voyageRawTx ----', voyageRawTx);
+      onRawTxChange(voyageRawTx.data as string);
       const estimateGasResponse = await fetch(
         `${process.env.VOYAGE_API_URL}/estimateGas`,
         {
@@ -103,8 +108,8 @@ const SpeedSelect: React.FunctionComponent<ISpeedSelectProps> = ({
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            speed: 'normal',
-            from: '0x130dA3533638250818792a9C95438387B443Ef4B',
+            speed: value,
+            from: user,
             calldata: voyageRawTx.data,
           }),
         }

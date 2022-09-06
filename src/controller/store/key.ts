@@ -4,7 +4,9 @@ import { ethers } from 'ethers';
 import { makeAutoObservable, toJS } from 'mobx';
 import Customauth from '@toruslabs/customauth';
 import { storage } from 'webextension-polyfill';
-import { omit } from 'lodash';
+import _, { omit } from 'lodash';
+import { GsnProvider } from 'controller/gsnProvider';
+import { throws } from 'assert';
 
 export interface PendingLogin {
   email: string;
@@ -18,6 +20,7 @@ class KeyStore {
   torusSdk: Customauth;
   isTermsSigned: boolean;
   account?: Account;
+  gsnProvider?: GsnProvider;
 
   constructor(root: ControllerStore) {
     this.root = root;
@@ -29,6 +32,7 @@ class KeyStore {
     });
     makeAutoObservable(this, { root: false });
     this.initialize();
+    this.gsnProvider = new GsnProvider();
   }
 
   getAccount(): Account | undefined {
@@ -41,6 +45,7 @@ class KeyStore {
       authInfo: this.account?.auth,
       stage: this.stage,
       isTermsSigned: this.isTermsSigned,
+      account: this.account,
     };
   }
 
@@ -127,9 +132,10 @@ class KeyStore {
     const mnemonic = process.env.DEBUG_GOERLI_MNEMONIC;
     const wallet = mnemonic
       ? new ethers.Wallet(
-          '0f1cf871e8ef1b9246ba70e5443439ea477502d1426fa69db9d8ec27ca0232fd'
-        ) //ethers.Wallet.fromMnemonic(mnemonic) //
+          '0xafd746101717d4ffbb8e387164e562e6299d290979ae66b76178c8088c314e0a'
+        ) // ethers.Wallet.fromMnemonic(mnemonic) //
       : ethers.Wallet.createRandom();
+
     return {
       publicAddress: wallet.address,
       privateKey: wallet.privateKey,
@@ -160,6 +166,9 @@ class KeyStore {
       email: currentUser.email,
       auth: currentUser,
     };
+    await this.gsnProvider?.init();
+    await this.gsnProvider?.addAccount(torusResponse.privateKey);
+
     await this.root.voyageStore.fetchVault();
     this.stage = KeyStoreStage.Initialized;
     this.persistState();
@@ -171,6 +180,11 @@ class KeyStore {
     this.account = undefined;
     this.isTermsSigned = false;
     storage.local.remove('keyStore');
+  }
+
+  testGsn() {
+    console.log('🚀 ~ file: key.ts ~ line 185 ~ KeyStore ~ testGsn ~ testGsn');
+    this.gsnProvider?.buyNow(this.account!.address);
   }
 }
 

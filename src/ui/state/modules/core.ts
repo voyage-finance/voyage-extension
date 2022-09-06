@@ -6,6 +6,7 @@ import {
   KeyStoreStage,
   AuthInfo,
   SignRequest,
+  Account,
 } from '../../../types';
 import { IWalletConnectSession } from '@walletconnect/types';
 import { PendingLogin } from 'controller/store/key';
@@ -26,6 +27,7 @@ interface CoreState {
   authInfo?: AuthInfo;
   isTermsSigned: boolean;
   vaultAddress?: string;
+  account?: Account;
   activeTab?: TabInfo;
 }
 
