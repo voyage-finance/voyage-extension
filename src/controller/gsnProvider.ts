@@ -4,8 +4,14 @@ import { getNetworkConfiguration, VoyageContracts } from '@utils/env';
 import VoyageAbi from 'abis/voyage.json';
 import HttpProvider from 'web3-providers-http';
 import { HttpClient, HttpWrapper } from '@opengsn/common';
-import fetchAdapter from '@vespaiach/axios-fetch-adapter';
+import { RelayTransactionRequest } from '@opengsn/common/dist/types/RelayTransactionRequest';
+import { RelayInfo } from '@opengsn/common/dist/types/RelayInfo';
+import { RelayRegisteredEventInfo } from '@opengsn/common/dist/types/GSNContractsDataTypes';
 import { createClientLogger } from '@opengsn/provider/dist/ClientWinstonLogger';
+import { PingResponse } from '@opengsn/common/dist/PingResponse';
+import { GsnTransactionDetails } from '@opengsn/common/dist/types/GsnTransactionDetails';
+import fetchAdapter from '@vespaiach/axios-fetch-adapter';
+import sinon from 'sinon';
 
 export class GsnProvider {
   gsnProvider: RelayProvider;
@@ -36,6 +42,7 @@ export class GsnProvider {
       config,
       overrideDependencies: {
         logger,
+        //@ts-ignore
         httpClient,
       },
     });
@@ -79,15 +86,8 @@ export class GsnProvider {
     const voyage = new ethers.Contract(
       getNetworkConfiguration().contracts[VoyageContracts.Voyage],
       VoyageAbi,
-      provider.getSigner('0xAD5792b1D998f607d3EEB2f357138A440B03f19f')
+      provider.getSigner(userAddress)
     );
-    console.log('---------- buyNow params ------------', {
-      _collection,
-      _tokenId,
-      _vault,
-      _marketplace,
-      _data,
-    });
     const tx = await voyage.buyNow(
       _collection,
       _tokenId,
@@ -95,9 +95,73 @@ export class GsnProvider {
       _marketplace,
       _data
     );
-    console.log(
-      '🚀 ~ file: gsnProvider.ts ~ line 47 ~ GsnProvider ~ buyNow ~ before',
-      tx
-    );
+    console.log('--------------- buyNow - tx ----------------', tx);
+    return tx;
+  }
+
+  async createRelayHttpRequest(
+    data: string,
+    userAddress: string
+  ): Promise<RelayTransactionRequest> {
+    console.log('------ createRelayHttpRequest --------');
+    const pingRequest = await fetch(`${process.env.VOYAGE_API_URL}/getAddr`);
+    const pingResponseBody = await pingRequest.json();
+    console.log('----- pingResponseBody ------', pingResponseBody);
+    const pingResponse = {
+      relayHubAddress: pingResponseBody.relayHubAddress,
+      relayWorkerAddress: pingResponseBody.relayWorkerAddress,
+    };
+    const eventInfo: RelayRegisteredEventInfo = {
+      baseRelayFee: pingResponseBody.baseRelayFee, //'this.relayer.config.baseRelayFee',
+      pctRelayFee: pingResponseBody.pctRelayFee, //'this.relayer.config.pctRelayFee.toString()',
+      relayManager: '',
+      relayUrl: '',
+    };
+    const relayInfo: RelayInfo = {
+      pingResponse: pingResponse as PingResponse,
+      relayInfo: eventInfo,
+    };
+    const gsnTransactionDetails: GsnTransactionDetails = {
+      from: userAddress,
+      to: getNetworkConfiguration().contracts[VoyageContracts.Voyage],
+      data: data,
+    };
+    if (gsnTransactionDetails.gas == null) {
+      const estimated =
+        await this.gsnProvider.relayClient.dependencies.contractInteractor.estimateGas(
+          gsnTransactionDetails
+        );
+      gsnTransactionDetails.gas = `0x${estimated.toString(16)}`;
+    }
+    gsnTransactionDetails.gasPrice =
+      gsnTransactionDetails.forceGasPrice ??
+      (await this.gsnProvider.relayClient._calculateGasPrice());
+
+    const mergedDeployment =
+      this.gsnProvider.relayClient.dependencies.contractInteractor.getDeployment();
+    const sandbox = sinon.createSandbox();
+    try {
+      sandbox
+        .stub(
+          this.gsnProvider.relayClient.dependencies.contractInteractor,
+          'getDeployment'
+        )
+        .returns(mergedDeployment);
+      const mergedTransactionDetail = Object.assign(
+        {},
+        gsnTransactionDetails,
+        {}
+      );
+      // do not 'return await' here as it will defer executing the 'finally' block and enable re-stubbing
+      // (will crash on 'let x = [createRelayHttpRequest(), createRelayHttpRequest()]')
+      // eslint-disable-next-line @typescript-eslint/return-await
+      const req = this.gsnProvider.relayClient._prepareRelayHttpRequest(
+        relayInfo,
+        mergedTransactionDetail
+      );
+      return req;
+    } finally {
+      sandbox.restore();
+    }
   }
 }

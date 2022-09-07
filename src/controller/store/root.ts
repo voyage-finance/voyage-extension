@@ -4,9 +4,11 @@ import { ethers } from 'ethers';
 import KeyStore from './key';
 import TransactionStore from './transaction';
 import { getNetworkConfiguration, VoyageContracts } from '@utils/env';
+import { GsnProvider } from 'controller/gsnProvider';
 
 class ControllerStore {
   provider: ethers.providers.Provider;
+  gsnProvider?: GsnProvider;
   walletConnectStore: WalletConnectStore;
   voyageStore: VoyageStore;
   transactionStore: TransactionStore;

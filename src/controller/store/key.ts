@@ -21,7 +21,6 @@ class KeyStore {
   torusSdk: Customauth;
   isTermsSigned: boolean;
   account?: Account;
-  gsnProvider?: GsnProvider;
 
   constructor(root: ControllerStore) {
     this.root = root;
@@ -45,6 +44,7 @@ class KeyStore {
       authInfo: this.account?.auth,
       stage: this.stage,
       isTermsSigned: this.isTermsSigned,
+      account: this.account,
     };
   }
 
@@ -57,8 +57,8 @@ class KeyStore {
       this.isTermsSigned = stateObject.isTermsSigned;
       this.account = stateObject.account;
       this.reconstructKeyPair();
-      await this.initGsnProvider();
     }
+    await this.initGsnProvider();
   }
 
   async reconstructKeyPair() {
@@ -79,47 +79,9 @@ class KeyStore {
   }
 
   async initGsnProvider() {
-    // @ts-ignore
-    // const web3Provider = new HttpProvider('http://127.0.0.1:8545');
-    // const config = {
-    //   paymasterAddress: '0xA6e10aA9B038c9Cddea24D2ae77eC3cE38a0c016',
-    //   auditorsCount: 0,
-    //   preferredRelays: ['http://127.0.0.1:3000'],
-    // };
-    // const gsnProvider = RelayProvider.newProvider({
-    //   provider: web3Provider,
-    //   config,
-    // });
-    // await gsnProvider.init();
-    // this.gsnProvider = gsnProvider;
-
-    //  seems separate class for gsn is more convinient
-    this.gsnProvider = new GsnProvider();
-    await this.gsnProvider.init();
-    console.log('initialized gsn provider');
-  }
-
-  testGsn() {
-    console.log('🚀 ~ file: key.ts ~ line 185 ~ KeyStore ~ testGsn ~ testGsn');
-    this.gsnProvider?.getVault(this.account!.address);
-  }
-
-  buyNow(
-    _collection: string,
-    _tokenId: string,
-    _vault: string,
-    _marketplace: string,
-    _data: ethers.BytesLike
-  ) {
-    console.log('🚀 ~ file: key.ts ~ line 185 ~ KeyStore ~ testGsn ~ testGsn');
-    this.gsnProvider?.buyNow(
-      this.account!.address,
-      _collection,
-      _tokenId,
-      _vault,
-      _marketplace,
-      _data
-    );
+    this.root.gsnProvider = new GsnProvider();
+    await this.root.gsnProvider.init();
+    console.log('----- initialized gsn provider -----');
   }
 
   persistState() {
@@ -211,7 +173,7 @@ class KeyStore {
     };
     await this.root.voyageStore.fetchVault();
     console.log('----- torusResponse.privateKey -----');
-    this.gsnProvider?.addAccount(torusResponse.privateKey);
+    this.root.gsnProvider?.addAccount(torusResponse.privateKey);
     console.log('----- addAccount -----');
     this.stage = KeyStoreStage.Initialized;
     this.persistState();
