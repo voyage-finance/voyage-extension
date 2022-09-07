@@ -1,5 +1,5 @@
 import { Duplex } from 'stream';
-import { BigNumber, BytesLike, ethers } from 'ethers';
+import { BytesLike, ethers } from 'ethers';
 import pump from 'pump';
 import {
   createIdRemapMiddleware,
@@ -21,7 +21,6 @@ import { auth, encodeRedirectUri } from '@utils/auth';
 import { sendSignInLinkToEmail } from 'firebase/auth';
 import { createRandomFingerprint } from '@utils/random';
 import { registerMessageListeners } from './runtimeMessage';
-import { getNetworkConfiguration } from '@utils/env';
 
 interface WalletConnectSessionRequest {
   chainId: number | null;
@@ -123,13 +122,13 @@ export class VoyageController extends SafeEventEmitter {
       openNotificationWindow: this.openNotificationWindow,
       getUnconfirmedTransactions: this.getUnconfirmedTransactions,
       populateBuyNow: this.populateBuyNow,
-      testGsn: this.testGsn,
       buyNow: this.buyNow,
+      createRelayHttpRequest: this.createRelayHttpRequest,
     };
   }
 
-  testGsn = () => {
-    this.store.keyStore.testGsn();
+  createRelayHttpRequest = (data: string, user: string) => {
+    return this.store.gsnProvider?.createRelayHttpRequest(data, user);
   };
 
   buyNow = (
@@ -139,7 +138,8 @@ export class VoyageController extends SafeEventEmitter {
     _marketplace: string,
     _data: ethers.BytesLike
   ) => {
-    this.store.keyStore.buyNow(
+    return this.store.gsnProvider?.buyNow(
+      this.store.keyStore.account?.address!,
       _collection,
       _tokenId,
       _vault,
