@@ -23,6 +23,7 @@ class VoyageRpcService {
   handleEthSendTx = async (txParams: TransactionParams) => {
     try {
       const preview = await this.previewTx(txParams);
+      console.log('preview params: ', preview);
       browser.tabs.create({ url: 'home.html' });
       return this.store.transactionStore.addNewUnconfirmedTransaction(
         txParams,

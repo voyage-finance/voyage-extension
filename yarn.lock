@@ -3526,7 +3526,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@opengsn/common@npm:^2.2.6":
+"@opengsn/common@npm:2.2.6, @opengsn/common@npm:^2.2.6":
   version: 2.2.6
   resolution: "@opengsn/common@npm:2.2.6"
   dependencies:
@@ -5230,6 +5230,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@vespaiach/axios-fetch-adapter@npm:^0.3.0":
+  version: 0.3.0
+  resolution: "@vespaiach/axios-fetch-adapter@npm:0.3.0"
+  peerDependencies:
+    axios: ">=0.26.0"
+  checksum: 9ce4b22f2fa36df4f209cf958e147d29f9852f63048f8b507b96a24d23b369a5a851ca690f7577593df4bea24b9a4df30f464b9c3c723326922df4beade6c00a
+  languageName: node
+  linkType: hard
+
 "@voyage-finance/providers@npm:^9.1.0":
   version: 9.1.1
   resolution: "@voyage-finance/providers@npm:9.1.1"
@@ -6500,6 +6509,15 @@ __metadata:
   version: 4.4.1
   resolution: "axe-core@npm:4.4.1"
   checksum: ad14c5b71059dc3d24ef2519b8cd96e98b4a572379396201ce449d1c4262181821d6ca9550df65b22371faf06d28bbe94d391fe5675f2a08e6550f7b5da8416d
+  languageName: node
+  linkType: hard
+
+"axios@npm:0.21.1":
+  version: 0.21.1
+  resolution: "axios@npm:0.21.1"
+  dependencies:
+    follow-redirects: ^1.10.0
+  checksum: c87915fa0b18c15c63350112b6b3563a3e2ae524d7707de0a73d2e065e0d30c5d3da8563037bc29d4cc1b7424b5a350cb7274fa52525c6c04a615fe561c6ab11
   languageName: node
   linkType: hard
 
@@ -10706,7 +10724,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"follow-redirects@npm:^1.14.0":
+"follow-redirects@npm:^1.10.0, follow-redirects@npm:^1.14.0":
   version: 1.15.1
   resolution: "follow-redirects@npm:1.15.1"
   peerDependenciesMeta:
@@ -19811,6 +19829,7 @@ __metadata:
     "@metamask/post-message-stream": ^4.0.0
     "@metamask/providers": ^8.1.1
     "@metamask/safe-event-emitter": ^2.0.0
+    "@opengsn/common": 2.2.6
     "@opengsn/provider": 2.2.6
     "@pmmmwh/react-refresh-webpack-plugin": ^0.5.3
     "@reduxjs/toolkit": ^1.8.1
@@ -19831,6 +19850,7 @@ __metadata:
     "@types/react-redux": ^7.1.24
     "@types/readable-stream": ^2.3.13
     "@types/webextension-polyfill": ^0.8.3
+    "@vespaiach/axios-fetch-adapter": ^0.3.0
     "@voyage-finance/providers": ^9.1.0
     "@voyage-finance/webpack-ext-reloader": ^1.2.0
     "@wagmi/core": ^0.5.3
@@ -19841,6 +19861,7 @@ __metadata:
     "@zxing/browser": ^0.1.1
     "@zxing/library": ^0.19.1
     assert: ^2.0.0
+    axios: 0.21.1
     babel-jest: ^27.4.2
     babel-loader: ^8.2.3
     babel-plugin-named-asset-import: ^0.3.8
