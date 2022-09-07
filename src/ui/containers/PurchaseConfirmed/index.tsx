@@ -10,12 +10,27 @@ import { PaymentOption } from '@components/BuyMethodSelect';
 import PaymentHoverBoard from '@components/PaymentHoverBoard';
 import { useAppSelector } from '@hooks/useRedux';
 import RepaymentSchedule from './RepaymentSchedule';
+import { useParams } from 'react-router-dom';
+import { formatAmount, formatEthersBN } from '@utils/bn';
+
+const getShortenedAddress = (address: string) => {
+  return `${address.substring(0, 6)}...${address.slice(-4)}`;
+};
 
 const PurchaseConfirmed: React.FC = () => {
   const [pmtOption] = React.useState(PaymentOption.BNPL);
   const [transaction] = useAppSelector((state) => {
     return Object.values(state.core.transactions);
   });
+  const { hash } = useParams();
+  const collectionName = transaction?.metadata?.metadata?.collectionName;
+  const name =
+    transaction?.metadata?.metadata?.name ||
+    transaction?.metadata?.metadata?.tokenId;
+  const bnplPayment = formatEthersBN(transaction.metadata?.loanParameters?.pmt);
+  const nper = transaction.metadata?.loanParameters.nper;
+  const epoch = transaction.metadata?.loanParameters.epoch;
+
   return (
     <Card
       style={{
@@ -42,13 +57,10 @@ const PurchaseConfirmed: React.FC = () => {
           <DoodleSvg />
           <Stack spacing={0} ml={16}>
             <Text weight={'bold'} size="lg">
-              {transaction?.metadata?.metadata?.name ||
-                transaction?.metadata?.metadata?.tokenId ||
-                'undefined name'}
+              {name || 'undefined name'}
             </Text>
             <Text type="secondary">
-              {transaction?.metadata?.metadata?.collectionName ||
-                'undefined collection'}
+              {collectionName || 'undefined collection'}
             </Text>
           </Stack>
         </Group>
@@ -78,7 +90,7 @@ const PurchaseConfirmed: React.FC = () => {
               type="gradient"
               sx={{ ':hover': { cursor: 'pointer' } }}
             >
-              0x915...dsny6
+              {getShortenedAddress(hash || '')}
             </Text>
             <ArrowSvg />
           </Group>
@@ -95,22 +107,29 @@ const PurchaseConfirmed: React.FC = () => {
                   type="gradient"
                   style={{ lineHeight: 1 }}
                 >
-                  2.1
+                  {formatAmount(bnplPayment)}
                 </Text>
                 <EthSvg style={{ width: 18 }} />
-                <Text style={{ lineHeight: 1 }}>/ 30 days</Text>
+                <Text style={{ lineHeight: 1 }}>/ {epoch} days</Text>
               </Group>
               <Text
                 ml="auto"
                 size="sm"
                 style={{ lineHeight: 1, marginTop: -4 }}
               >
-                3 payments
+                {nper} payments
               </Text>
             </Group>
           </Group>
         </Stack>
-        {pmtOption === PaymentOption.BNPL && <RepaymentSchedule mt={4} />}
+        {pmtOption === PaymentOption.BNPL && (
+          <RepaymentSchedule
+            mt={4}
+            nper={nper}
+            epoch={epoch}
+            payment={bnplPayment}
+          />
+        )}
         <Button fullWidth mt={24}>
           View My Collection
         </Button>
@@ -127,7 +146,7 @@ const PurchaseConfirmed: React.FC = () => {
             }}
           />
           <Text size="sm" sx={{ lineHeight: '12px' }}>
-            Connected to <strong>OpenSea</strong>
+            Connected to <strong>Looksrare</strong>
           </Text>
         </Group>
       </Stack>

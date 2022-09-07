@@ -48,14 +48,14 @@ const PurchaseCart: React.FC = () => {
   const handleBuyClick = async () => {
     console.log('[handleBuyClick] transaction: ', transaction);
     setIsLoading(true);
-    await controller.buyNow(
+    const tx = await controller.buyNow(
       transaction?.metadata?.metadata?.collectionAddress,
       transaction?.metadata?.metadata?.tokenId,
       vaultAddress!,
       LOOKS_EXCHANGE_RINKEBY,
       transaction?.options.data!
     );
-    navigate(`${PURCHASE_OVERVIEW_ROUTE}/confirmed`);
+    navigate(`${PURCHASE_OVERVIEW_ROUTE}/confirmed/${tx.hash}`);
     setIsLoading(false);
   };
 
