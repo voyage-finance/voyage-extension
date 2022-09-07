@@ -1,20 +1,28 @@
 import * as ethers from 'ethers';
-import { RelayProvider } from '@opengsn/provider';
+import { GSNConfig, RelayProvider } from '@opengsn/provider';
 import { getNetworkConfiguration, VoyageContracts } from '@utils/env';
 import VoyageAbi from 'abis/voyage.json';
 import HttpProvider from 'web3-providers-http';
-
-const config = {
-  paymasterAddress: '0xA6e10aA9B038c9Cddea24D2ae77eC3cE38a0c016',
-  auditorsCount: 0,
-  preferredRelays: ['http://127.0.0.1:3000'],
-};
+import { HttpClient, HttpWrapper } from '@opengsn/common';
+import fetchAdapter from '@vespaiach/axios-fetch-adapter';
+import { createClientLogger } from '@opengsn/provider/dist/ClientWinstonLogger';
 
 export class GsnProvider {
   gsnProvider: RelayProvider;
 
   constructor() {
     console.log('HttpProvider', HttpProvider);
+    const logger = createClientLogger({ logLevel: 'info' });
+    const httpClient = new HttpClient(
+      new HttpWrapper({ adapter: fetchAdapter }),
+      logger
+    );
+    const config: Partial<GSNConfig> = {
+      paymasterAddress: '0xA6e10aA9B038c9Cddea24D2ae77eC3cE38a0c016',
+      auditorsCount: 0,
+      preferredRelays: ['http://127.0.0.1:3000'],
+    };
+
     // bug in http provider typings. just cast it and forget about this.
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
@@ -25,6 +33,10 @@ export class GsnProvider {
     this.gsnProvider = RelayProvider.newProvider({
       provider,
       config,
+      overrideDependencies: {
+        logger,
+        httpClient,
+      },
     });
   }
 

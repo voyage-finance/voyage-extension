@@ -45,6 +45,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@metamask/post-message-stream", "npm:4.0.0"],\
             ["@metamask/providers", "npm:8.1.1"],\
             ["@metamask/safe-event-emitter", "npm:2.0.0"],\
+            ["@opengsn/common", "npm:2.2.6"],\
             ["@opengsn/provider", "npm:2.2.6"],\
             ["@pmmmwh/react-refresh-webpack-plugin", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:0.5.5"],\
             ["@reduxjs/toolkit", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:1.8.1"],\
@@ -65,6 +66,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/react-redux", "npm:7.1.24"],\
             ["@types/readable-stream", "npm:2.3.13"],\
             ["@types/webextension-polyfill", "npm:0.8.3"],\
+            ["@vespaiach/axios-fetch-adapter", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:0.3.0"],\
             ["@voyage-finance/providers", "npm:9.1.1"],\
             ["@voyage-finance/webpack-ext-reloader", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:1.2.0"],\
             ["@wagmi/core", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:0.5.3"],\
@@ -75,6 +77,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@zxing/browser", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:0.1.1"],\
             ["@zxing/library", "npm:0.19.1"],\
             ["assert", "npm:2.0.0"],\
+            ["axios", "npm:0.21.1"],\
             ["babel-jest", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:27.5.1"],\
             ["babel-loader", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:8.2.4"],\
             ["babel-plugin-named-asset-import", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:0.3.8"],\
@@ -8122,6 +8125,28 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["@vespaiach/axios-fetch-adapter", [\
+        ["npm:0.3.0", {\
+          "packageLocation": "./.yarn/cache/@vespaiach-axios-fetch-adapter-npm-0.3.0-791e456bcf-9ce4b22f2f.zip/node_modules/@vespaiach/axios-fetch-adapter/",\
+          "packageDependencies": [\
+            ["@vespaiach/axios-fetch-adapter", "npm:0.3.0"]\
+          ],\
+          "linkType": "SOFT"\
+        }],\
+        ["virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:0.3.0", {\
+          "packageLocation": "./.yarn/__virtual__/@vespaiach-axios-fetch-adapter-virtual-4529290927/0/cache/@vespaiach-axios-fetch-adapter-npm-0.3.0-791e456bcf-9ce4b22f2f.zip/node_modules/@vespaiach/axios-fetch-adapter/",\
+          "packageDependencies": [\
+            ["@vespaiach/axios-fetch-adapter", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:0.3.0"],\
+            ["@types/axios", null],\
+            ["axios", "npm:0.21.1"]\
+          ],\
+          "packagePeers": [\
+            "@types/axios",\
+            "axios"\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["@voyage-finance/providers", [\
         ["npm:9.1.1", {\
           "packageLocation": "./.yarn/cache/@voyage-finance-providers-npm-9.1.1-53e3d0e4e4-0afadf9840.zip/node_modules/@voyage-finance/providers/",\
@@ -9631,6 +9656,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["axios", [\
+        ["npm:0.21.1", {\
+          "packageLocation": "./.yarn/cache/axios-npm-0.21.1-d192f6b3b3-c87915fa0b.zip/node_modules/axios/",\
+          "packageDependencies": [\
+            ["axios", "npm:0.21.1"],\
+            ["follow-redirects", "virtual:e278873748b4e9d158db595d2f6cb0351c74052f52b53924aec4d9299e7b6babfb62aead374cf2f6e453bc8bea3b052380dc6b1137a162bbfc102bbb1c8cac42#npm:1.15.1"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
         ["npm:0.21.4", {\
           "packageLocation": "./.yarn/cache/axios-npm-0.21.4-e278873748-44245f24ac.zip/node_modules/axios/",\
           "packageDependencies": [\
@@ -25883,6 +25916,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@metamask/post-message-stream", "npm:4.0.0"],\
             ["@metamask/providers", "npm:8.1.1"],\
             ["@metamask/safe-event-emitter", "npm:2.0.0"],\
+            ["@opengsn/common", "npm:2.2.6"],\
             ["@opengsn/provider", "npm:2.2.6"],\
             ["@pmmmwh/react-refresh-webpack-plugin", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:0.5.5"],\
             ["@reduxjs/toolkit", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:1.8.1"],\
@@ -25903,6 +25937,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/react-redux", "npm:7.1.24"],\
             ["@types/readable-stream", "npm:2.3.13"],\
             ["@types/webextension-polyfill", "npm:0.8.3"],\
+            ["@vespaiach/axios-fetch-adapter", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:0.3.0"],\
             ["@voyage-finance/providers", "npm:9.1.1"],\
             ["@voyage-finance/webpack-ext-reloader", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:1.2.0"],\
             ["@wagmi/core", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:0.5.3"],\
@@ -25913,6 +25948,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@zxing/browser", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:0.1.1"],\
             ["@zxing/library", "npm:0.19.1"],\
             ["assert", "npm:2.0.0"],\
+            ["axios", "npm:0.21.1"],\
             ["babel-jest", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:27.5.1"],\
             ["babel-loader", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:8.2.4"],\
             ["babel-plugin-named-asset-import", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:0.3.8"],\
