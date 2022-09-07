@@ -5,13 +5,27 @@ import { ChevronDown } from 'tabler-icons-react';
 import { ReactComponent as EthSvg } from 'assets/img/eth-icon.svg';
 import styles from './index.module.scss';
 import cn from 'classnames';
+import BigNumber from 'bignumber.js';
+import moment from 'moment';
+import { formatAmount } from '@utils/bn';
 
-interface IBNPLScheduleProps extends GroupProps {}
+interface IBNPLScheduleProps extends GroupProps {
+  nper: number;
+  epoch: number;
+  payment: BigNumber;
+}
 
-const BNPLSchedule: React.FunctionComponent<IBNPLScheduleProps> = (props) => {
+const BNPLSchedule: React.FunctionComponent<IBNPLScheduleProps> = ({
+  epoch,
+  nper,
+  payment,
+  ...props
+}) => {
   const [opened, setOpened] = React.useState(false);
   const [mounted, setMounter] = React.useState(false);
+
   React.useEffect(() => {
+    console.log({ epoch, nper, payment });
     setMounter(true);
   }, []);
   return (
@@ -52,54 +66,32 @@ const BNPLSchedule: React.FunctionComponent<IBNPLScheduleProps> = (props) => {
             <Text size="lg" weight="bold" mt={16}>
               Payment Schedule
             </Text>
-            <Group mt={16} align="center" spacing={0}>
-              <Box
-                sx={{
-                  border: '3px solid rgba(255, 255, 255, 0.1)',
-                  borderRadius: '50%',
-                  width: 13,
-                  height: 13,
-                }}
-              />
-              <Text weight="bold" ml={14}>
-                Payment 1
-              </Text>
-              <Text ml={38}>Today</Text>
-              <Text sx={{ marginLeft: 'auto' }}>2.1</Text>
-              <EthSvg />
-            </Group>
-            <Group mt={20} align="center" spacing={0}>
-              <Box
-                sx={{
-                  border: '3px solid rgba(255, 255, 255, 0.1)',
-                  borderRadius: '50%',
-                  width: 13,
-                  height: 13,
-                }}
-              />
-              <Text weight="bold" ml={14}>
-                Payment 2
-              </Text>
-              <Text ml={38}>2 Aug 2022</Text>
-              <Text sx={{ marginLeft: 'auto' }}>2.1</Text>
-              <EthSvg />
-            </Group>
-            <Group mt={20} align="center" spacing={0}>
-              <Box
-                sx={{
-                  border: '3px solid rgba(255, 255, 255, 0.1)',
-                  borderRadius: '50%',
-                  width: 13,
-                  height: 13,
-                }}
-              />
-              <Text weight="bold" ml={14}>
-                Payment 3
-              </Text>
-              <Text ml={38}>2 Sep 2022</Text>
-              <Text sx={{ marginLeft: 'auto' }}>2.1</Text>
-              <EthSvg />
-            </Group>
+            {[...Array(Number(nper)).keys()].map((i) => {
+              const n = i + 1;
+              const date = moment().add(epoch * i, 'days');
+              return (
+                <Group mt={16} align="center" spacing={0} key={i}>
+                  <Box
+                    sx={{
+                      border: '3px solid rgba(255, 255, 255, 0.1)',
+                      borderRadius: '50%',
+                      width: 13,
+                      height: 13,
+                    }}
+                  />
+                  <Text weight="bold" ml={14}>
+                    Payment {n}
+                  </Text>
+                  <Text ml={38}>
+                    {n > 1 ? date.format('D MMM YYYY') : 'Today'}
+                  </Text>
+                  <Text sx={{ marginLeft: 'auto' }}>
+                    {formatAmount(payment)}
+                  </Text>
+                  <EthSvg />
+                </Group>
+              );
+            })}
           </Group>
         </Group>
       )}

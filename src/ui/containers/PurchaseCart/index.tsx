@@ -10,18 +10,21 @@ import BuyMethodSelect, { PaymentOption } from '@components/BuyMethodSelect';
 import PaymentHoverBoard from '@components/PaymentHoverBoard';
 import BNPLSchedule from '@components/BNPLSchedule';
 import { useAppSelector } from '@hooks/useRedux';
-import SpeedSelect, { LOOKS_EXCHANGE_RINKEBY, Speed } from './SpeedSelect';
+import SpeedSelect, { Speed } from './SpeedSelect';
 import { useEthBalance } from '@hooks/useEthBalance';
-import { formatAmount } from '@utils/bn';
+import { formatAmount, formatEthersBN } from '@utils/bn';
 import useVoyageController from '@hooks/useVoyageController';
 import { useNavigate } from 'react-router-dom';
-import { PURCHASE_OVERVIEW_ROUTE } from '@utils/constants';
+import {
+  LOOKS_EXCHANGE_RINKEBY,
+  PURCHASE_OVERVIEW_ROUTE,
+} from '@utils/constants';
+import { BigNumber } from 'ethers';
 
 const PurchaseCart: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [pmtOption, setPmtOption] = useState(PaymentOption.BNPL);
   const [speed, setSpeed] = useState(Speed.FAST);
-  const [rawTx, setRawTx] = useState('');
   const [transaction] = useAppSelector((state) => {
     return Object.values(state.core.transactions);
   });
@@ -37,39 +40,21 @@ const PurchaseCart: React.FC = () => {
     controller.fetchVault();
   }, []);
 
+  const price = formatEthersBN(transaction?.metadata?.price);
+  const bnplPayment = formatEthersBN(transaction.metadata?.loanParameters?.pmt);
+  const nper = transaction.metadata?.loanParameters.nper;
+  const epoch = transaction.metadata?.loanParameters.epoch;
+
   const handleBuyClick = async () => {
-    console.log('transaction: ', transaction);
-    console.log('--------- handleBuyClick -------------', [
-      '0x6C5AE80Bcf0Ec85002FE8eb3Ce267232614127C0',
-      transaction?.metadata?.metadata?.tokenId,
-      vaultAddress!,
-      LOOKS_EXCHANGE_RINKEBY,
-      transaction?.options.data!,
-    ]);
+    console.log('[handleBuyClick] transaction: ', transaction);
     setIsLoading(true);
     await controller.buyNow(
-      '0x6C5AE80Bcf0Ec85002FE8eb3Ce267232614127C0',
+      transaction?.metadata?.metadata?.collectionAddress,
       transaction?.metadata?.metadata?.tokenId,
       vaultAddress!,
       LOOKS_EXCHANGE_RINKEBY,
       transaction?.options.data!
     );
-    // const relayTransaction = await fetch(
-    //   `${process.env.VOYAGE_API_URL}/relayTransaction`,
-    //   {
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //     },
-    //     body: JSON.stringify({
-    //       speed: 'normal',
-    //       from: userAddress,
-    //       calldata: rawTx,
-    //     }),
-    //   }
-    // );
-    // const body = await relayTransaction.json();
-    // console.log('------------ estimateGasResponse -------------', body);
     navigate(`${PURCHASE_OVERVIEW_ROUTE}/confirmed`);
     setIsLoading(false);
   };
@@ -121,8 +106,7 @@ const PurchaseCart: React.FC = () => {
           <Stack spacing={0} ml="auto" align="end">
             <Group align="center" spacing={0}>
               <Text weight={'bold'} size="lg" ml={36}>
-                {transaction?.metadata?.metadata?.loanParameters?.principle ||
-                  '—'}
+                {formatAmount(price) || '—'}
               </Text>
               <EthSvg style={{ width: 24 }} />
             </Group>
@@ -151,7 +135,7 @@ const PurchaseCart: React.FC = () => {
             {pmtOption === PaymentOption.PAY_NOW ? (
               <Group ml="auto" align="center" spacing={0}>
                 <Text weight={'bold'} size="lg" ml={36} type="gradient">
-                  6
+                  {formatAmount(price) || '—'}
                 </Text>
                 <EthSvg style={{ width: 24 }} />
               </Group>
@@ -164,25 +148,36 @@ const PurchaseCart: React.FC = () => {
                     type="gradient"
                     style={{ lineHeight: 1 }}
                   >
-                    6.3
+                    {formatAmount(bnplPayment)}
                   </Text>
                   <EthSvg style={{ width: 18 }} />
-                  <Text style={{ lineHeight: 1 }}>/ 30 days</Text>
+                  <Text style={{ lineHeight: 1 }}>/ {epoch} days</Text>
                 </Group>
                 <Text
                   ml="auto"
                   size="sm"
                   style={{ lineHeight: 1, marginTop: -4 }}
                 >
-                  3 payments
+                  {nper} payments
                 </Text>
               </Group>
             )}
           </Group>
         </Stack>
-        {pmtOption === PaymentOption.BNPL && <BNPLSchedule mt={20} />}
+        {pmtOption === PaymentOption.BNPL && (
+          <BNPLSchedule
+            mt={20}
+            nper={nper}
+            epoch={epoch}
+            payment={bnplPayment}
+          />
+        )}
         <Button fullWidth mt={24} onClick={handleBuyClick} loading={isLoading}>
-          Pay 6 <EthSvg />
+          Pay{' '}
+          {pmtOption === PaymentOption.PAY_NOW
+            ? formatAmount(price)
+            : formatAmount(bnplPayment)}{' '}
+          <EthSvg />
         </Button>
         <Button fullWidth mt={12} kind="secondary">
           Cancel
@@ -192,12 +187,11 @@ const PurchaseCart: React.FC = () => {
           value={speed}
           onChange={setSpeed}
           mt={12}
-          collection={'0x6C5AE80Bcf0Ec85002FE8eb3Ce267232614127C0'}
+          collection={transaction?.metadata?.metadata?.collectionAddress}
           tokenId={transaction?.metadata?.metadata?.tokenId}
           vault={vaultAddress}
           user={userAddress}
           calldata={transaction?.options.data}
-          onRawTxChange={setRawTx}
         />
 
         <Group position="center" mt={22} spacing={6}>
@@ -210,7 +204,7 @@ const PurchaseCart: React.FC = () => {
             }}
           />
           <Text size="sm" sx={{ lineHeight: '12px' }}>
-            Connected to <strong>OpenSea</strong>
+            Connected to <strong>Looksrare</strong>
           </Text>
         </Group>
       </Stack>

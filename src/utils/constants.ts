@@ -11,3 +11,6 @@ export const VAULT_DEPOSIT_METHODS_ROUTE = '/vault/deposit/method';
 export const SIGN_MESSAGE_ROUTE = '/sign';
 
 export const PURCHASE_OVERVIEW_ROUTE = '/purchase';
+
+export const LOOKS_EXCHANGE_RINKEBY =
+  '0x1AA777972073Ff66DCFDeD85749bDD555C0665dA';

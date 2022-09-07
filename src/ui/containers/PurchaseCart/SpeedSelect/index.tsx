@@ -13,7 +13,7 @@ import { ReactComponent as CheckOrangeSvg } from 'assets/img/check-orange.svg';
 import { ReactComponent as EthSvg } from 'assets/img/eth-icon.svg';
 import useVoyageController from '@hooks/useVoyageController';
 import { BytesLike } from 'ethers';
-
+import { LOOKS_EXCHANGE_RINKEBY } from 'utils/constants';
 interface ISpeedSelectProps extends Omit<BoxProps<'div'>, 'onChange'> {
   value: Speed;
   collection?: string;
@@ -21,7 +21,6 @@ interface ISpeedSelectProps extends Omit<BoxProps<'div'>, 'onChange'> {
   vault?: string;
   user?: string;
   calldata?: BytesLike;
-  onRawTxChange: (rawTx: string) => void;
   onChange: (opt: Speed) => void;
 }
 
@@ -63,23 +62,20 @@ const SPEEDS: Record<Speed, SpeedConfig> = {
   },
 };
 
-export const LOOKS_EXCHANGE_RINKEBY =
-  '0x1AA777972073Ff66DCFDeD85749bDD555C0665dA';
-
 const SpeedSelect: React.FunctionComponent<ISpeedSelectProps> = ({
   value,
   onChange,
   collection,
   tokenId,
   vault,
+  user,
   calldata,
-  onRawTxChange,
   ...props
 }) => {
-  const user = '0xAD5792b1D998f607d3EEB2f357138A440B03f19f';
+  // const user = '0xAD5792b1D998f607d3EEB2f357138A440B03f19f';
   const [loading, setLoading] = React.useState(false);
   const [waitTime, setWaitTime] = React.useState(0);
-  const [price, setPrice] = React.useState(0);
+  const [price, setPrice] = React.useState('');
 
   const controller = useVoyageController();
 
@@ -89,37 +85,42 @@ const SpeedSelect: React.FunctionComponent<ISpeedSelectProps> = ({
       tokenId,
       vault,
       LOOKS_EXCHANGE_RINKEBY,
+      user,
+      calldata,
     });
-
     if (collection && tokenId && vault && calldata && user) {
       setLoading(true);
       const voyageRawTx = await controller.populateBuyNow(
-        collection, //'0x6C5AE80Bcf0Ec85002FE8eb3Ce267232614127C0',
-        tokenId, //'1000',
-        vault, //'0x9BB2Eac903B1Ff35825eBFECE63758eEB49a731F',
+        collection,
+        tokenId,
+        vault,
         LOOKS_EXCHANGE_RINKEBY,
         calldata
       );
       console.log('---- voyageRawTx ----', voyageRawTx);
-      onRawTxChange(voyageRawTx.data as string);
-      const estimateGasResponse = await fetch(
-        `${process.env.VOYAGE_API_URL}/estimateGas`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            speed: value,
-            from: user,
-            calldata: voyageRawTx.data,
-          }),
-        }
-      );
-      const body = await estimateGasResponse.json();
-      console.log('------------ estimateGasResponse -------------', body);
-      setPrice(body.networkFee);
-      setWaitTime(body.waitTime);
+      if (voyageRawTx.data) {
+        const estimateGasResponse = await fetch(
+          `${process.env.VOYAGE_API_URL}/estimateGas`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              speed: value,
+              request: await controller.createRelayHttpRequest(
+                voyageRawTx.data,
+                user
+              ),
+            }),
+          }
+        );
+        const body = await estimateGasResponse.json();
+        console.log('------------ estimateGasResponse -------------', body);
+        const fee = (body.networkFee / Math.pow(10, 9)).toFixed(5);
+        setPrice(fee);
+        setWaitTime(body.waitTime);
+      }
       setLoading(false);
     }
   };
