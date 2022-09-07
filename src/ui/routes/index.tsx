@@ -138,7 +138,7 @@ const Router: React.FC = () => {
         <Route path="/sign/:signRequestId" element={<SignMessage />} />
         <Route path={PURCHASE_OVERVIEW_ROUTE} element={<Onboard />}>
           <Route path=":txId" element={<PurchaseCart />} />
-          <Route path="confirmed" element={<PurchaseConfirmed />} />
+          <Route path="confirmed/:hash" element={<PurchaseConfirmed />} />
         </Route>
         <Route path="/onboard/" element={<Onboard />}>
           <Route path="login" element={<EnterEmailStep />} />
