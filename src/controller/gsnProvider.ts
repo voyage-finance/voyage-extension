@@ -18,7 +18,8 @@ export class GsnProvider {
       logger
     );
     const config: Partial<GSNConfig> = {
-      paymasterAddress: '0xA6e10aA9B038c9Cddea24D2ae77eC3cE38a0c016',
+      paymasterAddress:
+        '0xA6e10aA9B038c9Cddea24D2ae77eC3cE38a0c016'.toLowerCase(),
       auditorsCount: 0,
       preferredRelays: ['http://127.0.0.1:3000'],
     };
