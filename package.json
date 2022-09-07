@@ -117,12 +117,23 @@
     "workbox-webpack-plugin": "^6.4.1",
     "yup": "^0.32.11"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.ts": [
+      "eslint --fix",
+      "prettier --write"
+    ]
+  },
   "scripts": {
     "start": "node scripts/start.js",
     "devtools:react": "react-devtools",
     "gentypes": "typechain --target=ethers-v5 ./src/abis/**/*.json --out-dir ./src/contracts",
     "build": "node scripts/build.js",
-    "test": "node scripts/test.js"
+    "postinstall": "husky install"
   },
   "eslintConfig": {
     "extends": [
@@ -199,18 +210,25 @@
     ]
   },
   "devDependencies": {
+    "@commitlint/cli": "^17.1.2",
+    "@commitlint/config-conventional": "^17.1.0",
     "@metamask/post-message-stream": "^4.0.0",
     "@types/chrome": "0.0.180",
     "@types/lodash": "^4.14.182",
     "@types/pump": "^1.1.1",
     "@types/readable-stream": "^2.3.13",
     "@types/webextension-polyfill": "^0.8.3",
+    "@typescript-eslint/eslint-plugin": "^5.36.2",
+    "@typescript-eslint/parser": "^5.36.2",
     "@voyage-finance/webpack-ext-reloader": "^1.2.0",
     "@walletconnect/types": "^1.7.8",
     "clean-webpack-plugin": "^4.0.0",
     "copy-webpack-plugin": "^10.2.4",
+    "eslint-config-prettier": "^8.5.0",
     "events": "^3.3.0",
     "fork-ts-checker-webpack-plugin": "^7.2.6",
+    "husky": "^8.0.0",
+    "lint-staged": "^13.0.3",
     "prettier": "^2.6.0",
     "react-devtools": "^4.24.1",
     "sass": "^1.49.9",
