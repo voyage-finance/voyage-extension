@@ -20,6 +20,11 @@ export const SupportedApps: { [key: number]: { [origin: string]: App } } = {
       name: 'OpenSea',
       icon: 'https://testnets.opensea.io/static/images/favicon/32x32.png',
     },
+    'https://rinkeby.looksrare.org': {
+      uri: 'https://rinkeby.looksrare.org',
+      name: 'Looksrare Rinkeby',
+      icon: 'https://rinkeby.looksrare.org/favicon-32x32.png',
+    },
   },
   [ChainID.Rinkeby]: {
     'https://example.walletconnect.org': {
@@ -31,6 +36,11 @@ export const SupportedApps: { [key: number]: { [origin: string]: App } } = {
       uri: 'https://testnets.opensea.io',
       name: 'OpenSea',
       icon: 'https://testnets.opensea.io/static/images/favicon/32x32.png',
+    },
+    'https://rinkeby.looksrare.org': {
+      uri: 'https://rinkeby.looksrare.org',
+      name: 'Looksrare Rinkeby',
+      icon: 'https://rinkeby.looksrare.org/favicon-32x32.png',
     },
   },
 };
