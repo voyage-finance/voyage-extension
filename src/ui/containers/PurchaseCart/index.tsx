@@ -14,6 +14,8 @@ import SpeedSelect, { LOOKS_EXCHANGE_RINKEBY, Speed } from './SpeedSelect';
 import { useEthBalance } from '@hooks/useEthBalance';
 import { formatAmount } from '@utils/bn';
 import useVoyageController from '@hooks/useVoyageController';
+import { useNavigate } from 'react-router-dom';
+import { PURCHASE_OVERVIEW_ROUTE } from '@utils/constants';
 
 const PurchaseCart: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -28,6 +30,7 @@ const PurchaseCart: React.FC = () => {
   const [balance, balanceLoading] = useEthBalance(vaultAddress);
 
   const controller = useVoyageController();
+  const navigate = useNavigate();
 
   useEffect(() => {
     console.log('------- transaction --------', transaction);
@@ -44,7 +47,7 @@ const PurchaseCart: React.FC = () => {
       transaction?.options.data!,
     ]);
     setIsLoading(true);
-    controller.buyNow(
+    await controller.buyNow(
       '0x6C5AE80Bcf0Ec85002FE8eb3Ce267232614127C0',
       transaction?.metadata?.metadata?.tokenId,
       vaultAddress!,
@@ -67,6 +70,7 @@ const PurchaseCart: React.FC = () => {
     // );
     // const body = await relayTransaction.json();
     // console.log('------------ estimateGasResponse -------------', body);
+    navigate(`${PURCHASE_OVERVIEW_ROUTE}/confirmed`);
     setIsLoading(false);
   };
 

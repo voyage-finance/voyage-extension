@@ -47,7 +47,7 @@ const PurchaseConfirmed: React.FC = () => {
                 'undefined name'}
             </Text>
             <Text type="secondary">
-              {transaction?.metadata?.metadata?.collection ||
+              {transaction?.metadata?.metadata?.collectionName ||
                 'undefined collection'}
             </Text>
           </Stack>
