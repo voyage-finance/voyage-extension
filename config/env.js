@@ -77,6 +77,7 @@ function getClientEnvironment(publicUrl) {
         VOYAGE_WEB_URL: process.env.VOYAGE_WEB_URL || 'http://localhost:8080',
         VOYAGE_API_URL: process.env.VOYAGE_API_URL,
         DEBUG_GOERLI_MNEMONIC: process.env.DEBUG_GOERLI_MNEMONIC,
+        DEBUG_LOCALHOST_PRIVATE_KEY: process.env.DEBUG_LOCALHOST_PRIVATE_KEY,
         // Useful for resolving the correct path to static assets in `public`.
         // For example, <img src={process.env.PUBLIC_URL + '/img/logo.png'} />.
         // This should only be used as an escape hatch. Normally you would put

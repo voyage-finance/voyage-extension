@@ -21,6 +21,7 @@ import { auth, encodeRedirectUri } from '@utils/auth';
 import { sendSignInLinkToEmail } from 'firebase/auth';
 import { createRandomFingerprint } from '@utils/random';
 import { registerMessageListeners } from './runtimeMessage';
+import { getJsonProvider } from '@utils/env';
 
 interface WalletConnectSessionRequest {
   chainId: number | null;
@@ -45,17 +46,7 @@ export class VoyageController extends SafeEventEmitter {
   constructor() {
     super();
 
-    this.provider = new ethers.providers.JsonRpcProvider(
-      'http://localhost:8545',
-      {
-        chainId: 4,
-        name: 'rinkeby-fork',
-      }
-    );
-    // new ethers.providers.AlchemyProvider(
-    //   getNetworkConfiguration().name,
-    //   getNetworkConfiguration().apiKey
-    // );
+    this.provider = getJsonProvider();
     this.store = new ControllerStore(this.provider);
     this.service = new VoyageRpcService(this.store);
     this.engine = this.createRpcEngine();

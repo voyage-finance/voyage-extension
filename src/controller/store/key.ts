@@ -8,6 +8,7 @@ import { omit } from 'lodash';
 import HttpProvider from 'web3-providers-http';
 import { RelayProvider } from '@opengsn/provider';
 import { GsnProvider } from 'controller/gsnProvider';
+import { getNetworkEnvironment, Network } from '@utils/env';
 
 export interface PendingLogin {
   email: string;
@@ -136,11 +137,13 @@ class KeyStore {
         jwt
       );
     const mnemonic = process.env.DEBUG_GOERLI_MNEMONIC;
-    const wallet = mnemonic
-      ? new ethers.Wallet(
-          '0xafd746101717d4ffbb8e387164e562e6299d290979ae66b76178c8088c314e0a'
-        ) //ethers.Wallet.fromMnemonic(mnemonic) //
-      : ethers.Wallet.createRandom();
+    const wallet =
+      getNetworkEnvironment() === Network.Localhost &&
+      process.env.DEBUG_LOCALHOST_PRIVATE_KEY
+        ? new ethers.Wallet(process.env.DEBUG_LOCALHOST_PRIVATE_KEY)
+        : mnemonic
+        ? ethers.Wallet.fromMnemonic(mnemonic)
+        : ethers.Wallet.createRandom();
     return {
       publicAddress: wallet.address,
       privateKey: wallet.privateKey,
@@ -172,7 +175,6 @@ class KeyStore {
       auth: currentUser,
     };
     await this.root.voyageStore.fetchVault();
-    console.log('----- torusResponse.privateKey -----');
     this.root.gsnProvider?.addAccount(torusResponse.privateKey);
     console.log('----- addAccount -----');
     this.stage = KeyStoreStage.Initialized;
