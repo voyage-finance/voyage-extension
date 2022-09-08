@@ -1,6 +1,13 @@
 import Card from '@components/Card';
 import Text from '@components/Text';
-import { Box, Divider, Group, Loader, Stack } from '@mantine/core';
+import {
+  Box,
+  Divider,
+  Group,
+  Loader,
+  LoadingOverlay,
+  Stack,
+} from '@mantine/core';
 import { useEffect, useState } from 'react';
 import { ReactComponent as WalletSvg } from 'assets/img/wallet.svg';
 import { ReactComponent as EthSvg } from 'assets/img/eth-icon.svg';
@@ -12,14 +19,11 @@ import BNPLSchedule from '@components/BNPLSchedule';
 import { useAppSelector } from '@hooks/useRedux';
 import SpeedSelect, { Speed } from './SpeedSelect';
 import { useEthBalance } from '@hooks/useEthBalance';
-import { formatAmount, formatEthersBN } from '@utils/bn';
+import { formatAmount, fromBigNumber } from '@utils/bn';
 import useVoyageController from '@hooks/useVoyageController';
 import { useNavigate } from 'react-router-dom';
-import {
-  LOOKS_EXCHANGE_RINKEBY,
-  PURCHASE_OVERVIEW_ROUTE,
-} from '@utils/constants';
-import { BigNumber } from 'ethers';
+import { PURCHASE_OVERVIEW_ROUTE } from '@utils/constants';
+import BigNumber from 'bignumber.js';
 
 const PurchaseCart: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -28,6 +32,12 @@ const PurchaseCart: React.FC = () => {
   const [transaction] = useAppSelector((state) => {
     return Object.values(state.core.transactions);
   });
+  const [orderPreviewKey] = useAppSelector((state) =>
+    Object.keys(state.core.txOrderPreviewMap)
+  );
+  const [orderPreview] = useAppSelector((state) =>
+    Object.values(state.core.txOrderPreviewMap)
+  );
   const vaultAddress = useAppSelector((state) => state.core.vaultAddress);
   const userAddress = useAppSelector((state) => state.core.account?.address);
   const [balance, balanceLoading] = useEthBalance(vaultAddress);
@@ -36,25 +46,27 @@ const PurchaseCart: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log('------- transaction --------', transaction);
+    console.log('---------- orderPreviews ---------', orderPreviewKey);
+  }, [transaction?.orderPreview, orderPreviewKey]);
+
+  useEffect(() => {
     controller.fetchVault();
   }, []);
 
-  const price = formatEthersBN(transaction?.metadata?.price);
-  const bnplPayment = formatEthersBN(transaction.metadata?.loanParameters?.pmt);
-  const nper = transaction.metadata?.loanParameters.nper;
-  const epoch = transaction.metadata?.loanParameters.epoch;
+  // const orderPreview = transaction?.orderPreview;
+  const price = orderPreview
+    ? fromBigNumber(orderPreview.price)
+    : new BigNumber(0);
+  const bnplPayment = orderPreview
+    ? fromBigNumber(orderPreview.loanParameters?.payment.pmt)
+    : new BigNumber(0);
+  const nper = orderPreview ? Number(orderPreview.loanParameters.nper) : 0;
+  const epoch = orderPreview ? Number(orderPreview.loanParameters.epoch) : 0;
 
   const handleBuyClick = async () => {
     console.log('[handleBuyClick] transaction: ', transaction);
     setIsLoading(true);
-    const tx = await controller.buyNow(
-      transaction?.metadata?.metadata?.collectionAddress,
-      transaction?.metadata?.metadata?.tokenId,
-      vaultAddress!,
-      LOOKS_EXCHANGE_RINKEBY,
-      transaction?.options.data!
-    );
+    const tx = await controller.buyNow(transaction.id);
     navigate(`${PURCHASE_OVERVIEW_ROUTE}/confirmed/${tx.hash}`);
     setIsLoading(false);
   };
@@ -64,10 +76,12 @@ const PurchaseCart: React.FC = () => {
       style={{
         width: 420,
         margin: 'auto',
+        position: 'relative',
       }}
       py={40}
       px={56}
     >
+      <LoadingOverlay visible={!orderPreview} />
       <Stack spacing={0} align="stretch">
         <Group align="center" position="apart" noWrap>
           <Text sx={{ fontSize: 32 }} weight={'bold'}>
@@ -94,13 +108,12 @@ const PurchaseCart: React.FC = () => {
           <DoodleSvg />
           <Stack spacing={0}>
             <Text weight={'bold'} size="lg">
-              {transaction?.metadata?.metadata?.name ||
-                transaction?.metadata?.metadata?.tokenId ||
+              {orderPreview?.metadata?.name ||
+                orderPreview?.metadata?.tokenId ||
                 'undefined name'}
             </Text>
             <Text type="secondary">
-              {transaction?.metadata?.metadata?.collectionName ||
-                'undefined collection'}
+              {orderPreview?.metadata?.collectionName || 'undefined collection'}
             </Text>
           </Stack>
           <Stack spacing={0} ml="auto" align="end">
@@ -187,8 +200,8 @@ const PurchaseCart: React.FC = () => {
           value={speed}
           onChange={setSpeed}
           mt={12}
-          collection={transaction?.metadata?.metadata?.collectionAddress}
-          tokenId={transaction?.metadata?.metadata?.tokenId}
+          collection={orderPreview?.metadata?.collectionAddress}
+          tokenId={orderPreview?.metadata?.tokenId}
           vault={vaultAddress}
           user={userAddress}
           calldata={transaction?.options.data}

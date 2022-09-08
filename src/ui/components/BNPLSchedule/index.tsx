@@ -66,7 +66,7 @@ const BNPLSchedule: React.FunctionComponent<IBNPLScheduleProps> = ({
             <Text size="lg" weight="bold" mt={16}>
               Payment Schedule
             </Text>
-            {[...Array(Number(nper)).keys()].map((i) => {
+            {[...Array(nper).keys()].map((i) => {
               const n = i + 1;
               const date = moment().add(epoch * i, 'days');
               return (

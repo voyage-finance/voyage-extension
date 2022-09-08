@@ -35,7 +35,6 @@ import {
   VAULT_DEPOSIT_METHODS_ROUTE,
 } from '@utils/constants';
 import { ExtensionEnvType, getEnvironmentType } from '@utils/extension';
-import { TransactionStatus } from 'types/transaction';
 import PurchaseCart from '@containers/PurchaseCart';
 import PurchaseConfirmed from '@containers/PurchaseConfirmed';
 
@@ -55,9 +54,13 @@ const Router: React.FC = () => {
   const pendingSignRequests = useAppSelector((state) => {
     return Object.values(state.core.pendingSignRequests);
   });
-  const transactions = useAppSelector((state) => {
+  const [unconfirmedTx] = useAppSelector((state) => {
     return Object.values(state.core.transactions);
   });
+  const [pendingSignRequest] = pendingSignRequests;
+  // const [unconfirmedTx] = transactions.filter(
+  //   (tx) => tx.status === TransactionStatus.Unconfirmed
+  // );
 
   const [waitingDeploy, setWaitingDeploy] = useState(false);
 
@@ -66,17 +69,7 @@ const Router: React.FC = () => {
   };
 
   const checkStatusAndNavigate = async () => {
-    console.log(
-      '🚀 ~ file: index.tsx ~ line 76 ~ checkStatusAndNavigate ~ checkStatusAndNavigate'
-    );
-    const [pendingSignRequest] = pendingSignRequests;
-    const [unconfirmedTx] = transactions.filter(
-      (tx) => tx.status === TransactionStatus.Unconfirmed
-    );
-    console.log(
-      '🚀 ~ file: index.tsx ~ line 64 ~ checkStatusAndNavigate ~ unconfirmedTx',
-      unconfirmedTx
-    );
+    console.log('🚀 ~ checkStatusAndNavigate ~', unconfirmedTx);
     const isNotification =
       getEnvironmentType() === ExtensionEnvType.Notification;
     const isTab = getEnvironmentType() === ExtensionEnvType.Fullscreen;
@@ -120,7 +113,7 @@ const Router: React.FC = () => {
         }
         break;
     }
-  }, [stage, isTermsSigned, vault]);
+  }, [stage, isTermsSigned, vault, unconfirmedTx?.id]);
 
   return (
     <div className={cn(styles.root, isFullscreenMode && styles.tabView)}>
