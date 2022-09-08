@@ -27,16 +27,14 @@ export class GsnProvider {
       paymasterAddress:
         '0xA6e10aA9B038c9Cddea24D2ae77eC3cE38a0c016'.toLowerCase(),
       auditorsCount: 0,
-      preferredRelays: ['http://127.0.0.1:3000'],
+      preferredRelays: ['http://127.0.0.1:3000' || process.env.VOYAGE_API_URL],
     };
 
+    const endpoint = getNetworkConfiguration().endpoint;
     // bug in http provider typings. just cast it and forget about this.
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    const provider = new HttpProvider(
-      'http://127.0.0.1:8545'
-    ) as unknown as any;
-    console.log('provider', provider);
+    const provider = new HttpProvider(endpoint) as unknown as any;
     this.gsnProvider = RelayProvider.newProvider({
       provider,
       config,
@@ -54,9 +52,6 @@ export class GsnProvider {
   }
 
   addAccount = async (privateKey: string) => {
-    const wallet = new ethers.Wallet(privateKey);
-    console.log('------- wallet.privateKey -----', privateKey);
-    console.log('------- wallet.address -----', wallet.address);
     this.gsnProvider.addAccount(privateKey);
   };
 
@@ -112,8 +107,8 @@ export class GsnProvider {
       relayWorkerAddress: pingResponseBody.relayWorkerAddress,
     };
     const eventInfo: RelayRegisteredEventInfo = {
-      baseRelayFee: pingResponseBody.baseRelayFee, //'this.relayer.config.baseRelayFee',
-      pctRelayFee: pingResponseBody.pctRelayFee, //'this.relayer.config.pctRelayFee.toString()',
+      baseRelayFee: pingResponseBody.baseRelayFee,
+      pctRelayFee: pingResponseBody.pctRelayFee,
       relayManager: '',
       relayUrl: '',
     };
