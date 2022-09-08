@@ -51,6 +51,7 @@ export const createVoyageMiddleware = (service: VoyageRpcService) => {
         const result = await service.handleEthSendTx(
           params[0] as TransactionParams
         );
+        console.log('---- eth_sendTransaction ----- result', result);
         res.result = result;
         break;
       }

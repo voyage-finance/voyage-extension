@@ -21,9 +21,17 @@ class VoyageRpcService {
   };
 
   handleEthSendTx = async (txParams: TransactionParams) => {
-    const newTx = this.store.transactionStore.addNewTransaction(txParams);
-    browser.tabs.create({ url: 'home.html' });
-    return newTx.hash;
+    return new Promise<string>((resolve, reject) => {
+      this.store.transactionStore.addNewTransaction(
+        txParams,
+        async (hash: string) => {
+          console.log('transaction approved with hash', hash);
+          resolve(hash);
+        },
+        async () => reject('User rejected session request')
+      );
+      browser.tabs.create({ url: 'home.html' });
+    });
   };
 
   handleEthSign = async (

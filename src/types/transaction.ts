@@ -18,6 +18,8 @@ export interface Transaction {
   options: TransactionParams; // the standard params such as gas, etc
   orderPreview?: OrderPreview; // used to store marketplace-specific data
   result?: RelayingResult; // only set when the tx is in Pending or Mined state
+  onApprove?: (hash: string) => Promise<void>;
+  onReject?: () => Promise<void>;
 }
 
 export interface OrderPreview {
