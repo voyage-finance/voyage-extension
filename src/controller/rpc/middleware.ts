@@ -10,7 +10,7 @@ import { TransactionParams } from 'types/transaction';
 export const createProviderMiddleware = (
   provider: ethers.providers.JsonRpcProvider
 ) =>
-  createAsyncMiddleware(async (req, res, next) => {
+  createAsyncMiddleware(async (req, res) => {
     try {
       res.result = await provider.send(req.method, req.params as unknown[]);
     } catch (error: any) {
@@ -22,6 +22,7 @@ export const createProviderMiddleware = (
   });
 
 export const createVoyageMiddleware = (service: VoyageRpcService) => {
+  //esli
   return createAsyncMiddleware(async (req, res, next) => {
     switch (req.method) {
       case 'eth_accounts': {
@@ -49,17 +50,6 @@ export const createVoyageMiddleware = (service: VoyageRpcService) => {
         const params = req.params as unknown[];
         const result = await service.handleEthSendTx(
           params[0] as TransactionParams
-        );
-        res.result = result;
-        break;
-      }
-      case 'eth_signTypedData': {
-        // This is temporary for debugging purposes
-        console.log('----- eth_signTypedData --------');
-        const result = await service.getUnconfirmedTransactions();
-        console.log(
-          '🚀 ~ file: middleware.ts ~ line 60 ~ returncreateAsyncMiddleware ~ result',
-          result
         );
         res.result = result;
         break;

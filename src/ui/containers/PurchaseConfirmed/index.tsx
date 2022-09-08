@@ -11,7 +11,8 @@ import PaymentHoverBoard from '@components/PaymentHoverBoard';
 import { useAppSelector } from '@hooks/useRedux';
 import RepaymentSchedule from './RepaymentSchedule';
 import { useParams } from 'react-router-dom';
-import { formatAmount, formatEthersBN } from '@utils/bn';
+import { formatAmount, fromBigNumber } from '@utils/bn';
+import BigNumber from 'bignumber.js';
 
 const getShortenedAddress = (address: string) => {
   return `${address.substring(0, 6)}...${address.slice(-4)}`;
@@ -23,13 +24,14 @@ const PurchaseConfirmed: React.FC = () => {
     return Object.values(state.core.transactions);
   });
   const { hash } = useParams();
-  const collectionName = transaction?.metadata?.metadata?.collectionName;
-  const name =
-    transaction?.metadata?.metadata?.name ||
-    transaction?.metadata?.metadata?.tokenId;
-  const bnplPayment = formatEthersBN(transaction.metadata?.loanParameters?.pmt);
-  const nper = transaction.metadata?.loanParameters.nper;
-  const epoch = transaction.metadata?.loanParameters.epoch;
+  const orderPreview = transaction?.orderPreview;
+  const collectionName = orderPreview?.metadata?.collectionName;
+  const name = orderPreview?.metadata?.name || orderPreview?.metadata?.tokenId;
+  const bnplPayment = orderPreview
+    ? fromBigNumber(orderPreview.loanParameters?.payment.pmt)
+    : new BigNumber(0);
+  const nper = orderPreview ? Number(orderPreview.loanParameters.nper) : 0;
+  const epoch = orderPreview ? Number(orderPreview.loanParameters.epoch) : 0;
 
   return (
     <Card

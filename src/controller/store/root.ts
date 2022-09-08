@@ -4,11 +4,11 @@ import { ethers } from 'ethers';
 import KeyStore from './key';
 import TransactionStore from './transaction';
 import { getNetworkConfiguration, VoyageContracts } from '@utils/env';
-import { GsnProvider } from 'controller/gsnProvider';
+import { GsnStore } from 'controller/store/gsn';
 
 class ControllerStore {
   provider: ethers.providers.Provider;
-  gsnProvider?: GsnProvider;
+  gsnStore?: GsnStore;
   walletConnectStore: WalletConnectStore;
   voyageStore: VoyageStore;
   transactionStore: TransactionStore;
@@ -23,6 +23,7 @@ class ControllerStore {
     );
     this.keyStore = new KeyStore(this);
     this.transactionStore = new TransactionStore(this);
+    this.gsnStore = new GsnStore(this);
   }
 
   get state() {

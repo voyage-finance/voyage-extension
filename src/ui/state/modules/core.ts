@@ -10,7 +10,7 @@ import {
 } from '../../../types';
 import { IWalletConnectSession } from '@walletconnect/types';
 import { PendingLogin } from 'controller/store/key';
-import { Transaction } from 'types/transaction';
+import { OrderPreview, Transaction } from 'types/transaction';
 
 export type TabInfo = {
   origin: string;
@@ -20,7 +20,7 @@ export type TabInfo = {
 interface CoreState {
   pendingApprovals: Record<string, ApprovalRequest>;
   pendingSignRequests: Record<string, SignRequest>;
-  transactions: Transaction[];
+  transactions: Record<string, Transaction>;
   sessions: Record<string, IWalletConnectSession>;
   pendingLogin?: PendingLogin;
   stage: KeyStoreStage;
@@ -29,13 +29,15 @@ interface CoreState {
   vaultAddress?: string;
   account?: Account;
   activeTab?: TabInfo;
+  txOrderPreviewMap: Record<string, OrderPreview>;
 }
 
 const initialState: CoreState = {
   pendingApprovals: {},
   sessions: {},
   pendingSignRequests: {},
-  transactions: [],
+  transactions: {},
+  txOrderPreviewMap: {},
   stage: KeyStoreStage.Uninitialized,
   isTermsSigned: false,
 };

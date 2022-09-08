@@ -6,7 +6,7 @@ export enum Network {
   Mainnet = 'homestead',
   Goerli = 'goerli',
   Rinkeby = 'rinkeby',
-  Localhost = 'local',
+  Localhost = 'localhost',
 }
 
 export enum VoyageContracts {

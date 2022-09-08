@@ -12,11 +12,15 @@ import { PingResponse } from '@opengsn/common/dist/PingResponse';
 import { GsnTransactionDetails } from '@opengsn/common/dist/types/GsnTransactionDetails';
 import fetchAdapter from '@vespaiach/axios-fetch-adapter';
 import sinon from 'sinon';
+import ControllerStore from './root';
+import { LOOKS_EXCHANGE_RINKEBY } from '@utils/constants';
 
-export class GsnProvider {
+export class GsnStore {
   gsnProvider: RelayProvider;
+  root: ControllerStore;
 
-  constructor() {
+  constructor(root: ControllerStore) {
+    this.root = root;
     console.log('HttpProvider', HttpProvider);
     const logger = createClientLogger({ logLevel: 'info' });
     const httpClient = new HttpClient(
@@ -40,15 +44,15 @@ export class GsnProvider {
       config,
       overrideDependencies: {
         logger,
-        //@ts-ignore
         httpClient,
       },
     });
+    this.init();
   }
 
   async init() {
-    console.log('------- gsnProvider.init()-----');
     await this.gsnProvider.init();
+    console.log('------- gsnProvider.init()-----');
   }
 
   addAccount = async (privateKey: string) => {
@@ -69,26 +73,20 @@ export class GsnProvider {
     );
   }
 
-  async buyNow(
-    userAddress: string,
-    _collection: string,
-    _tokenId: string,
-    _vault: string,
-    _marketplace: string,
-    _data: ethers.BytesLike
-  ) {
+  async buyNow(txId: string) {
     const provider = new ethers.providers.Web3Provider(this.gsnProvider);
     const voyage = new ethers.Contract(
       getNetworkConfiguration().contracts[VoyageContracts.Voyage],
       VoyageAbi,
-      provider.getSigner(userAddress)
+      provider.getSigner(this.root.keyStore.account?.address)
     );
+    const transaction = this.root.transactionStore.transactions[txId];
     const tx = await voyage.buyNow(
-      _collection,
-      _tokenId,
-      _vault,
-      _marketplace,
-      _data
+      transaction.orderPreview?.metadata.collectionAddress,
+      transaction.orderPreview?.metadata.tokenId,
+      this.root.voyageStore.vaultAddress,
+      LOOKS_EXCHANGE_RINKEBY,
+      transaction.options.data
     );
     console.log('--------------- buyNow - tx ----------------', tx);
     return tx;

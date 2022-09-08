@@ -5,9 +5,6 @@ import { makeAutoObservable, toJS } from 'mobx';
 import Customauth from '@toruslabs/customauth';
 import { storage } from 'webextension-polyfill';
 import { omit } from 'lodash';
-import HttpProvider from 'web3-providers-http';
-import { RelayProvider } from '@opengsn/provider';
-import { GsnProvider } from 'controller/gsnProvider';
 import { getNetworkEnvironment, Network } from '@utils/env';
 
 export interface PendingLogin {
@@ -59,7 +56,6 @@ class KeyStore {
       this.account = stateObject.account;
       this.reconstructKeyPair();
     }
-    await this.initGsnProvider();
   }
 
   async reconstructKeyPair() {
@@ -77,12 +73,6 @@ class KeyStore {
         publicKey: torusKeys.pubKey?.pub_key_X,
       },
     };
-  }
-
-  async initGsnProvider() {
-    this.root.gsnProvider = new GsnProvider();
-    await this.root.gsnProvider.init();
-    console.log('----- initialized gsn provider -----');
   }
 
   persistState() {
@@ -175,7 +165,7 @@ class KeyStore {
       auth: currentUser,
     };
     await this.root.voyageStore.fetchVault();
-    this.root.gsnProvider?.addAccount(torusResponse.privateKey);
+    this.root.gsnStore?.gsnProvider?.addAccount(torusResponse.privateKey);
     console.log('----- addAccount -----');
     this.stage = KeyStoreStage.Initialized;
     this.persistState();

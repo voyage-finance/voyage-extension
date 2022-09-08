@@ -1,6 +1,7 @@
 import ControllerStore from './root';
 import { makeAutoObservable } from 'mobx';
 import {
+  OrderPreview,
   Transaction,
   TransactionParams,
   TransactionStatus,
@@ -9,6 +10,7 @@ import createRandomId from '@utils/random';
 import { SignRequest } from 'types';
 import { noop } from 'lodash';
 import { ethErrors } from 'eth-rpc-errors';
+import { formatEthersBN } from '@utils/bn';
 
 interface SignRequestCallbacks {
   resolve: (value?: unknown) => void;
@@ -18,12 +20,14 @@ interface SignRequestCallbacks {
 class TransactionStore implements TransactionStore {
   root: ControllerStore;
   transactions: Record<string, Transaction>;
+  txOrderPreviewMap: Record<string, OrderPreview>;
   pendingSignRequests: Record<string, SignRequest> = {};
   requestCallbacks: Record<string, SignRequestCallbacks> = {};
 
   constructor(root: ControllerStore) {
     this.root = root;
     this.transactions = {};
+    this.txOrderPreviewMap = {};
     makeAutoObservable(this, { root: false, requestCallbacks: false });
   }
 
@@ -31,25 +35,22 @@ class TransactionStore implements TransactionStore {
     return {
       transactions: this.transactions,
       pendingSignRequests: this.pendingSignRequests,
+      txOrderPreviewMap: this.txOrderPreviewMap,
     };
   }
 
-  addNewUnconfirmedTransaction(
+  addNewTransaction(
     txParams: TransactionParams,
-    txMeta?: any
+    fetchPreview = true
   ): Transaction {
     const id = `${createRandomId()}`;
     const transaction: Transaction = {
       id,
-      status: TransactionStatus.Unconfirmed,
+      status: TransactionStatus.Initial,
       options: txParams,
-      metadata: txMeta,
     };
     this.transactions[id] = transaction;
-    console.log(
-      '🚀 ~ file: transaction.ts ~ line 49 ~ TransactionStore ~ this.transactions',
-      this.transactions
-    );
+    if (fetchPreview) this.fetchPreviewTx(id, txParams);
     return transaction;
   }
 
@@ -74,13 +75,13 @@ class TransactionStore implements TransactionStore {
   }
 
   confirmTransaction(id: string): Promise<Transaction> {
-    let tx = this.transactions[id];
+    const tx = this.transactions[id];
     tx.status = TransactionStatus.Pending;
     return Promise.resolve(tx);
   }
 
   async rejectTransaction(id: string) {
-    let tx = this.transactions[id];
+    const tx = this.transactions[id];
     tx.status = TransactionStatus.Rejected;
   }
 
@@ -105,33 +106,45 @@ class TransactionStore implements TransactionStore {
     return cbs;
   };
 
-  getAllTransactions(): Transaction[] {
-    return Object.values(this.transactions);
-  }
-
-  getUnconfirmedTransactions(): Transaction[] {
-    return this.getAllTransactions().filter(
-      (tx) => tx.status === TransactionStatus.Unconfirmed
+  private fetchPreviewTx = async (id: string, txParams: TransactionParams) => {
+    const response = await fetch(
+      `${process.env.VOYAGE_API_URL}/v1/marketplace/preview/looksrare`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          calldata: txParams.data,
+          speed: 'fast',
+          vault: this.root.voyageStore.vaultAddress,
+        }),
+      }
     );
-  }
-
-  getPendingTransaction(): Transaction[] {
-    return this.getAllTransactions().filter(
-      (tx) => tx.status === TransactionStatus.Pending
+    const data = await response.json();
+    if (!response.ok) {
+      Promise.reject(data);
+    }
+    const orderPreview = {
+      ...data,
+      loanParameters: {
+        ...data.loanParameters,
+        payment: {
+          pmt: formatEthersBN(data.loanParameters.pmt.pmt),
+          principal: formatEthersBN(data.loanParameters.pmt.principal),
+          interest: formatEthersBN(data.loanParameters.pmt.interest),
+        },
+      },
+      price: formatEthersBN(data.price),
+    };
+    console.log('[tx preview]', orderPreview);
+    this.transactions[id].orderPreview = orderPreview;
+    this.txOrderPreviewMap[id] = orderPreview;
+    console.log(
+      '🚀 ~ fetchPreviewTx ~ txOrderPreviewMap',
+      this.txOrderPreviewMap
     );
-  }
-
-  getMinedTransactions(): Transaction[] {
-    return this.getAllTransactions().filter(
-      (tx) => tx.status === TransactionStatus.Mined
-    );
-  }
-
-  getRejectedTransactions(): Transaction[] {
-    return this.getAllTransactions().filter(
-      (tx) => tx.status === TransactionStatus.Rejected
-    );
-  }
+  };
 }
 
 export default TransactionStore;

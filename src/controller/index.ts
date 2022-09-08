@@ -111,7 +111,6 @@ export class VoyageController extends SafeEventEmitter {
       fetchVault: this.fetchVault,
       registerVaultWatcher: this.registerVaultWatcher,
       openNotificationWindow: this.openNotificationWindow,
-      getUnconfirmedTransactions: this.getUnconfirmedTransactions,
       populateBuyNow: this.populateBuyNow,
       buyNow: this.buyNow,
       createRelayHttpRequest: this.createRelayHttpRequest,
@@ -119,24 +118,11 @@ export class VoyageController extends SafeEventEmitter {
   }
 
   createRelayHttpRequest = (data: string, user: string) => {
-    return this.store.gsnProvider?.createRelayHttpRequest(data, user);
+    return this.store.gsnStore?.createRelayHttpRequest(data, user);
   };
 
-  buyNow = (
-    _collection: string,
-    _tokenId: string,
-    _vault: string,
-    _marketplace: string,
-    _data: ethers.BytesLike
-  ) => {
-    return this.store.gsnProvider?.buyNow(
-      this.store.keyStore.account?.address!,
-      _collection,
-      _tokenId,
-      _vault,
-      _marketplace,
-      _data
-    );
+  buyNow = (txId: string) => {
+    return this.store.gsnStore?.buyNow(txId);
   };
 
   connectWithWC = async (uri: string) => {
@@ -215,7 +201,7 @@ export class VoyageController extends SafeEventEmitter {
     const connection = await this.store.walletConnectStore.getConnection(id);
     connection.killSession();
     // TODO: add a timeout
-    return new Promise<void>(async (resolve, reject) => {
+    return new Promise<void>((resolve) => {
       connection.on('disconnect', () => {
         console.log('handling manual disconnect');
         resolve();
@@ -295,9 +281,6 @@ export class VoyageController extends SafeEventEmitter {
     const body = await response.json();
     return body.sentinelObj?.counterFactualAddress;
   };
-
-  getUnconfirmedTransactions = () =>
-    this.store.transactionStore.getUnconfirmedTransactions();
 
   private sendUpdate = (state: unknown) => {
     this.emit('update', toJS(state));
