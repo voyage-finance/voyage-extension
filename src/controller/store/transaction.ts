@@ -13,7 +13,7 @@ import { ethErrors } from 'eth-rpc-errors';
 import { formatEthersBN } from '@utils/bn';
 
 interface SignRequestCallbacks {
-  resolve: (value?: unknown) => void;
+  resolve: (value?: any) => void;
   reject: (error?: Error) => void;
 }
 
@@ -41,17 +41,20 @@ class TransactionStore implements TransactionStore {
 
   addNewTransaction(
     txParams: TransactionParams,
+    onApprove: (hash: string) => Promise<void>,
+    onReject: () => Promise<void>,
     fetchPreview = true
-  ): Transaction {
+  ) {
     const id = `${createRandomId()}`;
     const transaction: Transaction = {
       id,
       status: TransactionStatus.Initial,
       options: txParams,
+      onApprove,
+      onReject,
     };
     this.transactions[id] = transaction;
     if (fetchPreview) this.fetchPreviewTx(id, txParams);
-    return transaction;
   }
 
   addSignRequest(signRequest: SignRequest) {
@@ -74,9 +77,11 @@ class TransactionStore implements TransactionStore {
     });
   }
 
-  confirmTransaction(id: string): Promise<Transaction> {
+  confirmTransaction(id: string, hash: string): Promise<Transaction> {
     const tx = this.transactions[id];
+    tx.hash = hash;
     tx.status = TransactionStatus.Pending;
+    tx.onApprove?.(hash);
     return Promise.resolve(tx);
   }
 

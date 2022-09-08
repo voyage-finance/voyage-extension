@@ -89,6 +89,7 @@ export class GsnStore {
       transaction.options.data
     );
     console.log('--------------- buyNow - tx ----------------', tx);
+    this.root.transactionStore.confirmTransaction(txId, tx.hash);
     return tx;
   }
 
