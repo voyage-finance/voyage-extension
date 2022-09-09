@@ -9,16 +9,21 @@ export enum Network {
   Localhost = 'localhost',
 }
 
-export enum VoyageContracts {
+export enum Contracts {
   Voyage,
+  LooksRare,
+  Seaport,
 }
+
+type AddressToContract = Record<string, Contracts>;
 
 export interface NetworkConfiguration {
   name: string;
   apiKey?: string;
   endpoint: string;
   chaindId: number;
-  contracts: Record<VoyageContracts.Voyage, string>;
+  contracts: Record<Contracts, string>;
+  addressToContract: AddressToContract;
 }
 
 export const NetworkConfigurationMap: Record<Network, NetworkConfiguration> = {
@@ -28,7 +33,14 @@ export const NetworkConfigurationMap: Record<Network, NetworkConfiguration> = {
     endpoint: `https://eth-goerli.g.alchemy.com/v2/${process.env.ALCHEMY_GOERLI_API_KEY}`,
     chaindId: ChainID.Goerli,
     contracts: {
-      [VoyageContracts.Voyage]: '0x62e6aD57CB3C2bd1bfFf2B33d0539753E7aeEBA6',
+      [Contracts.Voyage]: '0x62e6ad57cb3c2bd1bfff2b33d0539753e7aeeba6',
+      [Contracts.LooksRare]: '0xd112466471b5438c1ca2d218694200e49d81d047',
+      [Contracts.Seaport]: '0x00000000006cee72100d161c57ada5bb2be1ca79',
+    },
+    addressToContract: {
+      '0x62e6ad57cb3c2bd1bfff2b33d0539753e7aeeba6': Contracts.Voyage,
+      '0xd112466471b5438c1ca2d218694200e49d81d047': Contracts.LooksRare,
+      '0x00000000006cee72100d161c57ada5bb2be1ca79': Contracts.Seaport,
     },
   },
   [Network.Rinkeby]: {
@@ -37,7 +49,14 @@ export const NetworkConfigurationMap: Record<Network, NetworkConfiguration> = {
     endpoint: `https://eth-rinkeby.alchemyapi.io/v2/${process.env.ALCHEMY_RINKEBY_API_KEY}`,
     chaindId: ChainID.Rinkeby,
     contracts: {
-      [VoyageContracts.Voyage]: '0xc317754a23F2C9599218b183FC2F1c762a794551',
+      [Contracts.Voyage]: '0xc317754a23f2c9599218b183fc2f1c762a794551',
+      [Contracts.LooksRare]: '0x1aa777972073ff66dcfded85749bdd555c0665da',
+      [Contracts.Seaport]: '0x00000000006cee72100d161c57ada5bb2be1ca79',
+    },
+    addressToContract: {
+      '0xc317754a23f2c9599218b183fc2f1c762a794551': Contracts.Voyage,
+      '0x1aa777972073ff66dcfded85749bdd555c0665da': Contracts.LooksRare,
+      '0x00000000006cee72100d161c57ada5bb2be1ca79': Contracts.Seaport,
     },
   },
   [Network.Localhost]: {
@@ -46,7 +65,14 @@ export const NetworkConfigurationMap: Record<Network, NetworkConfiguration> = {
     endpoint: `http://localhost:8545`,
     chaindId: ChainID.Rinkeby,
     contracts: {
-      [VoyageContracts.Voyage]: '0xc317754a23F2C9599218b183FC2F1c762a794551',
+      [Contracts.Voyage]: '0xc317754a23f2c9599218b183fc2f1c762a794551',
+      [Contracts.LooksRare]: '0x1aa777972073ff66dcfded85749bdd555c0665da',
+      [Contracts.Seaport]: '0x00000000006cee72100d161c57ada5bb2be1ca79',
+    },
+    addressToContract: {
+      '0xc317754a23f2c9599218b183fc2f1c762a794551': Contracts.Voyage,
+      '0x1aa777972073ff66dcfded85749bdd555c0665da': Contracts.LooksRare,
+      '0x00000000006cee72100d161c57ada5bb2be1ca79': Contracts.Seaport,
     },
   },
   [Network.Mainnet]: {
@@ -55,10 +81,20 @@ export const NetworkConfigurationMap: Record<Network, NetworkConfiguration> = {
     endpoint: ``,
     chaindId: ChainID.Mainnet,
     contracts: {
-      [VoyageContracts.Voyage]: '',
+      [Contracts.Voyage]: '',
+      [Contracts.LooksRare]: '',
+      [Contracts.Seaport]: '',
+    },
+    addressToContract: {
+      '0xc317754a23f2c9599218b183fc2f1c762a794551': Contracts.Voyage,
+      '0x1aa777972073ff66dcfded85749bdd555c0665da': Contracts.LooksRare,
+      '0x00000000006cee72100d161c57ada5bb2be1ca79': Contracts.Seaport,
     },
   },
 };
+
+export const getContractByAddress = (address: string) =>
+  NetworkConfigurationMap[getNetworkEnvironment()].addressToContract[address];
 
 export const getNetworkEnvironment = () => {
   const env = (process.env.NETWORK_ENV as Network) || Network.Localhost;

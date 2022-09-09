@@ -1,5 +1,8 @@
 import BigNumber from 'bignumber.js';
-import { ethers } from 'ethers';
+import {
+  TransactionRequest,
+  TransactionResponse,
+} from '@ethersproject/providers';
 
 export enum TransactionStatus {
   Initial, // when just received from middleware
@@ -9,13 +12,11 @@ export enum TransactionStatus {
   Rejected, // rejected by user
 }
 
-export type TransactionParams = ethers.UnsignedTransaction;
-
 export interface Transaction {
   id: string; // randomly generated id
   hash?: string;
   status: TransactionStatus;
-  options: TransactionParams; // the standard params such as gas, etc
+  options: TransactionRequest; // the standard params such as gas, etc
   orderPreview?: OrderPreview; // used to store marketplace-specific data
   result?: RelayingResult; // only set when the tx is in Pending or Mined state
   onApprove?: (hash: string) => Promise<void>;
@@ -56,4 +57,4 @@ export interface Metadata {
   collectionAddress: string;
 }
 
-export type RelayingResult = unknown;
+export type RelayingResult = TransactionResponse;

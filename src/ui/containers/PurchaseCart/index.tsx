@@ -66,7 +66,7 @@ const PurchaseCart: React.FC = () => {
   const handleBuyClick = async () => {
     console.log('[handleBuyClick] transaction: ', transaction);
     setIsLoading(true);
-    const tx = await controller.buyNow(transaction.id);
+    const tx = await controller.confirmTransaction(transaction.id);
     navigate(`${PURCHASE_OVERVIEW_ROUTE}/confirmed/${tx.hash}`);
     setIsLoading(false);
   };

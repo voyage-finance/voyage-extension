@@ -1,7 +1,7 @@
 import VoyageRpcService from './service';
 import { createAsyncMiddleware } from 'json-rpc-engine';
 import { ethers } from 'ethers';
-import { TransactionParams } from 'types/transaction';
+import { TransactionRequest } from '@ethersproject/providers';
 
 /**
  * Creates JsonRpcEngine middleware based on ethers.providers.JsonRpcProvider.
@@ -49,7 +49,7 @@ export const createVoyageMiddleware = (service: VoyageRpcService) => {
         console.log('----- eth_sendTransaction --------', req.params);
         const params = req.params as unknown[];
         const result = await service.handleEthSendTx(
-          params[0] as TransactionParams
+          params[0] as TransactionRequest
         );
         console.log('---- eth_sendTransaction ----- result', result);
         res.result = result;
