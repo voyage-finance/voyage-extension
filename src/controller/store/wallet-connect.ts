@@ -6,6 +6,8 @@ import { makeAutoObservable, runInAction, toJS } from 'mobx';
 import { ethErrors } from 'eth-rpc-errors';
 import { noop } from 'lodash';
 import ControllerStore from './root';
+import { createWcStream } from '../wcStream';
+import { Duplex } from 'stream';
 
 const NS = 'finance.voyage.walletconnect.sessions';
 
@@ -92,6 +94,9 @@ class WalletConnectStore {
         session,
       });
       connections[k] = connection;
+      this.root.controller.setupVoyageProviderConnection(
+        createWcStream(connection) as Duplex
+      );
       this.handleDisconnect(connection);
     }
     runInAction(() => (this.connections = connections));
