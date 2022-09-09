@@ -1,9 +1,9 @@
-import { TransactionParams } from 'types/transaction';
 import { ControllerStore } from '../store';
 import { nanoid } from 'nanoid';
 import { openNotificationWindow } from '@utils/extension';
 import { IClientMeta } from '@walletconnect/types';
 import browser from 'webextension-polyfill';
+import { TransactionRequest } from '@ethersproject/providers';
 
 /**
  * VoyageRpcService defines all handlers for eth RPC methods.
@@ -20,7 +20,7 @@ class VoyageRpcService {
     return address ? [address] : [];
   };
 
-  handleEthSendTx = async (txParams: TransactionParams) => {
+  handleEthSendTx = async (txParams: TransactionRequest) => {
     return new Promise<string>((resolve, reject) => {
       this.store.transactionStore.addNewTransaction(
         txParams,

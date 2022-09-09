@@ -3,27 +3,35 @@ import VoyageStore from './voyage';
 import { ethers } from 'ethers';
 import KeyStore from './key';
 import TransactionStore from './transaction';
-import { getNetworkConfiguration, VoyageContracts } from '@utils/env';
+import { getNetworkConfiguration, Contracts } from '@utils/env';
 import { GsnStore } from 'controller/store/gsn';
+import { VoyageController } from '../index';
+import { makeAutoObservable } from 'mobx';
 
 class ControllerStore {
+  controller: VoyageController;
   provider: ethers.providers.Provider;
-  gsnStore?: GsnStore;
+  gsnStore: GsnStore;
   walletConnectStore: WalletConnectStore;
   voyageStore: VoyageStore;
   transactionStore: TransactionStore;
   keyStore: KeyStore;
 
-  constructor(provider: ethers.providers.Provider) {
+  constructor(
+    provider: ethers.providers.Provider,
+    controller: VoyageController
+  ) {
+    this.controller = controller;
     this.provider = provider;
     this.walletConnectStore = new WalletConnectStore(this);
     this.voyageStore = new VoyageStore(
       this,
-      getNetworkConfiguration().contracts[VoyageContracts.Voyage]
+      getNetworkConfiguration().contracts[Contracts.Voyage]
     );
     this.keyStore = new KeyStore(this);
     this.transactionStore = new TransactionStore(this);
     this.gsnStore = new GsnStore(this);
+    makeAutoObservable(this, { controller: false });
   }
 
   get state() {

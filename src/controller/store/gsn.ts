@@ -1,7 +1,6 @@
 import * as ethers from 'ethers';
 import { GSNConfig, RelayProvider } from '@opengsn/provider';
-import { getNetworkConfiguration, VoyageContracts } from '@utils/env';
-import VoyageAbi from 'abis/voyage.json';
+import { Contracts, getNetworkConfiguration } from '@utils/env';
 import HttpProvider from 'web3-providers-http';
 import { HttpClient, HttpWrapper } from '@opengsn/common';
 import { RelayTransactionRequest } from '@opengsn/common/dist/types/RelayTransactionRequest';
@@ -13,9 +12,10 @@ import { GsnTransactionDetails } from '@opengsn/common/dist/types/GsnTransaction
 import fetchAdapter from '@vespaiach/axios-fetch-adapter';
 import sinon from 'sinon';
 import ControllerStore from './root';
-import { LOOKS_EXCHANGE_RINKEBY } from '@utils/constants';
+import { TransactionRequest } from '@ethersproject/providers';
 
 export class GsnStore {
+  ethersProvider: ethers.providers.Web3Provider;
   gsnProvider: RelayProvider;
   root: ControllerStore;
 
@@ -48,49 +48,20 @@ export class GsnStore {
       },
     });
     this.init();
+    this.ethersProvider = new ethers.providers.Web3Provider(this.gsnProvider);
   }
 
   async init() {
     await this.gsnProvider.init();
     console.log('------- gsnProvider.init()-----');
+    const account = this.root.keyStore.getAccount();
+    this.gsnProvider.addAccount(account!.keyPair!.privateKey);
   }
 
-  addAccount = async (privateKey: string) => {
-    this.gsnProvider.addAccount(privateKey);
-  };
-
-  async getVault(userAddress: string) {
-    const provider = new ethers.providers.Web3Provider(this.gsnProvider);
-    const voyage = new ethers.Contract(
-      getNetworkConfiguration().contracts[VoyageContracts.Voyage],
-      VoyageAbi,
-      provider.getSigner(userAddress)
-    );
-    const before = await voyage.getVaultAddr(userAddress);
-    console.log(
-      '🚀 ~ file: gsnProvider.ts ~ line 47 ~ GsnProvider ~ getVault ~ before',
-      before
-    );
-  }
-
-  async buyNow(txId: string) {
-    const provider = new ethers.providers.Web3Provider(this.gsnProvider);
-    const voyage = new ethers.Contract(
-      getNetworkConfiguration().contracts[VoyageContracts.Voyage],
-      VoyageAbi,
-      provider.getSigner(this.root.keyStore.account?.address)
-    );
-    const transaction = this.root.transactionStore.transactions[txId];
-    const tx = await voyage.buyNow(
-      transaction.orderPreview?.metadata.collectionAddress,
-      transaction.orderPreview?.metadata.tokenId,
-      this.root.voyageStore.vaultAddress,
-      LOOKS_EXCHANGE_RINKEBY,
-      transaction.options.data
-    );
-    console.log('--------------- buyNow - tx ----------------', tx);
-    this.root.transactionStore.confirmTransaction(txId, tx.hash);
-    return tx;
+  async relayTransaction(transaction: TransactionRequest) {
+    const account = await this.root.keyStore.getAccount();
+    const signer = await this.ethersProvider.getSigner(account?.address);
+    return signer.sendTransaction(transaction);
   }
 
   async createRelayHttpRequest(
@@ -117,7 +88,7 @@ export class GsnStore {
     };
     const gsnTransactionDetails: GsnTransactionDetails = {
       from: userAddress,
-      to: getNetworkConfiguration().contracts[VoyageContracts.Voyage],
+      to: getNetworkConfiguration().contracts[Contracts.Voyage],
       data: data,
     };
     if (gsnTransactionDetails.gas == null) {

@@ -47,7 +47,7 @@ export class VoyageController extends SafeEventEmitter {
     super();
 
     this.provider = getJsonProvider();
-    this.store = new ControllerStore(this.provider);
+    this.store = new ControllerStore(this.provider, this);
     this.service = new VoyageRpcService(this.store);
     this.engine = this.createRpcEngine();
     this.disposer = reaction(
@@ -112,17 +112,13 @@ export class VoyageController extends SafeEventEmitter {
       registerVaultWatcher: this.registerVaultWatcher,
       openNotificationWindow: this.openNotificationWindow,
       populateBuyNow: this.populateBuyNow,
-      buyNow: this.buyNow,
+      confirmTransaction: this.store.transactionStore.confirmTransaction,
       createRelayHttpRequest: this.createRelayHttpRequest,
     };
   }
 
   createRelayHttpRequest = (data: string, user: string) => {
     return this.store.gsnStore?.createRelayHttpRequest(data, user);
-  };
-
-  buyNow = (txId: string) => {
-    return this.store.gsnStore?.buyNow(txId);
   };
 
   connectWithWC = async (uri: string) => {

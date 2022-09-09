@@ -1,9 +1,8 @@
 import ControllerStore from './root';
-import { makeAutoObservable } from 'mobx';
+import { makeAutoObservable, runInAction } from 'mobx';
 import {
   OrderPreview,
   Transaction,
-  TransactionParams,
   TransactionStatus,
 } from 'types/transaction';
 import createRandomId from '@utils/random';
@@ -11,23 +10,22 @@ import { SignRequest } from 'types';
 import { noop } from 'lodash';
 import { ethErrors } from 'eth-rpc-errors';
 import { formatEthersBN } from '@utils/bn';
+import { TransactionRequest } from '@ethersproject/providers';
 
 interface SignRequestCallbacks {
-  resolve: (value?: any) => void;
-  reject: (error?: Error) => void;
+  resolve: (value?: any) => Promise<void>;
+  reject: (error?: Error) => Promise<void>;
 }
 
 class TransactionStore implements TransactionStore {
   root: ControllerStore;
-  transactions: Record<string, Transaction>;
-  txOrderPreviewMap: Record<string, OrderPreview>;
+  transactions: Record<string, Transaction> = {};
+  txOrderPreviewMap: Record<string, OrderPreview> = {};
   pendingSignRequests: Record<string, SignRequest> = {};
   requestCallbacks: Record<string, SignRequestCallbacks> = {};
 
   constructor(root: ControllerStore) {
     this.root = root;
-    this.transactions = {};
-    this.txOrderPreviewMap = {};
     makeAutoObservable(this, { root: false, requestCallbacks: false });
   }
 
@@ -35,26 +33,45 @@ class TransactionStore implements TransactionStore {
     return {
       transactions: this.transactions,
       pendingSignRequests: this.pendingSignRequests,
-      txOrderPreviewMap: this.txOrderPreviewMap,
+      txOrderPreviewMap: { ...this.txOrderPreviewMap },
     };
   }
 
-  addNewTransaction(
-    txParams: TransactionParams,
-    onApprove: (hash: string) => Promise<void>,
+  async addNewTransaction(
+    txRequest: TransactionRequest,
+    onApprove: (txHash: string) => Promise<void>,
     onReject: () => Promise<void>,
     fetchPreview = true
   ) {
     const id = `${createRandomId()}`;
-    const transaction: Transaction = {
+    this.transactions[id] = {
       id,
       status: TransactionStatus.Initial,
-      options: txParams,
+      options: txRequest,
       onApprove,
       onReject,
     };
-    this.transactions[id] = transaction;
-    if (fetchPreview) this.fetchPreviewTx(id, txParams);
+    this.requestCallbacks[id] = {
+      resolve: async () => {
+        const res = await this.root.voyageStore.buyNow(txRequest);
+        this.transactions[id] = {
+          ...this.transactions[id],
+          hash: res.hash,
+          status: TransactionStatus.Pending,
+        };
+        onApprove(res.hash);
+      },
+      reject: async () => {
+        onReject();
+      },
+    };
+    if (fetchPreview) {
+      const preview = await this.fetchPreviewTx(id, txRequest);
+      runInAction(() => {
+        this.transactions[id].orderPreview = preview;
+        this.txOrderPreviewMap[id] = preview;
+      });
+    }
   }
 
   addSignRequest(signRequest: SignRequest) {
@@ -77,13 +94,12 @@ class TransactionStore implements TransactionStore {
     });
   }
 
-  confirmTransaction(id: string, hash: string): Promise<Transaction> {
-    const tx = this.transactions[id];
-    tx.hash = hash;
-    tx.status = TransactionStatus.Pending;
-    tx.onApprove?.(hash);
-    return Promise.resolve(tx);
-  }
+  confirmTransaction = async (id: string): Promise<Transaction> => {
+    const { resolve } = this.requestCallbacks[id];
+    await resolve();
+    delete this.requestCallbacks[id];
+    return this.transactions[id];
+  };
 
   async rejectTransaction(id: string) {
     const tx = this.transactions[id];
@@ -111,7 +127,7 @@ class TransactionStore implements TransactionStore {
     return cbs;
   };
 
-  private fetchPreviewTx = async (id: string, txParams: TransactionParams) => {
+  private fetchPreviewTx = async (id: string, txParams: TransactionRequest) => {
     const response = await fetch(
       `${process.env.VOYAGE_API_URL}/v1/marketplace/preview/looksrare`,
       {
@@ -130,7 +146,8 @@ class TransactionStore implements TransactionStore {
     if (!response.ok) {
       Promise.reject(data);
     }
-    const orderPreview = {
+
+    return {
       ...data,
       loanParameters: {
         ...data.loanParameters,
@@ -142,13 +159,6 @@ class TransactionStore implements TransactionStore {
       },
       price: formatEthersBN(data.price),
     };
-    console.log('[tx preview]', orderPreview);
-    this.transactions[id].orderPreview = orderPreview;
-    this.txOrderPreviewMap[id] = orderPreview;
-    console.log(
-      '🚀 ~ fetchPreviewTx ~ txOrderPreviewMap',
-      this.txOrderPreviewMap
-    );
   };
 }
 
