@@ -8,7 +8,9 @@ const bgPort = chrome.runtime.connect({ name: 'voyage-contentscript' });
 const bgStream = new PortStream(bgPort as Runtime.Port);
 const mux = setupMultiplex(bgStream as unknown as Duplex, 'bootstrap');
 
+//eslint-disable-next-line
 const controller = mux.createStream('controller');
+//eslint-disable-next-line
 const provider = new BaseProvider(mux.createStream('provider') as Duplex);
 
 const buttons = window.document.querySelectorAll('button');

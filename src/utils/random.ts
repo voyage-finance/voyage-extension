@@ -15,11 +15,11 @@ export default function createRandomId() {
 }
 
 export function createRandomFingerprint() {
-  var byteArray = utils.randomBytes(6);
-  var emojiArray = [];
+  const byteArray = utils.randomBytes(6);
+  const emojiArray = [];
 
   for (const byte of byteArray) {
-    var emoji = DEVICE_EMOJIS[byte];
+    const emoji = DEVICE_EMOJIS[byte];
 
     if (!emoji) {
       console.error(byte);

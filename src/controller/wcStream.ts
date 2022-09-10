@@ -3,7 +3,6 @@ import { Duplex } from 'readable-stream';
 import { noop } from 'lodash';
 
 export const createWcStream = (connection: WalletConnect) => {
-  const idMap: Record<any, any> = {};
   connection.on('disconnect', (err, payload) => {
     if (err) {
       console.error('ending wc stream err: ', err);

@@ -12,9 +12,7 @@ import Button from '@components/Button';
 import { useForm } from '@mantine/form';
 import { parseWalletConnectUri } from '@walletconnect/utils';
 
-interface Props {}
-
-const Connect: React.FC<Props> = () => {
+const Connect: React.FC = () => {
   const form = useForm({
     initialValues: { wcURI: '' },
     validate: {
