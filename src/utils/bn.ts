@@ -15,8 +15,11 @@ export const formatEthersBN = (bn: any, decimals = ETHERS_DECIMALS) => {
 
 export const fromBigNumber = (bn: any) => new BigNumber(bn.toString());
 
-export const formatAmount = (value?: BigNumber) => {
-  return parseFloat((value ? value : Zero).toFixed(3, BigNumber.ROUND_UP));
+export const formatAmount = (value: BigNumber = Zero, decimalPlaces = 5) => {
+  const leadingZeros = value.isZero()
+    ? 0
+    : Math.floor(Math.abs(Math.log10(value?.toNumber())));
+  return parseFloat(value.toFixed(Math.max(leadingZeros + 1, decimalPlaces)));
 };
 
 export const Zero = new BigNumber(0);
