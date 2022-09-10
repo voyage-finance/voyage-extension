@@ -164,8 +164,10 @@ class KeyStore {
       email: currentUser.email,
       auth: currentUser,
     };
+
     await this.root.voyageStore.fetchVault();
-    this.root.gsnStore?.gsnProvider?.addAccount(torusResponse.privateKey);
+    await this.root.gsnStore.initialized;
+    this.root.gsnStore.addAccount(torusResponse.privateKey);
     console.log('----- addAccount -----');
     this.stage = KeyStoreStage.Initialized;
     this.persistState();
