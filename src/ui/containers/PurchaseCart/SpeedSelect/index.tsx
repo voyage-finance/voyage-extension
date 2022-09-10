@@ -127,7 +127,7 @@ const SpeedSelect: React.FunctionComponent<ISpeedSelectProps> = ({
 
   React.useEffect(() => {
     updateGasData();
-  }, [value]);
+  }, [value, collection, tokenId, vault, user, calldata]);
 
   return (
     <Group position="apart" align="center" {...props}>

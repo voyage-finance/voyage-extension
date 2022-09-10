@@ -8,12 +8,7 @@ type IProps = TextInputProps &
     liveValidation?: boolean;
   };
 
-const Input: React.FC<IProps> = ({
-  label,
-  width,
-  liveValidation,
-  ...props
-}) => {
+const Input: React.FC<IProps> = ({ width, liveValidation, ...props }) => {
   return (
     <TextInput
       radius={10}

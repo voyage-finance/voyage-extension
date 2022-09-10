@@ -6,11 +6,7 @@ import styles from './index.module.scss';
 import Text from '@components/Text';
 import { ReactComponent as EthSvg } from 'assets/img/eth-icon.svg';
 
-interface IPaymentHoverBoardProps {}
-
-const PaymentHoverBoard: React.FunctionComponent<IPaymentHoverBoardProps> = (
-  props
-) => {
+const PaymentHoverBoard: React.FunctionComponent = () => {
   const [opened, setOpened] = useState(false);
   return (
     <Popover

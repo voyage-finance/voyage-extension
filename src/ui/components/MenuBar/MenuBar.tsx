@@ -1,4 +1,3 @@
-import { PropsWithChildren } from 'react';
 import { ReactComponent as Voyage } from '@images/logo-menu.svg';
 import { ReactComponent as MM } from '@images/logo-metamask.svg';
 import { truncate } from '@utils/address';
@@ -10,9 +9,7 @@ import { ActionIcon } from '@mantine/core';
 import { DotsVertical } from 'tabler-icons-react';
 import { useNavigate } from 'react-router-dom';
 
-interface Props {}
-
-const MenuBar = (props: PropsWithChildren<Props>) => {
+const MenuBar = () => {
   const { address } = useAccount();
   const { chain } = useNetwork();
   const isSupportedChain = chains.some(({ id }) => id === chain?.id);

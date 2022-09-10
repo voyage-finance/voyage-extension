@@ -1,5 +1,5 @@
 import Text from '@components/Text';
-import { Box, BoxProps, Group, Menu, Space } from '@mantine/core';
+import { Box, BoxProps, Group, Menu } from '@mantine/core';
 import * as React from 'react';
 import { Check, ChevronDown } from 'tabler-icons-react';
 

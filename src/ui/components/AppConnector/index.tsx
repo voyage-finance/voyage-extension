@@ -35,6 +35,7 @@ const AppConnector = (props: Props) => {
             <div
               className={cn(
                 styles.statusIndicator,
+                //eslint-disable-next-line
                 !!session ? styles.ok : styles.bad
               )}
             />
