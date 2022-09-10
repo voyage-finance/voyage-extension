@@ -15,9 +15,10 @@ import ControllerStore from './root';
 import { TransactionRequest } from '@ethersproject/providers';
 
 export class GsnStore {
-  ethersProvider: ethers.providers.Web3Provider;
-  gsnProvider: RelayProvider;
   root: ControllerStore;
+  gsnProvider: RelayProvider;
+  ethersProvider!: ethers.providers.Web3Provider;
+  initialized: Promise<void>;
 
   constructor(root: ControllerStore) {
     this.root = root;
@@ -47,22 +48,24 @@ export class GsnStore {
         httpClient,
       },
     });
-    this.init();
-    this.ethersProvider = new ethers.providers.Web3Provider(this.gsnProvider);
+    this.initialized = this.init();
   }
 
-  async init() {
+  init = async () => {
     await this.gsnProvider.init();
     console.log('------- gsnProvider.init()-----');
-    const account = this.root.keyStore.getAccount();
-    this.gsnProvider.addAccount(account!.keyPair!.privateKey);
+    this.ethersProvider = new ethers.providers.Web3Provider(this.gsnProvider);
+  };
+
+  addAccount(privKey: string) {
+    this.gsnProvider.addAccount(privKey);
   }
 
-  async relayTransaction(transaction: TransactionRequest) {
-    const account = await this.root.keyStore.getAccount();
-    const signer = await this.ethersProvider.getSigner(account?.address);
+  relayTransaction = (transaction: TransactionRequest) => {
+    const account = this.root.keyStore.getAccount();
+    const signer = this.ethersProvider.getSigner(account?.address);
     return signer.sendTransaction(transaction);
-  }
+  };
 
   async createRelayHttpRequest(
     data: string,

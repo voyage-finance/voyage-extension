@@ -76,7 +76,7 @@ class VoyageStore {
       marketplace,
       transaction.data!
     );
-    return this.root.gsnStore?.relayTransaction(txRequest);
+    return this.root.gsnStore.relayTransaction(txRequest);
   }
 
   decodeMarketplaceCalldata(transaction: TransactionRequest): BuyNowParams {
