@@ -1,6 +1,7 @@
 import { ethers } from 'ethers';
 import { alchemyProvider } from 'wagmi/providers/alchemy';
 import { ChainID } from './chain';
+import { LOOKS_EXCHANGE_RINKEBY, SEAPORT_EXCHANGE_RINKEBY } from './constants';
 
 export enum Network {
   Mainnet = 'homestead',
@@ -10,9 +11,9 @@ export enum Network {
 }
 
 export enum Contracts {
-  Voyage,
-  LooksRare,
-  Seaport,
+  Voyage = 'voyage',
+  LooksRare = 'looksrare',
+  Seaport = 'opensea',
 }
 
 type AddressToContract = Record<string, Contracts>;
@@ -33,14 +34,17 @@ export const NetworkConfigurationMap: Record<Network, NetworkConfiguration> = {
     endpoint: `https://eth-goerli.g.alchemy.com/v2/${process.env.ALCHEMY_GOERLI_API_KEY}`,
     chaindId: ChainID.Goerli,
     contracts: {
-      [Contracts.Voyage]: '0x62e6ad57cb3c2bd1bfff2b33d0539753e7aeeba6',
-      [Contracts.LooksRare]: '0xd112466471b5438c1ca2d218694200e49d81d047',
-      [Contracts.Seaport]: '0x00000000006cee72100d161c57ada5bb2be1ca79',
+      [Contracts.Voyage]:
+        '0x62e6ad57cb3c2bd1bfff2b33d0539753e7aeeba6'.toLowerCase(),
+      [Contracts.LooksRare]:
+        '0xd112466471b5438c1ca2d218694200e49d81d047'.toLowerCase(),
+      [Contracts.Seaport]:
+        '0x00000000006c3852cbef3e08e8df289169ede581'.toLowerCase(),
     },
     addressToContract: {
       '0x62e6ad57cb3c2bd1bfff2b33d0539753e7aeeba6': Contracts.Voyage,
       '0xd112466471b5438c1ca2d218694200e49d81d047': Contracts.LooksRare,
-      '0x00000000006cee72100d161c57ada5bb2be1ca79': Contracts.Seaport,
+      '0x00000000006c3852cbef3e08e8df289169ede581': Contracts.Seaport,
     },
   },
   [Network.Rinkeby]: {
@@ -50,13 +54,13 @@ export const NetworkConfigurationMap: Record<Network, NetworkConfiguration> = {
     chaindId: ChainID.Rinkeby,
     contracts: {
       [Contracts.Voyage]: '0xc317754a23f2c9599218b183fc2f1c762a794551',
-      [Contracts.LooksRare]: '0x1aa777972073ff66dcfded85749bdd555c0665da',
-      [Contracts.Seaport]: '0x00000000006cee72100d161c57ada5bb2be1ca79',
+      [Contracts.LooksRare]: LOOKS_EXCHANGE_RINKEBY,
+      [Contracts.Seaport]: SEAPORT_EXCHANGE_RINKEBY,
     },
     addressToContract: {
       '0xc317754a23f2c9599218b183fc2f1c762a794551': Contracts.Voyage,
-      '0x1aa777972073ff66dcfded85749bdd555c0665da': Contracts.LooksRare,
-      '0x00000000006cee72100d161c57ada5bb2be1ca79': Contracts.Seaport,
+      [LOOKS_EXCHANGE_RINKEBY]: Contracts.LooksRare,
+      [SEAPORT_EXCHANGE_RINKEBY]: Contracts.Seaport,
     },
   },
   [Network.Localhost]: {
@@ -66,13 +70,13 @@ export const NetworkConfigurationMap: Record<Network, NetworkConfiguration> = {
     chaindId: ChainID.Rinkeby,
     contracts: {
       [Contracts.Voyage]: '0xc317754a23f2c9599218b183fc2f1c762a794551',
-      [Contracts.LooksRare]: '0x1aa777972073ff66dcfded85749bdd555c0665da',
-      [Contracts.Seaport]: '0x00000000006cee72100d161c57ada5bb2be1ca79',
+      [Contracts.LooksRare]: LOOKS_EXCHANGE_RINKEBY,
+      [Contracts.Seaport]: SEAPORT_EXCHANGE_RINKEBY,
     },
     addressToContract: {
       '0xc317754a23f2c9599218b183fc2f1c762a794551': Contracts.Voyage,
-      '0x1aa777972073ff66dcfded85749bdd555c0665da': Contracts.LooksRare,
-      '0x00000000006cee72100d161c57ada5bb2be1ca79': Contracts.Seaport,
+      [LOOKS_EXCHANGE_RINKEBY]: Contracts.LooksRare,
+      [SEAPORT_EXCHANGE_RINKEBY]: Contracts.Seaport,
     },
   },
   [Network.Mainnet]: {
@@ -88,7 +92,7 @@ export const NetworkConfigurationMap: Record<Network, NetworkConfiguration> = {
     addressToContract: {
       '0xc317754a23f2c9599218b183fc2f1c762a794551': Contracts.Voyage,
       '0x1aa777972073ff66dcfded85749bdd555c0665da': Contracts.LooksRare,
-      '0x00000000006cee72100d161c57ada5bb2be1ca79': Contracts.Seaport,
+      '0x00000000006c3852cbEf3e08E8dF289169EdE581': Contracts.Seaport,
     },
   },
 };

@@ -200,11 +200,8 @@ const PurchaseCart: React.FC = () => {
           value={speed}
           onChange={setSpeed}
           mt={12}
-          collection={orderPreview?.metadata?.collectionAddress}
-          tokenId={orderPreview?.metadata?.tokenId}
           vault={vaultAddress}
           user={userAddress}
-          calldata={transaction?.options.data}
         />
 
         <Group position="center" mt={22} spacing={6}>

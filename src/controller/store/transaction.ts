@@ -11,6 +11,7 @@ import { noop } from 'lodash';
 import { ethErrors } from 'eth-rpc-errors';
 import { formatEthersBN } from '@utils/bn';
 import { TransactionRequest } from '@ethersproject/providers';
+import { getContractByAddress } from '@utils/env';
 
 interface SignRequestCallbacks {
   resolve: (value?: any) => Promise<void>;
@@ -127,16 +128,22 @@ class TransactionStore implements TransactionStore {
     return cbs;
   };
 
-  private fetchPreviewTx = async (id: string, txParams: TransactionRequest) => {
+  private fetchPreviewTx = async (
+    id: string,
+    transaction: TransactionRequest
+  ) => {
+    if (!transaction.data || !transaction.to)
+      throw new Error('Invalid transaction');
+    const contract = getContractByAddress(transaction.to.toLowerCase());
     const response = await fetch(
-      `${process.env.VOYAGE_API_URL}/v1/marketplace/preview/looksrare`,
+      `${process.env.VOYAGE_API_URL}/v1/marketplace/preview/${contract}`,
       {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          calldata: txParams.data,
+          calldata: transaction.data,
           speed: 'fast',
           vault: this.root.voyageStore.vaultAddress,
         }),
