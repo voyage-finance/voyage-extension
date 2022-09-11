@@ -6,15 +6,9 @@ import { ReactComponent as EthSvg } from 'assets/img/eth-icon.svg';
 import Button from '@components/Button';
 import { useNavigate } from 'react-router-dom';
 import { MIN_DEPOSIT } from '@utils/bn';
-import useVoyageController from '@hooks/useVoyageController';
 
 const SelectDepositMethod: React.FC = () => {
-  const controller = useVoyageController();
   const [isInfoCardShown, setIsInfoCardShown] = React.useState(true);
-
-  React.useEffect(() => {
-    controller.fetchVault();
-  }, []);
 
   return isInfoCardShown ? (
     <InfoCard onClick={() => setIsInfoCardShown(false)} />

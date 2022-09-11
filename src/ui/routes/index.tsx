@@ -54,13 +54,6 @@ const Router: React.FC = () => {
   const pendingSignRequests = useAppSelector((state) => {
     return Object.values(state.core.pendingSignRequests);
   });
-  const [unconfirmedTx] = useAppSelector((state) => {
-    return Object.values(state.core.transactions);
-  });
-
-  // const [unconfirmedTx] = transactions.filter(
-  //   (tx) => tx.status === TransactionStatus.Unconfirmed
-  // );
 
   const [waitingDeploy, setWaitingDeploy] = useState(false);
 
@@ -69,6 +62,7 @@ const Router: React.FC = () => {
   };
 
   const checkStatusAndNavigate = async () => {
+    const [unconfirmedTx] = await controller.getUnconfirmedTransactions();
     const [pendingSignRequest] = pendingSignRequests;
     const isNotification =
       getEnvironmentType() === ExtensionEnvType.Notification;
@@ -112,7 +106,7 @@ const Router: React.FC = () => {
         }
         break;
     }
-  }, [stage, isTermsSigned, vault, unconfirmedTx?.id]);
+  }, [stage, isTermsSigned, vault]);
 
   return (
     <div className={cn(styles.root, isFullscreenMode && styles.tabView)}>
@@ -130,7 +124,7 @@ const Router: React.FC = () => {
         <Route path="/sign/:signRequestId" element={<SignMessage />} />
         <Route path={PURCHASE_OVERVIEW_ROUTE} element={<Onboard />}>
           <Route path=":txId" element={<PurchaseCart />} />
-          <Route path="confirmed/:hash" element={<PurchaseConfirmed />} />
+          <Route path="confirmed/:txId" element={<PurchaseConfirmed />} />
         </Route>
         <Route path="/onboard/" element={<Onboard />}>
           <Route path="login" element={<EnterEmailStep />} />
