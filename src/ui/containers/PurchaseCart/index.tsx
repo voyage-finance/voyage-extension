@@ -19,25 +19,21 @@ import BNPLSchedule from '@components/BNPLSchedule';
 import { useAppSelector } from '@hooks/useRedux';
 import SpeedSelect, { Speed } from './SpeedSelect';
 import { useEthBalance } from '@hooks/useEthBalance';
-import { formatAmount, fromBigNumber } from '@utils/bn';
+import { formatAmount, fromBigNumber, Zero } from '@utils/bn';
 import useVoyageController from '@hooks/useVoyageController';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { PURCHASE_OVERVIEW_ROUTE } from '@utils/constants';
-import BigNumber from 'bignumber.js';
+import { TransactionStatus } from 'types/transaction';
 
 const PurchaseCart: React.FC = () => {
+  const { txId } = useParams();
   const [isLoading, setIsLoading] = useState(false);
   const [pmtOption, setPmtOption] = useState(PaymentOption.BNPL);
   const [speed, setSpeed] = useState(Speed.FAST);
-  const [transaction] = useAppSelector((state) => {
-    return Object.values(state.core.transactions);
+  const transaction = useAppSelector((state) => {
+    return state.core.transactions[txId!];
   });
-  const [orderPreviewKey] = useAppSelector((state) =>
-    Object.keys(state.core.txOrderPreviewMap)
-  );
-  const [orderPreview] = useAppSelector((state) =>
-    Object.values(state.core.txOrderPreviewMap)
-  );
+
   const vaultAddress = useAppSelector((state) => state.core.vaultAddress);
   const userAddress = useAppSelector((state) => state.core.account?.address);
   const [balance, balanceLoading] = useEthBalance(vaultAddress);
@@ -45,30 +41,23 @@ const PurchaseCart: React.FC = () => {
   const controller = useVoyageController();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    console.log('---------- orderPreviews ---------', orderPreviewKey);
-  }, [transaction?.orderPreview, orderPreviewKey]);
-
-  useEffect(() => {
-    controller.fetchVault();
-  }, []);
-
-  // const orderPreview = transaction?.orderPreview;
-  const price = orderPreview
-    ? fromBigNumber(orderPreview.price)
-    : new BigNumber(0);
+  const orderPreview = transaction?.orderPreview;
+  const price = orderPreview ? fromBigNumber(orderPreview.price) : Zero;
   const bnplPayment = orderPreview
     ? fromBigNumber(orderPreview.loanParameters?.payment.pmt)
-    : new BigNumber(0);
+    : Zero;
   const nper = orderPreview ? Number(orderPreview.loanParameters.nper) : 0;
   const epoch = orderPreview ? Number(orderPreview.loanParameters.epoch) : 0;
 
   const handleBuyClick = async () => {
-    console.log('[handleBuyClick] transaction: ', transaction);
     setIsLoading(true);
-    const tx = await controller.confirmTransaction(transaction.id);
-    navigate(`${PURCHASE_OVERVIEW_ROUTE}/confirmed/${tx.hash}`);
+    await controller.confirmTransaction(transaction.id);
+    navigate(`${PURCHASE_OVERVIEW_ROUTE}/confirmed/${transaction.id}`);
     setIsLoading(false);
+  };
+
+  const handleCancelClick = () => {
+    controller.rejectTransaction(transaction.id);
   };
 
   return (
@@ -185,24 +174,42 @@ const PurchaseCart: React.FC = () => {
             payment={bnplPayment}
           />
         )}
-        <Button fullWidth mt={24} onClick={handleBuyClick} loading={isLoading}>
-          Pay{' '}
-          {pmtOption === PaymentOption.PAY_NOW
-            ? formatAmount(price)
-            : formatAmount(bnplPayment)}{' '}
-          <EthSvg />
-        </Button>
-        <Button fullWidth mt={12} kind="secondary">
-          Cancel
-        </Button>
+        {transaction.status === TransactionStatus.Unconfirmed ? (
+          <>
+            <Button
+              fullWidth
+              mt={24}
+              onClick={handleBuyClick}
+              loading={isLoading}
+            >
+              Pay{' '}
+              {pmtOption === PaymentOption.PAY_NOW
+                ? formatAmount(price)
+                : formatAmount(bnplPayment)}{' '}
+              <EthSvg />
+            </Button>
+            <Button
+              fullWidth
+              mt={12}
+              kind="secondary"
+              onClick={handleCancelClick}
+            >
+              Cancel
+            </Button>
 
-        <SpeedSelect
-          value={speed}
-          onChange={setSpeed}
-          mt={12}
-          vault={vaultAddress}
-          user={userAddress}
-        />
+            <SpeedSelect
+              value={speed}
+              onChange={setSpeed}
+              mt={12}
+              vault={vaultAddress}
+              user={userAddress}
+            />
+          </>
+        ) : (
+          <Button fullWidth disabled mt={24} kind="secondary">
+            Rejected
+          </Button>
+        )}
 
         <Group position="center" mt={22} spacing={6}>
           <Box

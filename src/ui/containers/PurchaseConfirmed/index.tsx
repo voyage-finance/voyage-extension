@@ -19,11 +19,11 @@ const getShortenedAddress = (address: string) => {
 };
 
 const PurchaseConfirmed: React.FC = () => {
+  const { txId } = useParams();
   const [pmtOption] = React.useState(PaymentOption.BNPL);
-  const [transaction] = useAppSelector((state) => {
-    return Object.values(state.core.transactions);
+  const transaction = useAppSelector((state) => {
+    return state.core.transactions[txId!];
   });
-  const { hash } = useParams();
   const orderPreview = transaction?.orderPreview;
   const collectionName = orderPreview?.metadata?.collectionName;
   const name = orderPreview?.metadata?.name || orderPreview?.metadata?.tokenId;
@@ -92,7 +92,7 @@ const PurchaseConfirmed: React.FC = () => {
               type="gradient"
               sx={{ ':hover': { cursor: 'pointer' } }}
             >
-              {getShortenedAddress(hash || '')}
+              {getShortenedAddress(transaction.hash || '')}
             </Text>
             <ArrowSvg />
           </Group>

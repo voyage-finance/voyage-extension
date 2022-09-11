@@ -1,10 +1,6 @@
 import ControllerStore from './root';
 import { makeAutoObservable, runInAction } from 'mobx';
-import {
-  OrderPreview,
-  Transaction,
-  TransactionStatus,
-} from 'types/transaction';
+import { Transaction, TransactionStatus } from 'types/transaction';
 import createRandomId from '@utils/random';
 import { SignRequest } from 'types';
 import { noop } from 'lodash';
@@ -21,7 +17,6 @@ interface SignRequestCallbacks {
 class TransactionStore implements TransactionStore {
   root: ControllerStore;
   transactions: Record<string, Transaction> = {};
-  txOrderPreviewMap: Record<string, OrderPreview> = {};
   pendingSignRequests: Record<string, SignRequest> = {};
   requestCallbacks: Record<string, SignRequestCallbacks> = {};
 
@@ -34,7 +29,20 @@ class TransactionStore implements TransactionStore {
     return {
       transactions: this.transactions,
       pendingSignRequests: this.pendingSignRequests,
-      txOrderPreviewMap: { ...this.txOrderPreviewMap },
+    };
+  }
+
+  updateTransactions = () => {
+    this.transactions = { ...this.transactions };
+  };
+
+  get api() {
+    return {
+      confirmTransaction: this.confirmTransaction.bind(this),
+      rejectTransaction: this.rejectTransaction.bind(this),
+      approveSignRequest: this.approveSignRequest.bind(this),
+      rejectSignRequest: this.rejectSignRequest.bind(this),
+      getUnconfirmedTransactions: this.getUnconfirmedTransactions.bind(this),
     };
   }
 
@@ -47,20 +55,19 @@ class TransactionStore implements TransactionStore {
     const id = `${createRandomId()}`;
     this.transactions[id] = {
       id,
-      status: TransactionStatus.Initial,
+      status: TransactionStatus.Unconfirmed,
       options: txRequest,
       onApprove,
       onReject,
     };
     this.requestCallbacks[id] = {
       resolve: async () => {
-        const res = await this.root.voyageStore.buyNow(txRequest);
-        this.transactions[id] = {
-          ...this.transactions[id],
-          hash: res.hash,
-          status: TransactionStatus.Pending,
-        };
-        onApprove(res.hash);
+        const buyNowTx = await this.root.voyageStore.buyNow(txRequest);
+        this.transactions[id].hash = buyNowTx.hash;
+        this.transactions[id].status = TransactionStatus.Pending;
+        this.updateTransactions();
+        await buyNowTx.wait();
+        onApprove(buyNowTx.hash);
       },
       reject: async () => {
         onReject();
@@ -70,9 +77,15 @@ class TransactionStore implements TransactionStore {
       const preview = await this.fetchPreviewTx(id, txRequest);
       runInAction(() => {
         this.transactions[id].orderPreview = preview;
-        this.txOrderPreviewMap[id] = preview;
+        this.updateTransactions();
       });
     }
+  }
+
+  getUnconfirmedTransactions() {
+    return Object.values(this.transactions).filter(
+      (tx) => tx.status === TransactionStatus.Unconfirmed
+    );
   }
 
   addSignRequest(signRequest: SignRequest) {
@@ -103,8 +116,11 @@ class TransactionStore implements TransactionStore {
   };
 
   async rejectTransaction(id: string) {
-    const tx = this.transactions[id];
-    tx.status = TransactionStatus.Rejected;
+    this.transactions[id].status = TransactionStatus.Rejected;
+    this.updateTransactions();
+    const { reject } = this.requestCallbacks[id];
+    delete this.requestCallbacks[id];
+    await reject(ethErrors.provider.userRejectedRequest());
   }
 
   approveSignRequest = async (id: string) => {
