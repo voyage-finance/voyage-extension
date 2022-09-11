@@ -8,6 +8,7 @@ import { keccak256, toUtf8Bytes } from 'ethers/lib/utils';
 import { makeAutoObservable, runInAction } from 'mobx';
 import { Listener, TransactionRequest } from '@ethersproject/providers';
 import { decodeMarketplaceCalldata } from '@utils/decoder';
+import { storage } from 'webextension-polyfill';
 
 class VoyageStore {
   root: ControllerStore;
@@ -21,12 +22,28 @@ class VoyageStore {
       this.root.provider
     );
     makeAutoObservable(this, { root: false, voyage: false });
+    this.initialize();
+  }
+
+  async initialize() {
+    const storedVault = (await storage.local.get('vaultAddress'))
+      .vaultAddress as string | undefined;
+    console.log('----VoyageStore [storedVault] -----', storedVault);
+    if (storedVault) {
+      this.vaultAddress = storedVault;
+    }
   }
 
   get state() {
     return {
       vaultAddress: this.vaultAddress,
     };
+  }
+
+  persistState() {
+    storage.local.set({
+      vaultAddress: this.vaultAddress,
+    });
   }
 
   async fetchVault() {
@@ -37,6 +54,7 @@ class VoyageStore {
     runInAction(() => {
       this.vaultAddress = vaultAddress;
     });
+    this.persistState();
     console.log(
       '🚀 ~ file: voyage.ts ~ line 33 ~ VoyageStore ~ fetchVault ~ vaultAddress & user address',
       vaultAddress,
