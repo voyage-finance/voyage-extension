@@ -57,7 +57,7 @@ const Router: React.FC = () => {
   const [unconfirmedTx] = useAppSelector((state) => {
     return Object.values(state.core.transactions);
   });
-  const [pendingSignRequest] = pendingSignRequests;
+
   // const [unconfirmedTx] = transactions.filter(
   //   (tx) => tx.status === TransactionStatus.Unconfirmed
   // );
@@ -69,14 +69,13 @@ const Router: React.FC = () => {
   };
 
   const checkStatusAndNavigate = async () => {
-    console.log('🚀 ~ checkStatusAndNavigate ~', unconfirmedTx);
+    const [pendingSignRequest] = pendingSignRequests;
     const isNotification =
       getEnvironmentType() === ExtensionEnvType.Notification;
     const isTab = getEnvironmentType() === ExtensionEnvType.Fullscreen;
     if (isNotification && pendingSignRequest) {
       navigate(`${SIGN_MESSAGE_ROUTE}/${pendingSignRequest.id}`);
-    }
-    if (isTab && unconfirmedTx) {
+    } else if (isTab && unconfirmedTx) {
       navigate(`${PURCHASE_OVERVIEW_ROUTE}/${unconfirmedTx.id}`);
     } else {
       navigate(DEFAULT_ROUTE);

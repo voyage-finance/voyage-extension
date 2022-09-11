@@ -32,7 +32,8 @@ const Home: React.FC = () => {
     session && session.peerMeta
       ? {
           uri: session.peerMeta.url,
-          name: session.peerMeta.name,
+          name:
+            getDappForTab(chainId, activeTab)?.name || session.peerMeta.name,
           icon: session.peerMeta.icons[0],
         }
       : getDappForTab(chainId, activeTab);

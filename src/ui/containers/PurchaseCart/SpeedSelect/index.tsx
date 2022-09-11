@@ -12,15 +12,12 @@ import { ChevronDown } from 'tabler-icons-react';
 import { ReactComponent as CheckOrangeSvg } from 'assets/img/check-orange.svg';
 import { ReactComponent as EthSvg } from 'assets/img/eth-icon.svg';
 import useVoyageController from '@hooks/useVoyageController';
-import { BytesLike } from 'ethers';
-import { LOOKS_EXCHANGE_RINKEBY } from 'utils/constants';
+import { useAppSelector } from '@hooks/useRedux';
+import { decodeMarketplaceCalldata } from '@utils/decoder';
 interface ISpeedSelectProps extends Omit<BoxProps<'div'>, 'onChange'> {
   value: Speed;
-  collection?: string;
-  tokenId?: string;
   vault?: string;
   user?: string;
-  calldata?: BytesLike;
   onChange: (opt: Speed) => void;
 }
 
@@ -65,69 +62,68 @@ const SPEEDS: Record<Speed, SpeedConfig> = {
 const SpeedSelect: React.FunctionComponent<ISpeedSelectProps> = ({
   value,
   onChange,
-  collection,
-  tokenId,
   vault,
   user,
-  calldata,
   ...props
 }) => {
-  // const user = '0xAD5792b1D998f607d3EEB2f357138A440B03f19f';
   const [loading, setLoading] = React.useState(false);
   const [waitTime, setWaitTime] = React.useState(0);
   const [price, setPrice] = React.useState('');
 
   const controller = useVoyageController();
+  const [transaction] = useAppSelector((state) => {
+    return Object.values(state.core.transactions);
+  });
 
   const updateGasData = async () => {
-    console.log('---- voyage raw tx body ----', {
+    const { marketplace, tokenId, collection, data } =
+      decodeMarketplaceCalldata(transaction.options);
+    console.log('---- [updateGasData] values ----', {
       collection,
-      tokenId,
+      tokenId: tokenId.toString(),
       vault,
-      LOOKS_EXCHANGE_RINKEBY,
+      marketplace,
       user,
-      calldata,
+      data,
     });
-    if (collection && tokenId && vault && calldata && user) {
-      setLoading(true);
-      const voyageRawTx = await controller.populateBuyNow(
-        collection,
-        tokenId,
-        vault,
-        LOOKS_EXCHANGE_RINKEBY,
-        calldata
+    setLoading(true);
+    const voyageRawTx = await controller.populateBuyNow(
+      collection,
+      tokenId.toString(),
+      vault!,
+      marketplace,
+      data
+    );
+    console.log('---- voyageRawTx ----', voyageRawTx);
+    if (voyageRawTx.data) {
+      const estimateGasResponse = await fetch(
+        `${process.env.VOYAGE_API_URL}/estimateGas`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            speed: value,
+            request: await controller.createRelayHttpRequest(
+              voyageRawTx.data,
+              user!
+            ),
+          }),
+        }
       );
-      console.log('---- voyageRawTx ----', voyageRawTx);
-      if (voyageRawTx.data) {
-        const estimateGasResponse = await fetch(
-          `${process.env.VOYAGE_API_URL}/estimateGas`,
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              speed: value,
-              request: await controller.createRelayHttpRequest(
-                voyageRawTx.data,
-                user
-              ),
-            }),
-          }
-        );
-        const body = await estimateGasResponse.json();
-        console.log('------------ estimateGasResponse -------------', body);
-        const fee = (body.networkFee / Math.pow(10, 9)).toFixed(5);
-        setPrice(fee);
-        setWaitTime(body.waitTime);
-      }
-      setLoading(false);
+      const body = await estimateGasResponse.json();
+      console.log('------------ estimateGasResponse -------------', body);
+      const fee = (body.networkFee / Math.pow(10, 9)).toFixed(5);
+      setPrice(fee);
+      setWaitTime(body.waitTime);
     }
+    setLoading(false);
   };
 
   React.useEffect(() => {
     updateGasData();
-  }, [value, collection, tokenId, vault, user, calldata]);
+  }, [value, vault, user, transaction]);
 
   return (
     <Group position="apart" align="center" {...props}>

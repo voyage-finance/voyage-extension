@@ -28,7 +28,7 @@ const AppConnector = (props: Props) => {
         <div className={styles.info}>
           <div>
             <Text color="white" size="md" className={styles.name}>
-              {session?.peerMeta?.name ?? app?.name}
+              {app?.name ?? session?.peerMeta?.name}
             </Text>
           </div>
           <div className={styles.connectionInfo}>
