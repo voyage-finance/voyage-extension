@@ -5,7 +5,6 @@ import {
 } from '@ethersproject/providers';
 
 export enum TransactionStatus {
-  Initial, // when just received from middleware
   Unconfirmed, // yet to be confirmed by the user
   Pending, // confirmed and broadcasted to the mempool but not mined yet, has tx hash
   Mined, // mined on the blockchain, has a transaction hash
