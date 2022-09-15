@@ -94,9 +94,9 @@ function getClientEnvironment(publicUrl) {
         // Whether or not react-refresh is enabled.
         // It is defined here so it is available in the webpackHotDevClient.
         FAST_REFRESH: process.env.FAST_REFRESH !== 'false',
-        GOERLI_API_KEY: process.env.GOERLI_API_KEY,
-        RINKEBY_API_KEY: process.env.RINKEBY_API_KEY,
-        MAINNET_API_KEY: process.env.MAINNET_API_KEY,
+        ALCHEMY_GOERLI_API_KEY: process.env.ALCHEMY_GOERLI_API_KEY,
+        ALCHEMY_RINKEBY_API_KEY: process.env.ALCHEMY_RINKEBY_API_KEY,
+        ALCHEMY_MAINNET_API_KEY: process.env.ALCHEMY_MAINNET_API_KEY,
 
         FIREBASE_API_KEY: process.env.FIREBASE_API_KEY,
         FIREBASE_AUTH_DOMAIN: process.env.FIREBASE_AUTH_DOMAIN,

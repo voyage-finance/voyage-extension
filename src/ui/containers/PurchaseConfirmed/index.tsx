@@ -27,11 +27,18 @@ const PurchaseConfirmed: React.FC = () => {
   const orderPreview = transaction?.orderPreview;
   const collectionName = orderPreview?.metadata?.collectionName;
   const name = orderPreview?.metadata?.name || orderPreview?.metadata?.tokenId;
-  const bnplPayment = orderPreview
-    ? fromBigNumber(orderPreview.loanParameters?.payment.pmt)
-    : new BigNumber(0);
-  const nper = orderPreview ? Number(orderPreview.loanParameters.nper) : 0;
-  const epoch = orderPreview ? Number(orderPreview.loanParameters.epoch) : 0;
+  const bnplPayment =
+    orderPreview && orderPreview.loanParameters
+      ? fromBigNumber(orderPreview.loanParameters.payment.pmt)
+      : new BigNumber(0);
+  const nper =
+    orderPreview && orderPreview.loanParameters
+      ? Number(orderPreview.loanParameters.nper)
+      : 0;
+  const epoch =
+    orderPreview && orderPreview.loanParameters
+      ? Number(orderPreview.loanParameters.epoch)
+      : 0;
 
   return (
     <Card

@@ -1,24 +1,5 @@
 [
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_owner",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "constructor"
-  },
-  {
-    "stateMutability": "payable",
-    "type": "fallback"
-  },
-  {
-    "stateMutability": "payable",
-    "type": "receive"
-  },
-  {
     "anonymous": false,
     "inputs": [
       {
@@ -562,6 +543,25 @@
       {
         "indexed": true,
         "internalType": "address",
+        "name": "_treasury",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "_fee",
+        "type": "uint256"
+      }
+    ],
+    "name": "ProtocolFeeUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
         "name": "_collection",
         "type": "address"
       }
@@ -826,11 +826,6 @@
         "internalType": "address",
         "name": "_user",
         "type": "address"
-      },
-      {
-        "internalType": "enum Tranche",
-        "name": "_tranche",
-        "type": "uint8"
       }
     ],
     "name": "unbonding",
@@ -853,7 +848,7 @@
       },
       {
         "internalType": "uint40",
-        "name": "_cutRatio",
+        "name": "_takeRate",
         "type": "uint40"
       }
     ],
@@ -942,12 +937,42 @@
   },
   {
     "inputs": [],
+    "name": "BuyNowStaleTwap",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "ExceedsFloorPrice",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InsufficientCash",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "InsufficientCreditLimit",
     "type": "error"
   },
   {
     "inputs": [],
+    "name": "InsufficientJuniorLiquidity",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "InsufficientLiquidity",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InsufficientMaxCreditLimit",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InsufficientVaultBalance",
     "type": "error"
   },
   {
@@ -962,12 +987,12 @@
   },
   {
     "inputs": [],
-    "name": "InvalidLiquidate",
+    "name": "InvalidJuniorTrancheBalance",
     "type": "error"
   },
   {
     "inputs": [],
-    "name": "InvalidPrincipal",
+    "name": "InvalidLiquidate",
     "type": "error"
   },
   {
@@ -977,7 +1002,7 @@
   },
   {
     "inputs": [],
-    "name": "InvalidValueTransfered",
+    "name": "LiquidateStaleTwap",
     "type": "error"
   },
   {
@@ -1045,6 +1070,12 @@
         "indexed": false,
         "internalType": "uint256",
         "name": "_apr",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "_protocolFee",
         "type": "uint256"
       }
     ],
@@ -1235,7 +1266,7 @@
     ],
     "name": "buyNow",
     "outputs": [],
-    "stateMutability": "payable",
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -1295,6 +1326,30 @@
       },
       {
         "internalType": "address",
+        "name": "_asset",
+        "type": "address"
+      }
+    ],
+    "name": "juniorInterestBalance",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_collection",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
         "name": "_vault",
         "type": "address"
       },
@@ -1315,6 +1370,16 @@
         "internalType": "address",
         "name": "_collection",
         "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_vault",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_principal",
+        "type": "uint256"
       }
     ],
     "name": "previewBuyNowParams",
@@ -1322,29 +1387,19 @@
       {
         "components": [
           {
-            "internalType": "address",
-            "name": "collection",
-            "type": "address"
-          },
-          {
-            "internalType": "address",
-            "name": "currency",
-            "type": "address"
-          },
-          {
-            "internalType": "address",
-            "name": "marketplace",
-            "type": "address"
-          },
-          {
             "internalType": "uint256",
-            "name": "tokenId",
+            "name": "epoch",
             "type": "uint256"
           },
           {
-            "internalType": "address",
-            "name": "vault",
-            "type": "address"
+            "internalType": "uint256",
+            "name": "term",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "nper",
+            "type": "uint256"
           },
           {
             "internalType": "uint256",
@@ -1358,72 +1413,17 @@
           },
           {
             "internalType": "uint256",
-            "name": "totalDebt",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "outstandingPrincipal",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "outstandingInterest",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "outstandingDebt",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "fv",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "timestamp",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint40",
-            "name": "term",
-            "type": "uint40"
-          },
-          {
-            "internalType": "uint40",
-            "name": "epoch",
-            "type": "uint40"
-          },
-          {
-            "internalType": "uint40",
-            "name": "nper",
-            "type": "uint40"
-          },
-          {
-            "internalType": "uint256",
-            "name": "downpayment",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
             "name": "borrowRate",
             "type": "uint256"
           },
           {
             "internalType": "uint256",
-            "name": "availableLiquidity",
+            "name": "takeRate",
             "type": "uint256"
           },
           {
             "internalType": "uint256",
-            "name": "totalBalance",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "totalPending",
+            "name": "protocolFee",
             "type": "uint256"
           },
           {
@@ -1445,6 +1445,11 @@
               },
               {
                 "internalType": "uint256",
+                "name": "fee",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
                 "name": "pmt",
                 "type": "uint256"
               }
@@ -1452,26 +1457,9 @@
             "internalType": "struct PMT",
             "name": "pmt",
             "type": "tuple"
-          },
-          {
-            "components": [
-              {
-                "internalType": "uint256",
-                "name": "tokenId",
-                "type": "uint256"
-              },
-              {
-                "internalType": "uint256",
-                "name": "assetPrice",
-                "type": "uint256"
-              }
-            ],
-            "internalType": "struct AssetInfo",
-            "name": "assetInfo",
-            "type": "tuple"
           }
         ],
-        "internalType": "struct ExecuteBuyNowParams",
+        "internalType": "struct LoanFacet.PreviewBuyNowParams",
         "name": "",
         "type": "tuple"
       }
@@ -1522,6 +1510,30 @@
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_collection",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_asset",
+        "type": "address"
+      }
+    ],
+    "name": "seniorInterestBalance",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "FailedDeployVault",
     "type": "error"
@@ -1538,12 +1550,7 @@
   },
   {
     "inputs": [],
-    "name": "InvalidVaultAddress",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "InvalidVaultCall",
+    "name": "InvalidVaultImpl",
     "type": "error"
   },
   {
@@ -1574,6 +1581,19 @@
       }
     ],
     "name": "VaultCreated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "_impl",
+        "type": "address"
+      }
+    ],
+    "name": "VaultImplementationUpdated",
     "type": "event"
   },
   {
@@ -1719,6 +1739,19 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "getVaultImpl",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",
@@ -1726,7 +1759,7 @@
         "type": "address"
       }
     ],
-    "name": "setVaultBeacon",
+    "name": "setVaultImpl",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -1767,7 +1800,25 @@
         "type": "uint256"
       }
     ],
-    "name": "transferReserve",
+    "name": "transferCurrency",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_vault",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_vaule",
+        "type": "uint256"
+      }
+    ],
+    "name": "unwrapVaultETH",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -1809,8 +1860,31 @@
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_vault",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_value",
+        "type": "uint256"
+      }
+    ],
+    "name": "wrapVaultETH",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "IllegalLoanParameters",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidGSNConfiguration",
     "type": "error"
   },
   {
@@ -1837,6 +1911,35 @@
     "inputs": [],
     "name": "InvalidLoanTerm",
     "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidMaxTwapStaleness",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidOptimalRatio",
+    "type": "error"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "_paymaster",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "_trustedForwarder",
+        "type": "address"
+      }
+    ],
+    "name": "GSNConfigurationUpdated",
+    "type": "event"
   },
   {
     "anonymous": false,
@@ -1908,6 +2011,100 @@
     "type": "event"
   },
   {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "_collection",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "_maxTwapStaleness",
+        "type": "uint256"
+      }
+    ],
+    "name": "MaxTwapStaleness",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "_collection",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "_optimalRatio",
+        "type": "uint256"
+      }
+    ],
+    "name": "OptimalLiquidityRatioUpdated",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_collection",
+        "type": "address"
+      }
+    ],
+    "name": "getIncomeRatio",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_collection",
+        "type": "address"
+      }
+    ],
+    "name": "getMaxTwapStaleness",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_paymaster",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_trustedForwarder",
+        "type": "address"
+      }
+    ],
+    "name": "setGSNConfiguration",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",
@@ -1967,6 +2164,42 @@
       }
     ],
     "name": "setLoanParams",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_collection",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_maxTwapStaleness",
+        "type": "uint256"
+      }
+    ],
+    "name": "setMaxTwapStaleness",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_collection",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_ratio",
+        "type": "uint256"
+      }
+    ],
+    "name": "setOptimalLiquidityRatio",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -2133,6 +2366,11 @@
               {
                 "internalType": "uint256",
                 "name": "interest",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "fee",
                 "type": "uint256"
               },
               {
@@ -2414,11 +2652,6 @@
           },
           {
             "internalType": "uint256",
-            "name": "withdrawableJuniorTrancheBalance",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
             "name": "seniorTrancheBalance",
             "type": "uint256"
           },
@@ -2455,30 +2688,6 @@
         "internalType": "address",
         "name": "",
         "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_user",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_collection",
-        "type": "address"
-      }
-    ],
-    "name": "pendingJuniorWithdrawals",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -2856,6 +3065,11 @@
         "internalType": "address",
         "name": "_vault",
         "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_value",
+        "type": "uint256"
       },
       {
         "internalType": "bytes",

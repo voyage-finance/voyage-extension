@@ -23,7 +23,7 @@ export interface Transaction {
 }
 
 export interface OrderPreview {
-  loanParameters: {
+  loanParameters?: {
     vault: string; // address of the borrowing vault
     term: string; // loan duration
     epoch: string; // instalment interval
@@ -37,12 +37,22 @@ export interface OrderPreview {
     };
   };
   metadata: Metadata;
-  gasPrice: string;
-  // Waiting time(in seconds) for gas price speed
-  waitTime: number;
-  // the result of eth_estimateGas
-  gasLimit: string;
   price: BigNumber;
+  error?: PreviewError;
+}
+
+export interface PreviewError {
+  type: PreviewErrorType;
+  message: string;
+  metadata: any;
+}
+
+export enum PreviewErrorType {
+  UNDEFINED = 'UNDEFINED',
+  UNSUPPORTED_COLLECTION = 'UNSUPPORTED_COLLECTION',
+  FLOOR_PRICE = 'FLOOR_PRICE',
+  INSUFFICIENT_POOL = 'INSUFFICIENT_POOL',
+  UNSUPPORTED_CURRENCY = 'UNSUPPORTED_CURRENCY',
 }
 
 export interface Metadata {

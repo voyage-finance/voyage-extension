@@ -1,6 +1,10 @@
 import ControllerStore from './root';
 import { makeAutoObservable, runInAction } from 'mobx';
-import { Transaction, TransactionStatus } from 'types/transaction';
+import {
+  OrderPreview,
+  Transaction,
+  TransactionStatus,
+} from 'types/transaction';
 import createRandomId from '@utils/random';
 import { SignRequest } from 'types';
 import { noop } from 'lodash';
@@ -43,14 +47,14 @@ class TransactionStore implements TransactionStore {
       approveSignRequest: this.approveSignRequest.bind(this),
       rejectSignRequest: this.rejectSignRequest.bind(this),
       getUnconfirmedTransactions: this.getUnconfirmedTransactions.bind(this),
+      updateOrderPreviewData: this.updateOrderPreviewData.bind(this),
     };
   }
 
   async addNewTransaction(
     txRequest: TransactionRequest,
     onApprove: (txHash: string) => Promise<void>,
-    onReject: () => Promise<void>,
-    fetchPreview = true
+    onReject: () => Promise<void>
   ) {
     const id = `${createRandomId()}`;
     this.transactions[id] = {
@@ -73,13 +77,19 @@ class TransactionStore implements TransactionStore {
         onReject();
       },
     };
-    if (fetchPreview) {
-      const preview = await this.fetchPreviewTx(id, txRequest);
-      runInAction(() => {
-        this.transactions[id].orderPreview = preview;
-        this.updateTransactions();
-      });
+  }
+
+  async updateOrderPreviewData(id: string) {
+    let preview: any;
+    try {
+      preview = await this.fetchPreviewTx(id, this.transactions[id].options);
+    } catch (e) {
+      preview = {};
     }
+    runInAction(() => {
+      this.transactions[id].orderPreview = preview;
+      this.updateTransactions();
+    });
   }
 
   getUnconfirmedTransactions() {
@@ -147,7 +157,7 @@ class TransactionStore implements TransactionStore {
   private fetchPreviewTx = async (
     id: string,
     transaction: TransactionRequest
-  ) => {
+  ): Promise<OrderPreview> => {
     if (!transaction.data || !transaction.to)
       throw new Error('Invalid transaction');
     const contract = getContractByAddress(transaction.to.toLowerCase());
@@ -172,15 +182,17 @@ class TransactionStore implements TransactionStore {
 
     return {
       ...data,
-      loanParameters: {
-        ...data.loanParameters,
-        payment: {
-          pmt: formatEthersBN(data.loanParameters.pmt.pmt),
-          principal: formatEthersBN(data.loanParameters.pmt.principal),
-          interest: formatEthersBN(data.loanParameters.pmt.interest),
-        },
-      },
       price: formatEthersBN(data.price),
+      loanParameters: data.loanParameters
+        ? {
+            ...data.loanParameters,
+            payment: {
+              pmt: formatEthersBN(data.loanParameters.pmt.pmt),
+              principal: formatEthersBN(data.loanParameters.pmt.principal),
+              interest: formatEthersBN(data.loanParameters.pmt.interest),
+            },
+          }
+        : undefined,
     };
   };
 }

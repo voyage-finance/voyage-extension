@@ -28,9 +28,9 @@ class ControllerStore {
       this,
       getNetworkConfiguration().contracts[Contracts.Voyage]
     );
+    this.gsnStore = new GsnStore(this);
     this.keyStore = new KeyStore(this);
     this.transactionStore = new TransactionStore(this);
-    this.gsnStore = new GsnStore(this);
     makeAutoObservable(this, { controller: false });
   }
 

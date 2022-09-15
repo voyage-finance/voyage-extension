@@ -30,12 +30,13 @@ export class GsnStore {
     );
     const config: Partial<GSNConfig> = {
       paymasterAddress:
-        '0xA6e10aA9B038c9Cddea24D2ae77eC3cE38a0c016'.toLowerCase(),
+        '0x1181C3d48Dd70A162E88689377Da9341A95873d5'.toLowerCase(),
       auditorsCount: 0,
       preferredRelays: ['http://127.0.0.1:3000' || process.env.VOYAGE_API_URL],
     };
 
     const endpoint = getNetworkConfiguration().endpoint;
+    console.log('---- [GsnStore] endpoint----', endpoint);
     // bug in http provider typings. just cast it and forget about this.
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
@@ -57,8 +58,10 @@ export class GsnStore {
     this.ethersProvider = new ethers.providers.Web3Provider(this.gsnProvider);
   };
 
-  addAccount(privKey: string) {
+  async addAccount(privKey: string) {
+    await this.gsnProvider.relayClient.initializingPromise;
     this.gsnProvider.addAccount(privKey);
+    console.log('[gsn] added account');
   }
 
   relayTransaction = (transaction: TransactionRequest) => {

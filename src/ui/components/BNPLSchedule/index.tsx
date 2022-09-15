@@ -12,7 +12,7 @@ import { formatAmount } from '@utils/bn';
 interface IBNPLScheduleProps extends GroupProps {
   nper: number;
   epoch: number;
-  payment: BigNumber;
+  payment?: BigNumber;
 }
 
 const BNPLSchedule: React.FunctionComponent<IBNPLScheduleProps> = ({
@@ -22,11 +22,10 @@ const BNPLSchedule: React.FunctionComponent<IBNPLScheduleProps> = ({
   ...props
 }) => {
   const [opened, setOpened] = React.useState(false);
-  const [mounted, setMounter] = React.useState(false);
+  const [mounted, setMounted] = React.useState(false);
 
   React.useEffect(() => {
-    console.log({ epoch, nper, payment });
-    setMounter(true);
+    setMounted(true);
   }, []);
   return (
     <Transition
@@ -49,9 +48,18 @@ const BNPLSchedule: React.FunctionComponent<IBNPLScheduleProps> = ({
             spacing={0}
             onClick={() => setOpened(!opened)}
           >
-            <Text size="sm">Show BNPL Repayment Schedule</Text>
+            <Text
+              size="sm"
+              type={payment === undefined ? 'secondary' : 'primary'}
+            >
+              Show BNPL Repayment Schedule
+            </Text>
             <ChevronDown
-              className={cn(styles.chevron, opened && styles.up)}
+              className={cn(
+                styles.chevron,
+                opened && styles.up,
+                payment === undefined && styles.faded
+              )}
               style={{ marginTop: 1 }}
               size={18}
             />
@@ -86,7 +94,7 @@ const BNPLSchedule: React.FunctionComponent<IBNPLScheduleProps> = ({
                     {n > 1 ? date.format('D MMM YYYY') : 'Today'}
                   </Text>
                   <Text sx={{ marginLeft: 'auto' }}>
-                    {formatAmount(payment)}
+                    {payment ? formatAmount(payment) : '-'}
                   </Text>
                   <EthSvg />
                 </Group>

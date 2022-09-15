@@ -1,12 +1,5 @@
 import Text from '@components/Text';
-import {
-  Box,
-  BoxProps,
-  Group,
-  Menu,
-  Stack,
-  LoadingOverlay,
-} from '@mantine/core';
+import { Box, BoxProps, Group, Menu, Stack } from '@mantine/core';
 import * as React from 'react';
 import { ChevronDown } from 'tabler-icons-react';
 import { ReactComponent as CheckOrangeSvg } from 'assets/img/check-orange.svg';
@@ -14,6 +7,7 @@ import { ReactComponent as EthSvg } from 'assets/img/eth-icon.svg';
 import useVoyageController from '@hooks/useVoyageController';
 import { useAppSelector } from '@hooks/useRedux';
 import { decodeMarketplaceCalldata } from '@utils/decoder';
+import { useParams } from 'react-router-dom';
 interface ISpeedSelectProps extends Omit<BoxProps<'div'>, 'onChange'> {
   value: Speed;
   vault?: string;
@@ -66,13 +60,14 @@ const SpeedSelect: React.FunctionComponent<ISpeedSelectProps> = ({
   user,
   ...props
 }) => {
+  const { txId } = useParams();
   const [loading, setLoading] = React.useState(false);
   const [waitTime, setWaitTime] = React.useState(0);
   const [price, setPrice] = React.useState('');
 
   const controller = useVoyageController();
-  const [transaction] = useAppSelector((state) => {
-    return Object.values(state.core.transactions);
+  const transaction = useAppSelector((state) => {
+    return state.core.transactions[txId!];
   });
 
   const updateGasData = async () => {
@@ -87,52 +82,55 @@ const SpeedSelect: React.FunctionComponent<ISpeedSelectProps> = ({
       data,
     });
     setLoading(true);
-    const voyageRawTx = await controller.populateBuyNow(
-      collection,
-      tokenId.toString(),
-      vault!,
-      marketplace,
-      data
-    );
-    console.log('---- voyageRawTx ----', voyageRawTx);
-    if (voyageRawTx.data) {
-      const estimateGasResponse = await fetch(
-        `${process.env.VOYAGE_API_URL}/estimateGas`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            speed: value,
-            request: await controller.createRelayHttpRequest(
-              voyageRawTx.data,
-              user!
-            ),
-          }),
-        }
+    try {
+      const voyageRawTx = await controller.populateBuyNow(
+        collection,
+        tokenId.toString(),
+        vault!,
+        marketplace,
+        data
       );
-      const body = await estimateGasResponse.json();
-      console.log('------------ estimateGasResponse -------------', body);
-      const fee = (body.networkFee / Math.pow(10, 9)).toFixed(5);
-      setPrice(fee);
-      setWaitTime(body.waitTime);
+      console.log('---- voyageRawTx ----', voyageRawTx);
+      if (voyageRawTx.data) {
+        const estimateGasResponse = await fetch(
+          `${process.env.VOYAGE_API_URL}/estimateGas`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              speed: value,
+              request: await controller.createRelayHttpRequest(
+                voyageRawTx.data,
+                user!
+              ),
+            }),
+          }
+        );
+        const body = await estimateGasResponse.json();
+        console.log('------------ estimateGasResponse -------------', body);
+        const fee = (body.networkFee / Math.pow(10, 9)).toFixed(5);
+        setPrice(fee);
+        setWaitTime(body.waitTime);
+      }
+    } catch (e) {
+      console.log('[FAILED] at estimate gas', e);
     }
     setLoading(false);
   };
 
   React.useEffect(() => {
     updateGasData();
-  }, [value, vault, user, transaction]);
+  }, [value]);
 
   return (
     <Group position="apart" align="center" {...props}>
       <Stack spacing={0} sx={{ position: 'relative' }}>
-        <LoadingOverlay visible={loading} />
         <Group spacing={0}>
           <EthSvg style={{ width: 11 }} />
           <Text size="sm" sx={{ lineHeight: '12px' }} ml={1} weight={'bold'}>
-            {price}
+            {loading ? '...' : price}
           </Text>
           <Text
             size="sm"
@@ -141,7 +139,7 @@ const SpeedSelect: React.FunctionComponent<ISpeedSelectProps> = ({
             type="secondary"
             weight={'bold'}
           >
-            ~{waitTime} sec
+            ~{loading ? '...' : waitTime} sec
           </Text>
         </Group>
         <Text size="sm" ml={3} sx={{ lineHeight: '12px' }} type="secondary">

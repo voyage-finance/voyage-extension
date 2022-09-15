@@ -19,20 +19,24 @@ import BNPLSchedule from '@components/BNPLSchedule';
 import { useAppSelector } from '@hooks/useRedux';
 import SpeedSelect, { Speed } from './SpeedSelect';
 import { useEthBalance } from '@hooks/useEthBalance';
-import { formatAmount, fromBigNumber, Zero } from '@utils/bn';
+import { formatAmount, fromBigNumber } from '@utils/bn';
 import useVoyageController from '@hooks/useVoyageController';
 import { useNavigate, useParams } from 'react-router-dom';
 import { PURCHASE_OVERVIEW_ROUTE } from '@utils/constants';
 import { TransactionStatus } from 'types/transaction';
+import ErrorBox from '@components/PreviewErrorBox';
+import { getContractByAddress } from '@utils/env';
 
 const PurchaseCart: React.FC = () => {
   const { txId } = useParams();
   const [isLoading, setIsLoading] = useState(false);
+  const [isPurchasing, setIsPurchasing] = useState(false);
   const [pmtOption, setPmtOption] = useState(PaymentOption.BNPL);
   const [speed, setSpeed] = useState(Speed.FAST);
   const transaction = useAppSelector((state) => {
     return state.core.transactions[txId!];
   });
+  const [errorMessage, setErrorMessage] = useState('');
 
   const vaultAddress = useAppSelector((state) => state.core.vaultAddress);
   const userAddress = useAppSelector((state) => state.core.account?.address);
@@ -42,23 +46,54 @@ const PurchaseCart: React.FC = () => {
   const navigate = useNavigate();
 
   const orderPreview = transaction?.orderPreview;
-  const price = orderPreview ? fromBigNumber(orderPreview.price) : Zero;
-  const bnplPayment = orderPreview
-    ? fromBigNumber(orderPreview.loanParameters?.payment.pmt)
-    : Zero;
-  const nper = orderPreview ? Number(orderPreview.loanParameters.nper) : 0;
-  const epoch = orderPreview ? Number(orderPreview.loanParameters.epoch) : 0;
+  const price =
+    orderPreview && orderPreview.price
+      ? fromBigNumber(orderPreview.price)
+      : undefined;
+  const bnplPayment =
+    orderPreview && orderPreview.loanParameters
+      ? fromBigNumber(orderPreview.loanParameters.payment.pmt)
+      : undefined;
+  const nper =
+    orderPreview && orderPreview.loanParameters
+      ? Number(orderPreview.loanParameters.nper)
+      : 3;
+  const epoch =
+    orderPreview && orderPreview.loanParameters
+      ? Number(orderPreview.loanParameters.epoch)
+      : 14;
 
   const handleBuyClick = async () => {
-    setIsLoading(true);
-    await controller.confirmTransaction(transaction.id);
-    navigate(`${PURCHASE_OVERVIEW_ROUTE}/confirmed/${transaction.id}`);
-    setIsLoading(false);
+    setIsPurchasing(true);
+    setErrorMessage('');
+    try {
+      await controller.confirmTransaction(transaction.id);
+      navigate(`${PURCHASE_OVERVIEW_ROUTE}/confirmed/${transaction.id}`);
+    } catch (e: any) {
+      console.log(e);
+      setErrorMessage(e.message as string);
+    }
+    setIsPurchasing(false);
   };
 
   const handleCancelClick = () => {
     controller.rejectTransaction(transaction.id);
   };
+
+  const fetchPreview = async () => {
+    setIsLoading(true);
+    try {
+      await controller.updateOrderPreviewData(transaction.id);
+    } catch (e: any) {
+      console.log('[updateOrderPreviewData]', e.message);
+      setErrorMessage(e.message);
+    }
+    setIsLoading(false);
+  };
+
+  useEffect(() => {
+    fetchPreview();
+  }, []);
 
   return (
     <Card
@@ -70,7 +105,7 @@ const PurchaseCart: React.FC = () => {
       py={40}
       px={56}
     >
-      <LoadingOverlay visible={!orderPreview} />
+      <LoadingOverlay visible={isLoading} />
       <Stack spacing={0} align="stretch">
         <Group align="center" position="apart" noWrap>
           <Text sx={{ fontSize: 32 }} weight={'bold'}>
@@ -93,6 +128,9 @@ const PurchaseCart: React.FC = () => {
             <EthSvg style={{ width: 24 }} />
           </Group>
         </Group>
+        {orderPreview?.error && (
+          <ErrorBox mt={20} mb={7} error={orderPreview.error} />
+        )}
         <Group mt={15}>
           <DoodleSvg />
           <Stack spacing={0}>
@@ -150,7 +188,7 @@ const PurchaseCart: React.FC = () => {
                     type="gradient"
                     style={{ lineHeight: 1 }}
                   >
-                    {formatAmount(bnplPayment)}
+                    {bnplPayment ? formatAmount(bnplPayment) : '-'}
                   </Text>
                   <EthSvg style={{ width: 18 }} />
                   <Text style={{ lineHeight: 1 }}>/ {epoch} days</Text>
@@ -174,19 +212,32 @@ const PurchaseCart: React.FC = () => {
             payment={bnplPayment}
           />
         )}
+        {errorMessage && (
+          <Text type="danger" align="center" lineClamp={4}>
+            {errorMessage}
+          </Text>
+        )}
         {transaction.status === TransactionStatus.Unconfirmed ? (
           <>
             <Button
               fullWidth
               mt={24}
               onClick={handleBuyClick}
-              loading={isLoading}
+              loading={isPurchasing}
+              disabled={!!orderPreview?.error}
             >
-              Pay{' '}
-              {pmtOption === PaymentOption.PAY_NOW
-                ? formatAmount(price)
-                : formatAmount(bnplPayment)}{' '}
-              <EthSvg />
+              {!isPurchasing ? (
+                <>
+                  Pay{' '}
+                  {bnplPayment &&
+                    (pmtOption === PaymentOption.PAY_NOW
+                      ? formatAmount(price)
+                      : formatAmount(bnplPayment))}{' '}
+                  {bnplPayment && <EthSvg />}
+                </>
+              ) : (
+                'Purchasing'
+              )}
             </Button>
             <Button
               fullWidth
@@ -205,10 +256,17 @@ const PurchaseCart: React.FC = () => {
               user={userAddress}
             />
           </>
-        ) : (
+        ) : transaction.status === TransactionStatus.Rejected ? (
           <Button fullWidth disabled mt={24} kind="secondary">
             Rejected
           </Button>
+        ) : transaction.status === TransactionStatus.Pending ? (
+          <Button fullWidth disabled mt={24} kind="secondary" loading>
+            Mining
+          </Button>
+        ) : (
+          // unreachable state
+          <Text align="center">Mined</Text>
         )}
 
         <Group position="center" mt={22} spacing={6}>
@@ -220,9 +278,14 @@ const PurchaseCart: React.FC = () => {
               backgroundColor: 'rgba(12, 205, 170, 1)',
             }}
           />
-          <Text size="sm" sx={{ lineHeight: '12px' }}>
-            Connected to <strong>Looksrare</strong>
-          </Text>
+          {transaction.options.to && (
+            <Text size="sm" sx={{ lineHeight: '12px' }}>
+              Connected to{' '}
+              <strong>
+                {getContractByAddress(transaction.options.to.toLowerCase())}
+              </strong>
+            </Text>
+          )}
         </Group>
       </Stack>
     </Card>

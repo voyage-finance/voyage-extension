@@ -3,6 +3,11 @@
     &.up {
         transform: rotate(180deg);
     }
+    &.faded {
+        svg {
+            stroke: rgba(255, 255, 255, 0.35);
+        }
+    }
 }
 
 .activatorActivator {

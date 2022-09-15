@@ -139,7 +139,12 @@ const Router: React.FC = () => {
         </Route>
       </Routes>
       {process.env.VOYAGE_DEBUG && (
-        <button onClick={resetStorage}>Clear storage</button>
+        <div
+          style={{ color: 'rgba(255, 255, 255, 0.1)' }}
+          onClick={resetStorage}
+        >
+          Clear storage
+        </div>
       )}
     </div>
   );

@@ -80,6 +80,15 @@ class VoyageStore {
   async buyNow(transaction: TransactionRequest) {
     const { marketplace, collection, tokenId, data } =
       decodeMarketplaceCalldata(transaction);
+
+    console.log('buyNow params', {
+      collection,
+      tokenId,
+      vaultAddress: this.vaultAddress!,
+      marketplace,
+      data,
+    });
+
     const txRequest = await this.voyage.populateTransaction.buyNow(
       collection,
       tokenId,

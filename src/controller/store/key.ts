@@ -5,7 +5,6 @@ import { makeAutoObservable, toJS } from 'mobx';
 import Customauth from '@toruslabs/customauth';
 import { storage } from 'webextension-polyfill';
 import { omit } from 'lodash';
-import { getNetworkEnvironment, Network } from '@utils/env';
 
 export interface PendingLogin {
   email: string;
@@ -73,6 +72,7 @@ class KeyStore {
         publicKey: torusKeys.pubKey?.pub_key_X,
       },
     };
+    this.root.gsnStore.addAccount(torusKeys.privateKey);
   }
 
   persistState() {
@@ -127,13 +127,11 @@ class KeyStore {
         jwt
       );
     const mnemonic = process.env.DEBUG_GOERLI_MNEMONIC;
-    const wallet =
-      getNetworkEnvironment() === Network.Localhost &&
-      process.env.DEBUG_LOCALHOST_PRIVATE_KEY
-        ? new ethers.Wallet(process.env.DEBUG_LOCALHOST_PRIVATE_KEY)
-        : mnemonic
-        ? ethers.Wallet.fromMnemonic(mnemonic)
-        : ethers.Wallet.createRandom();
+    const wallet = process.env.DEBUG_LOCALHOST_PRIVATE_KEY
+      ? new ethers.Wallet(process.env.DEBUG_LOCALHOST_PRIVATE_KEY)
+      : mnemonic
+      ? ethers.Wallet.fromMnemonic(mnemonic)
+      : ethers.Wallet.createRandom();
     return {
       publicAddress: wallet.address,
       privateKey: wallet.privateKey,
@@ -168,7 +166,6 @@ class KeyStore {
     await this.root.voyageStore.fetchVault();
     await this.root.gsnStore.initialized;
     this.root.gsnStore.addAccount(torusResponse.privateKey);
-    console.log('----- addAccount -----');
     this.stage = KeyStoreStage.Initialized;
     this.persistState();
   }
@@ -179,6 +176,7 @@ class KeyStore {
     this.account = undefined;
     this.isTermsSigned = false;
     storage.local.remove('keyStore');
+    storage.local.remove('vaultAddress');
   }
 }
 
