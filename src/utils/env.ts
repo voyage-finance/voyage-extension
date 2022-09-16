@@ -2,15 +2,14 @@ import { ethers } from 'ethers';
 import { alchemyProvider } from 'wagmi/providers/alchemy';
 import { ChainID } from './chain';
 import {
-  LOOKS_EXCHANGE_RINKEBY,
-  SEAPORT_EXCHANGE_RINKEBY,
-  VOYAGE_RINKEBY,
+  LOOKS_EXCHANGE_TESTNET,
+  SEAPORT_EXCHANGE_TESTNET,
+  VOYAGE_GOERLI,
 } from './constants';
 
 export enum Network {
   Mainnet = 'homestead',
   Goerli = 'goerli',
-  Rinkeby = 'rinkeby',
   Localhost = 'localhost',
 }
 
@@ -25,6 +24,7 @@ type AddressToContract = Record<string, Contracts>;
 export interface NetworkConfiguration {
   name: string;
   apiKey?: string;
+  explorer: string;
   endpoint: string;
   chaindId: number;
   contracts: Record<Contracts, string>;
@@ -35,57 +35,42 @@ export const NetworkConfigurationMap: Record<Network, NetworkConfiguration> = {
   [Network.Goerli]: {
     name: Network.Goerli,
     apiKey: process.env.ALCHEMY_GOERLI_API_KEY,
+    explorer: 'https://goerli.etherscan.io/',
     endpoint: `https://eth-goerli.g.alchemy.com/v2/${process.env.ALCHEMY_GOERLI_API_KEY}`,
     chaindId: ChainID.Goerli,
     contracts: {
-      [Contracts.Voyage]: VOYAGE_RINKEBY,
-      [Contracts.LooksRare]:
-        '0xd112466471b5438c1ca2d218694200e49d81d047'.toLowerCase(),
-      [Contracts.Seaport]:
-        '0x00000000006c3852cbef3e08e8df289169ede581'.toLowerCase(),
+      [Contracts.Voyage]: VOYAGE_GOERLI,
+      [Contracts.LooksRare]: LOOKS_EXCHANGE_TESTNET,
+      [Contracts.Seaport]: SEAPORT_EXCHANGE_TESTNET,
     },
     addressToContract: {
-      VOYAGE_RINKEBY: Contracts.Voyage,
-      '0xd112466471b5438c1ca2d218694200e49d81d047': Contracts.LooksRare,
-      '0x00000000006c3852cbef3e08e8df289169ede581': Contracts.Seaport,
-    },
-  },
-  [Network.Rinkeby]: {
-    name: Network.Rinkeby,
-    apiKey: process.env.ALCHEMY_RINKEBY_API_KEY,
-    endpoint: `https://eth-rinkeby.alchemyapi.io/v2/${process.env.ALCHEMY_RINKEBY_API_KEY}`,
-    chaindId: ChainID.Rinkeby,
-    contracts: {
-      [Contracts.Voyage]: VOYAGE_RINKEBY,
-      [Contracts.LooksRare]: LOOKS_EXCHANGE_RINKEBY,
-      [Contracts.Seaport]: SEAPORT_EXCHANGE_RINKEBY,
-    },
-    addressToContract: {
-      [VOYAGE_RINKEBY]: Contracts.Voyage,
-      [LOOKS_EXCHANGE_RINKEBY]: Contracts.LooksRare,
-      [SEAPORT_EXCHANGE_RINKEBY]: Contracts.Seaport,
+      [VOYAGE_GOERLI]: Contracts.Voyage,
+      [LOOKS_EXCHANGE_TESTNET]: Contracts.LooksRare,
+      [SEAPORT_EXCHANGE_TESTNET]: Contracts.Seaport,
     },
   },
   [Network.Localhost]: {
     name: Network.Localhost,
     apiKey: process.env.ALCHEMY_RINKEBY_API_KEY,
     endpoint: `http://localhost:8545`,
+    explorer: 'https://goerli.etherscan.io/',
     chaindId: ChainID.Rinkeby,
     contracts: {
-      [Contracts.Voyage]: VOYAGE_RINKEBY,
-      [Contracts.LooksRare]: LOOKS_EXCHANGE_RINKEBY,
-      [Contracts.Seaport]: SEAPORT_EXCHANGE_RINKEBY,
+      [Contracts.Voyage]: VOYAGE_GOERLI,
+      [Contracts.LooksRare]: LOOKS_EXCHANGE_TESTNET,
+      [Contracts.Seaport]: SEAPORT_EXCHANGE_TESTNET,
     },
     addressToContract: {
-      [VOYAGE_RINKEBY]: Contracts.Voyage,
-      [LOOKS_EXCHANGE_RINKEBY]: Contracts.LooksRare,
-      [SEAPORT_EXCHANGE_RINKEBY]: Contracts.Seaport,
+      [VOYAGE_GOERLI]: Contracts.Voyage,
+      [LOOKS_EXCHANGE_TESTNET]: Contracts.LooksRare,
+      [SEAPORT_EXCHANGE_TESTNET]: Contracts.Seaport,
     },
   },
   [Network.Mainnet]: {
     name: Network.Mainnet,
     apiKey: process.env.MAINNET_API_KEY,
     endpoint: ``,
+    explorer: 'https://etherscan.io/',
     chaindId: ChainID.Mainnet,
     contracts: {
       [Contracts.Voyage]: '',
@@ -117,7 +102,7 @@ export const getAlchemyProvider = () =>
 
 export const getJsonProvider = () => {
   switch (getNetworkEnvironment()) {
-    case Network.Rinkeby:
+    case Network.Goerli:
       return new ethers.providers.AlchemyProvider(
         getNetworkConfiguration().name,
         getNetworkConfiguration().apiKey
@@ -132,4 +117,13 @@ export const getJsonProvider = () => {
         }
       );
   }
+};
+
+export const getShortenedAddress = (address: string) => {
+  return `${address.substring(0, 6)}...${address.slice(-4)}`;
+};
+
+export const getTxExpolerLink = (hash: string) => {
+  const { explorer: explorerUrl } = getNetworkConfiguration();
+  return `${explorerUrl}tx/${hash}`;
 };

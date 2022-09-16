@@ -4,7 +4,6 @@ import { Box, Group, Stack } from '@mantine/core';
 import * as React from 'react';
 import { ReactComponent as EthSvg } from 'assets/img/eth-icon.svg';
 import { ReactComponent as DoodleSvg } from 'assets/img/doodle.svg';
-import { ReactComponent as ArrowSvg } from 'assets/img/arrow-top-right-gradient.svg';
 import Button from '@components/Button';
 import { PaymentOption } from '@components/BuyMethodSelect';
 import PaymentHoverBoard from '@components/PaymentHoverBoard';
@@ -13,10 +12,8 @@ import RepaymentSchedule from './RepaymentSchedule';
 import { useParams } from 'react-router-dom';
 import { formatAmount, fromBigNumber } from '@utils/bn';
 import BigNumber from 'bignumber.js';
-
-const getShortenedAddress = (address: string) => {
-  return `${address.substring(0, 6)}...${address.slice(-4)}`;
-};
+import Link from '@components/Link';
+import { getShortenedAddress, getTxExpolerLink } from '@utils/env';
 
 const PurchaseConfirmed: React.FC = () => {
   const { txId } = useParams();
@@ -92,16 +89,11 @@ const PurchaseConfirmed: React.FC = () => {
             <Text type="secondary" mr={4}>
               Transaction ID
             </Text>
-            <Text
-              size="lg"
+            <Link
               ml="auto"
-              weight="bold"
-              type="gradient"
-              sx={{ ':hover': { cursor: 'pointer' } }}
-            >
-              {getShortenedAddress(transaction.hash || '')}
-            </Text>
-            <ArrowSvg />
+              link={getTxExpolerLink(transaction.hash || '')}
+              text={getShortenedAddress(transaction.hash || '')}
+            />
           </Group>
           <Group align="center" spacing={0}>
             <Text type="secondary" mr={4}>
