@@ -8,6 +8,8 @@ import { App, getDappForTab } from '@utils/dapps';
 import { useAppDispatch, useAppSelector } from '@hooks/useRedux';
 import { useAutoConnect } from '@utils/chain';
 import { updateActiveTab } from '@state/modules/core';
+import Link from '@components/Link';
+import { getShortenedAddress, getTxExpolerLink } from '@utils/env';
 
 const Home: React.FC = () => {
   const { chain } = useNetwork();
@@ -66,6 +68,14 @@ const Home: React.FC = () => {
       <VoyagePaper className={styles.main}>
         <div>
           <div>Main Vault</div>
+          <Link
+            link={getTxExpolerLink(
+              '0xe3290236d13b98b33e81965a77e5375f9a4c7d6f68ae20d6a83bec04eea04f2c'
+            )}
+            text={getShortenedAddress(
+              '0xe3290236d13b98b33e81965a77e5375f9a4c7d6f68ae20d6a83bec04eea04f2c'
+            )}
+          />
           <div>
             <Code>0xc494...5c43</Code>
           </div>

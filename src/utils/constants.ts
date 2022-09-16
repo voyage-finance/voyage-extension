@@ -12,12 +12,12 @@ export const SIGN_MESSAGE_ROUTE = '/sign';
 
 export const PURCHASE_OVERVIEW_ROUTE = '/purchase';
 
-export const LOOKS_EXCHANGE_RINKEBY =
-  '0x1AA777972073Ff66DCFDeD85749bDD555C0665dA'.toLowerCase();
+export const LOOKS_EXCHANGE_TESTNET =
+  '0xd112466471b5438c1ca2d218694200e49d81d047'.toLowerCase();
 //0xc778417e063141139fce010982780140aa0cd5ab
 
-export const SEAPORT_EXCHANGE_RINKEBY =
+export const SEAPORT_EXCHANGE_TESTNET =
   '0x00000000006c3852cbef3e08e8df289169ede581'.toLowerCase();
 
-export const VOYAGE_RINKEBY =
+export const VOYAGE_GOERLI =
   '0x4aFb3904e9f0615Aa15eb3208484BdcE7595bb79'.toLowerCase();
