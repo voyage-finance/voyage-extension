@@ -8,6 +8,10 @@ import useVoyageController from '@hooks/useVoyageController';
 import { useAppSelector } from '@hooks/useRedux';
 import { decodeMarketplaceCalldata } from '@utils/decoder';
 import { useParams } from 'react-router-dom';
+import { useInterval } from '@mantine/hooks';
+import cn from 'classnames';
+import styles from './index.module.scss';
+
 interface ISpeedSelectProps extends Omit<BoxProps<'div'>, 'onChange'> {
   value: Speed;
   vault?: string;
@@ -16,40 +20,32 @@ interface ISpeedSelectProps extends Omit<BoxProps<'div'>, 'onChange'> {
 }
 
 export enum Speed {
-  FAST = 'fast',
-  NORMAL = 'normal',
-  SLOW = 'slow',
+  FAST = 'high',
+  NORMAL = 'medium',
+  SLOW = 'low',
 }
 
 export type SpeedConfig = {
   type: Speed;
   label: string;
-  time: number;
-  priceFrom: number;
-  priceTo: number;
+  values?: {
+    maxWaitTime: number;
+    maxFeePerGas: number;
+  };
 };
 
-const SPEEDS: Record<Speed, SpeedConfig> = {
+const DEFAULT_SPEEDS: Record<string, SpeedConfig> = {
   [Speed.FAST]: {
     type: Speed.FAST,
     label: '🚤 Fast',
-    time: 10,
-    priceFrom: 12,
-    priceTo: 15,
   },
   [Speed.NORMAL]: {
     type: Speed.NORMAL,
     label: '⛵ Normal',
-    time: 30,
-    priceFrom: 12,
-    priceTo: 15,
   },
   [Speed.SLOW]: {
     type: Speed.SLOW,
     label: '🛶 Slow',
-    time: 30,
-    priceFrom: 12,
-    priceTo: 15,
   },
 };
 
@@ -61,10 +57,11 @@ const SpeedSelect: React.FunctionComponent<ISpeedSelectProps> = ({
   ...props
 }) => {
   const { txId } = useParams();
-  const [loading, setLoading] = React.useState(false);
-  const [waitTime, setWaitTime] = React.useState(0);
-  const [price, setPrice] = React.useState('');
-
+  const [isGasLoading, setGasLoading] = React.useState(false);
+  const [isFeeLoading, setFeeLoading] = React.useState(false);
+  const [gas, setGas] = React.useState(0);
+  const [speeds, setSpeeds] =
+    React.useState<Record<string, SpeedConfig>>(DEFAULT_SPEEDS);
   const controller = useVoyageController();
   const transaction = useAppSelector((state) => {
     return state.core.transactions[txId!];
@@ -81,7 +78,7 @@ const SpeedSelect: React.FunctionComponent<ISpeedSelectProps> = ({
       user,
       data,
     });
-    setLoading(true);
+    setGasLoading(true);
     try {
       const voyageRawTx = await controller.populateBuyNow(
         collection,
@@ -100,7 +97,7 @@ const SpeedSelect: React.FunctionComponent<ISpeedSelectProps> = ({
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-              speed: value,
+              speed: 'fast', // will be removed for next version of api
               request: await controller.createRelayHttpRequest(
                 voyageRawTx.data,
                 user!
@@ -110,27 +107,58 @@ const SpeedSelect: React.FunctionComponent<ISpeedSelectProps> = ({
         );
         const body = await estimateGasResponse.json();
         console.log('------------ estimateGasResponse -------------', body);
-        const fee = (body.networkFee / Math.pow(10, 9)).toFixed(5);
-        setPrice(fee);
-        setWaitTime(body.waitTime);
+        setGas(body.gas);
       }
     } catch (e) {
       console.log('[FAILED] at estimate gas', e);
     }
-    setLoading(false);
+    setGasLoading(false);
   };
+
+  const getGasFees = async () => {
+    setFeeLoading(true);
+    try {
+      const estimateGasResponse = await fetch(
+        `${process.env.VOYAGE_API_URL}/v1/metadata/gasFee`
+      );
+      const body = await estimateGasResponse.json();
+      const newSpeedValues = speeds;
+      Object.keys(body).forEach((key) => {
+        if (newSpeedValues[key])
+          newSpeedValues[key].values = {
+            maxFeePerGas: body[key].suggestedMaxPriorityFeePerGas,
+            maxWaitTime: body[key].maxWaitTimeEstimate / 1000,
+          };
+      });
+      setSpeeds(newSpeedValues);
+    } catch (e) {
+      console.log('[FAILED] at getGasFees', e);
+    }
+    setTimeout(() => {
+      setFeeLoading(false);
+    }, 2000);
+  };
+
+  const getFeesPoll = useInterval(getGasFees, 5000);
 
   React.useEffect(() => {
     updateGasData();
-  }, [value]);
+    getFeesPoll.start();
+    return getFeesPoll.stop;
+  }, []);
 
   return (
     <Group position="apart" align="center" {...props}>
-      <Stack spacing={0} sx={{ position: 'relative' }}>
+      <Stack spacing={0} className={cn(isFeeLoading && styles.animatePulse)}>
         <Group spacing={0}>
           <EthSvg style={{ width: 11 }} />
           <Text size="sm" sx={{ lineHeight: '12px' }} ml={1} weight={'bold'}>
-            {loading ? '...' : price}
+            {!isGasLoading && speeds[value].values
+              ? (
+                  (gas * speeds[value].values!.maxFeePerGas) /
+                  Math.pow(10, 9)
+                ).toFixed(5)
+              : '...'}
           </Text>
           <Text
             size="sm"
@@ -139,7 +167,11 @@ const SpeedSelect: React.FunctionComponent<ISpeedSelectProps> = ({
             type="secondary"
             weight={'bold'}
           >
-            ~{loading ? '...' : waitTime} sec
+            ~
+            {!isGasLoading && speeds[value].values
+              ? speeds[value].values!.maxWaitTime
+              : '...'}{' '}
+            sec
           </Text>
         </Group>
         <Text size="sm" ml={3} sx={{ lineHeight: '12px' }} type="secondary">
@@ -160,7 +192,7 @@ const SpeedSelect: React.FunctionComponent<ISpeedSelectProps> = ({
               ':hover': { cursor: 'pointer' },
             }}
           >
-            <Text>{SPEEDS[value].label}</Text>
+            <Text>{speeds[value].label}</Text>
             <ChevronDown style={{ marginTop: 1 }} size={18} />
           </Group>
         }
@@ -192,8 +224,9 @@ const SpeedSelect: React.FunctionComponent<ISpeedSelectProps> = ({
           Transaction Speed
         </Text>
         <Group direction="column" spacing={5} mt={6}>
-          {Object.values(SPEEDS).map((speed) => (
+          {Object.values(speeds).map((speed, i) => (
             <Menu.Item
+              key={i}
               icon={
                 value === speed.type ? (
                   <CheckOrangeSvg />
@@ -217,11 +250,17 @@ const SpeedSelect: React.FunctionComponent<ISpeedSelectProps> = ({
                   type="secondary"
                   size="sm"
                   ml={2}
+                  className={cn(isFeeLoading && styles.animatePulse)}
                 >
-                  ~ {speed.time} sec
+                  ~ {speed.values?.maxWaitTime || '...'} sec
                 </Text>
-                <Text sx={{ whiteSpace: 'nowrap' }} size="sm" ml="auto">
-                  {speed.priceFrom}-{speed.priceTo} Gwei
+                <Text
+                  sx={{ whiteSpace: 'nowrap' }}
+                  size="sm"
+                  ml="auto"
+                  className={cn(isFeeLoading && styles.animatePulse)}
+                >
+                  {speed.values?.maxFeePerGas} Gwei
                 </Text>
               </Group>
             </Menu.Item>
