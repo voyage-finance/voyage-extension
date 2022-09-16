@@ -2,6 +2,7 @@ import ControllerStore from './root';
 import { makeAutoObservable, runInAction } from 'mobx';
 import {
   OrderPreview,
+  PreviewErrorType,
   Transaction,
   TransactionStatus,
 } from 'types/transaction';
@@ -80,11 +81,16 @@ class TransactionStore implements TransactionStore {
   }
 
   async updateOrderPreviewData(id: string) {
-    let preview: any;
+    let preview: OrderPreview;
     try {
       preview = await this.fetchPreviewTx(id, this.transactions[id].options);
     } catch (e) {
-      preview = {};
+      preview = {
+        error: {
+          type: PreviewErrorType.UNDEFINED,
+          message: "Couldn't fetch order preview information.",
+        },
+      };
     }
     runInAction(() => {
       this.transactions[id].orderPreview = preview;

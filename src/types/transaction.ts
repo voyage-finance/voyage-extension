@@ -36,15 +36,15 @@ export interface OrderPreview {
       pmt: BigNumber;
     };
   };
-  metadata: Metadata;
-  price: BigNumber;
+  metadata?: Metadata;
+  price?: BigNumber;
   error?: PreviewError;
 }
 
 export interface PreviewError {
   type: PreviewErrorType;
   message: string;
-  metadata: any;
+  metadata?: any;
 }
 
 export enum PreviewErrorType {

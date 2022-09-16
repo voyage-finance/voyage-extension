@@ -54,7 +54,7 @@ export const NetworkConfigurationMap: Record<Network, NetworkConfiguration> = {
     apiKey: process.env.ALCHEMY_RINKEBY_API_KEY,
     endpoint: `http://localhost:8545`,
     explorer: 'https://goerli.etherscan.io/',
-    chaindId: ChainID.Rinkeby,
+    chaindId: ChainID.Goerli,
     contracts: {
       [Contracts.Voyage]: VOYAGE_GOERLI,
       [Contracts.LooksRare]: LOOKS_EXCHANGE_TESTNET,

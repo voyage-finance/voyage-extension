@@ -4,6 +4,7 @@ import {
   Box,
   Divider,
   Group,
+  Image,
   Loader,
   LoadingOverlay,
   Stack,
@@ -11,7 +12,6 @@ import {
 import { useEffect, useState } from 'react';
 import { ReactComponent as WalletSvg } from 'assets/img/wallet.svg';
 import { ReactComponent as EthSvg } from 'assets/img/eth-icon.svg';
-import { ReactComponent as DoodleSvg } from 'assets/img/doodle.svg';
 import Button from '@components/Button';
 import BuyMethodSelect, { PaymentOption } from '@components/BuyMethodSelect';
 import PaymentHoverBoard from '@components/PaymentHoverBoard';
@@ -46,22 +46,18 @@ const PurchaseCart: React.FC = () => {
   const navigate = useNavigate();
 
   const orderPreview = transaction?.orderPreview;
-  const price =
-    orderPreview && orderPreview.price
-      ? fromBigNumber(orderPreview.price)
-      : undefined;
-  const bnplPayment =
-    orderPreview && orderPreview.loanParameters
-      ? fromBigNumber(orderPreview.loanParameters.payment.pmt)
-      : undefined;
-  const nper =
-    orderPreview && orderPreview.loanParameters
-      ? Number(orderPreview.loanParameters.nper)
-      : 3;
-  const epoch =
-    orderPreview && orderPreview.loanParameters
-      ? Number(orderPreview.loanParameters.epoch)
-      : 14;
+  const price = orderPreview?.price
+    ? fromBigNumber(orderPreview.price)
+    : undefined;
+  const bnplPayment = orderPreview?.loanParameters
+    ? fromBigNumber(orderPreview.loanParameters.payment.pmt)
+    : undefined;
+  const nper = orderPreview?.loanParameters
+    ? Number(orderPreview.loanParameters.nper)
+    : 3;
+  const epoch = orderPreview?.loanParameters
+    ? Number(orderPreview.loanParameters.epoch)
+    : 14;
 
   const handleBuyClick = async () => {
     setIsPurchasing(true);
@@ -132,7 +128,25 @@ const PurchaseCart: React.FC = () => {
           <ErrorBox mt={20} mb={7} error={orderPreview.error} />
         )}
         <Group mt={15}>
-          <DoodleSvg />
+          {orderPreview?.metadata?.image ? (
+            <Image
+              width={50}
+              fit="contain"
+              radius={10}
+              height={50}
+              src={orderPreview?.metadata.image}
+              alt="image"
+            />
+          ) : (
+            <Box
+              sx={{
+                width: 50,
+                height: 50,
+                borderRadius: 10,
+                background: 'rgba(255, 255, 255, 0.1)',
+              }}
+            />
+          )}
           <Stack spacing={0}>
             <Text weight={'bold'} size="lg">
               {orderPreview?.metadata?.name ||
