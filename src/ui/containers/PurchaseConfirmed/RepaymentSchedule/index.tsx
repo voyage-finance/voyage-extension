@@ -7,19 +7,25 @@ import moment from 'moment';
 import BigNumber from 'bignumber.js';
 import { formatAmount } from '@utils/bn';
 import styles from './index.module.scss';
+import { getShortenedAddress, getTxExpolerLink } from '@utils/env';
 
 interface IRepaymentScheduleProps extends GroupProps {
   nper: number;
   epoch: number;
   payment: BigNumber;
+  transactions: string[];
 }
 
 const RepaymentSchedule: React.FunctionComponent<IRepaymentScheduleProps> = ({
   epoch,
   nper,
   payment,
+  transactions,
   ...props
 }) => {
+  const onPmtClick = (hash: string) => {
+    window.open(getTxExpolerLink(hash), '_blank');
+  };
   return (
     <Group direction="column" align="stretch" spacing={0} {...props}>
       <Group direction="column" align="stretch" spacing={0} noWrap>
@@ -28,11 +34,12 @@ const RepaymentSchedule: React.FunctionComponent<IRepaymentScheduleProps> = ({
         </Text>
         {[...Array(Number(nper)).keys()].map((i) => {
           const n = i + 1;
+          const daysLeft = epoch * i;
           const date = moment().add(epoch * i, 'days');
           return (
             <Group mt={10} align="center" spacing={0} key={i} noWrap>
               <div style={{ position: 'relative' }}>
-                {n == 1 ? (
+                {i < transactions.length ? (
                   <Group
                     sx={{
                       borderRadius: '50%',
@@ -40,9 +47,14 @@ const RepaymentSchedule: React.FunctionComponent<IRepaymentScheduleProps> = ({
                       height: 43,
                       width: 43,
                       color: 'white',
+                      ':hover': {
+                        cursor: 'pointer',
+                        background: 'rgba(12, 205, 170, 0.9)',
+                      },
                     }}
                     align="center"
                     position="center"
+                    onClick={() => onPmtClick(transactions[i])}
                   >
                     <ArrowUpRight size={20} />
                   </Group>
@@ -63,13 +75,14 @@ const RepaymentSchedule: React.FunctionComponent<IRepaymentScheduleProps> = ({
                 )}
                 {n < nper && <div className={styles.schedulConnectLine} />}
               </div>
-              <Stack spacing={0} ml={14}>
+              <Stack spacing={0} ml={14} align="start">
                 <Text weight="bold" size="lg">
-                  Payment {n}
-                </Text>
-                <Text size="sm">
-                  {' '}
                   {n > 1 ? date.format('D MMM YYYY') : 'Today'}
+                </Text>
+                <Text size="sm" type={n > 1 ? 'primary' : 'success'}>
+                  {i >= transactions.length
+                    ? `Due in ${daysLeft} days`
+                    : `Paid • ${getShortenedAddress(transactions[i])}`}
                 </Text>
               </Stack>
               <Text size="lg" weight="bold" sx={{ marginLeft: 'auto' }}>
