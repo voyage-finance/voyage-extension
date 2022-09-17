@@ -79,14 +79,17 @@ const BNPLSchedule: React.FunctionComponent<IBNPLScheduleProps> = ({
               const date = moment().add(epoch * i, 'days');
               return (
                 <Group mt={16} align="center" spacing={0} key={i}>
-                  <Box
-                    sx={{
-                      border: '3px solid rgba(255, 255, 255, 0.1)',
-                      borderRadius: '50%',
-                      width: 13,
-                      height: 13,
-                    }}
-                  />
+                  <div style={{ position: 'relative' }}>
+                    <Box
+                      sx={{
+                        border: '3px solid rgba(255, 255, 255, 0.1)',
+                        borderRadius: '50%',
+                        width: 13,
+                        height: 13,
+                      }}
+                    />
+                    {n < nper && <div className={styles.schedulConnectLine} />}
+                  </div>
                   <Text weight="bold" ml={14}>
                     Payment {n}
                   </Text>
