@@ -129,6 +129,7 @@ const PurchaseConfirmed: React.FC = () => {
             nper={nper}
             epoch={epoch}
             payment={bnplPayment}
+            transactions={transaction.hash ? [transaction.hash] : []}
           />
         )}
         <Button fullWidth mt={24}>

@@ -71,7 +71,7 @@ class TransactionStore implements TransactionStore {
         this.transactions[id].hash = buyNowTx.hash;
         this.transactions[id].status = TransactionStatus.Pending;
         this.updateTransactions();
-        await buyNowTx.wait();
+        await buyNowTx.wait(+process.env.NUM_CONFIRMATIONS!);
         onApprove(buyNowTx.hash);
       },
       reject: async () => {
