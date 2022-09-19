@@ -282,25 +282,25 @@ const PurchaseCart: React.FC = () => {
           // unreachable state
           <Text align="center">Mined</Text>
         )}
-
-        <Group position="center" mt={22} spacing={6}>
-          <Box
-            sx={{
-              width: 6,
-              height: 6,
-              borderRadius: '50%',
-              backgroundColor: 'rgba(12, 205, 170, 1)',
-            }}
-          />
-          {transaction.options.to && (
-            <Text size="sm" sx={{ lineHeight: '12px' }}>
-              Connected to{' '}
-              <strong>
-                {getContractByAddress(transaction.options.to.toLowerCase())}
-              </strong>
-            </Text>
+        {transaction.options.to &&
+          getContractByAddress(transaction.options.to.toLowerCase()) && (
+            <Group position="center" mt={22} spacing={6}>
+              <Box
+                sx={{
+                  width: 6,
+                  height: 6,
+                  borderRadius: '50%',
+                  backgroundColor: 'rgba(12, 205, 170, 1)',
+                }}
+              />
+              <Text size="sm" sx={{ lineHeight: '12px' }}>
+                Connected to{' '}
+                <strong>
+                  {getContractByAddress(transaction.options.to.toLowerCase())}
+                </strong>
+              </Text>
+            </Group>
           )}
-        </Group>
       </Stack>
     </Card>
   );

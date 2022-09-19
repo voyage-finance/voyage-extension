@@ -65,6 +65,7 @@ class TransactionStore implements TransactionStore {
       onApprove,
       onReject,
     };
+
     this.requestCallbacks[id] = {
       resolve: async () => {
         const buyNowTx = await this.root.voyageStore.buyNow(txRequest);
@@ -84,11 +85,11 @@ class TransactionStore implements TransactionStore {
     let preview: OrderPreview;
     try {
       preview = await this.fetchPreviewTx(id, this.transactions[id].options);
-    } catch (e) {
+    } catch (e: any) {
       preview = {
         error: {
           type: PreviewErrorType.UNDEFINED,
-          message: "Couldn't fetch order preview information.",
+          message: e?.message || "Couldn't fetch order preview information.",
         },
       };
     }
@@ -167,6 +168,8 @@ class TransactionStore implements TransactionStore {
     if (!transaction.data || !transaction.to)
       throw new Error('Invalid transaction');
     const contract = getContractByAddress(transaction.to.toLowerCase());
+    if (!contract)
+      throw new Error("Sorry, this marketplace isn't yet supported by our app");
     const response = await fetch(
       `${process.env.VOYAGE_API_URL}/v1/marketplace/preview/${contract}`,
       {
