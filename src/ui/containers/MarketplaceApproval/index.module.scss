@@ -1,0 +1,46 @@
+.root {
+  text-align: center;
+  padding: 15px 24px;
+  width: 100%;
+  height: 100%;
+
+  .title {
+    font-size: 32px;
+    line-height: 38px;
+    font-weight: 700;
+    color: white;
+  }
+
+  .line {
+    width: 35px;
+    height: 1.5px;
+    background: rgba(255, 255, 255, 0.35);
+  }
+
+  .name {
+    color: white;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .messageBox {
+    word-wrap: break-word;
+    overflow-y: scroll;
+    text-align: left;
+    color: white;
+  }
+
+  .buttons {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: row;
+    .reject {
+      flex: 1 0 auto;
+      margin-right: 7px;
+    }
+    .accept {
+      flex: 1 0 auto;
+      margin-left: 7px;
+    }
+  }
+}

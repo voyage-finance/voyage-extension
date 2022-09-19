@@ -27,7 +27,7 @@ class WalletConnectStore {
 
   requestCallbacks: Record<string, ApprovalCallbacks> = {};
 
-  pendingConnectionRequests: Record<string, ApprovalRequest> = {};
+  pendingApprovalRequests: Record<string, ApprovalRequest> = {};
 
   connections: Record<string, WalletConnect> = {};
 
@@ -40,8 +40,15 @@ class WalletConnectStore {
 
   get state() {
     return {
-      pendingApprovals: toJS(this.pendingConnectionRequests),
+      pendingApprovals: toJS(this.pendingApprovalRequests),
       sessions: this.sessions,
+    };
+  }
+
+  get api() {
+    return {
+      approveApprovalRequest: this.approveApprovalRequest.bind(this),
+      rejectApprovalRequest: this.rejectApprovalRequest.bind(this),
     };
   }
 
@@ -103,15 +110,15 @@ class WalletConnectStore {
   }
 
   /**
-   * Adds a pending connection request.
+   * Adds a pending approval request.
    * These are deleted after they are either approved or rejected.
    * @param approval
    */
-  addConnectionRequest = (approval: ApprovalRequest) => {
+  addApprovalRequest = (approval: ApprovalRequest) => {
     const { id } = approval;
     return new Promise<void>((resolve, reject) => {
-      this.pendingConnectionRequests = {
-        ...this.pendingConnectionRequests,
+      this.pendingApprovalRequests = {
+        ...this.pendingApprovalRequests,
         [id]: approval,
       };
       this.requestCallbacks[id] = {
@@ -128,20 +135,20 @@ class WalletConnectStore {
   };
 
   /**
-   * Retrieve a pending connection request by id.
+   * Retrieve a pending approval request by id.
    * @param id
    * @returns ApprovalRequest
    */
-  getConnectionRequest = (id: string): ApprovalRequest => {
-    return this.pendingConnectionRequests[id];
+  getApprovalRequest = (id: string): ApprovalRequest => {
+    return this.pendingApprovalRequests[id];
   };
 
   /**
-   * Approves a connection request by id and runs approval callback.
+   * Approves a request by id and runs approval callback.
    * @param id
    */
-  approveConnectionRequest = async (id: string) => {
-    const { resolve } = this.deleteConnectionRequest(id);
+  approveApprovalRequest = async (id: string) => {
+    const { resolve } = this.deleteApprovalRequest(id);
     await resolve();
   };
 
@@ -149,8 +156,8 @@ class WalletConnectStore {
    * Rejects a connection request and runs rejection callback.
    * @param id
    */
-  rejectConnectionRequest = async (id: string) => {
-    const { reject } = this.deleteConnectionRequest(id);
+  rejectApprovalRequest = async (id: string) => {
+    const { reject } = this.deleteApprovalRequest(id);
     await reject(ethErrors.provider.userRejectedRequest());
   };
 
@@ -158,14 +165,14 @@ class WalletConnectStore {
    * Deletes in-memory connection request. THis is always called regardless of approval or rejection.
    * @param id
    */
-  private deleteConnectionRequest = (id: string) => {
+  private deleteApprovalRequest = (id: string) => {
     if (!this.requestCallbacks[id]) {
       return { resolve: noop, reject: noop };
     }
 
     const cbs = this.requestCallbacks[id];
     delete this.requestCallbacks[id];
-    delete this.pendingConnectionRequests[id];
+    delete this.pendingApprovalRequests[id];
     return cbs;
   };
 

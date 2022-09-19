@@ -7,7 +7,10 @@ import { ControllerStore } from './index';
 import { keccak256, toUtf8Bytes } from 'ethers/lib/utils';
 import { makeAutoObservable, runInAction } from 'mobx';
 import { Listener, TransactionRequest } from '@ethersproject/providers';
-import { decodeMarketplaceCalldata } from '@utils/decoder';
+import {
+  decodeMarketplaceFromApproveCalldata,
+  decodeMarketplaceCalldata,
+} from '@utils/decoder';
 import { storage } from 'webextension-polyfill';
 
 class VoyageStore {
@@ -95,6 +98,21 @@ class VoyageStore {
       this.vaultAddress!,
       marketplace,
       data
+    );
+    return this.root.gsnStore.relayTransaction(txRequest);
+  }
+
+  async approveMarketplace(calldata: string) {
+    const marketplace = decodeMarketplaceFromApproveCalldata(calldata);
+
+    console.log('approveMarketplace params', {
+      vaultAddress: this.vaultAddress!,
+      marketplace,
+    });
+
+    const txRequest = await this.voyage.populateTransaction.approveMarketplace(
+      this.vaultAddress!,
+      marketplace
     );
     return this.root.gsnStore.relayTransaction(txRequest);
   }

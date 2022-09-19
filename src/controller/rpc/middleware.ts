@@ -2,6 +2,7 @@ import VoyageRpcService from './service';
 import { createAsyncMiddleware } from 'json-rpc-engine';
 import { ethers } from 'ethers';
 import { TransactionRequest } from '@ethersproject/providers';
+import { IClientMeta } from '@walletconnect/types';
 
 /**
  * Creates JsonRpcEngine middleware based on ethers.providers.JsonRpcProvider.
@@ -48,9 +49,16 @@ export const createVoyageMiddleware = (service: VoyageRpcService) => {
       case 'eth_sendTransaction': {
         console.log('----- eth_sendTransaction --------', req.params);
         const params = req.params as unknown[];
-        const result = await service.handleEthSendTx(
-          params[0] as TransactionRequest
-        );
+        const txRequest = params[0] as TransactionRequest;
+        let result;
+        if (txRequest.data?.length === 138) {
+          result = await service.handleApproveMarketplace(
+            txRequest.data! as string,
+            params[1] as IClientMeta
+          );
+        } else {
+          result = await service.handleEthSendTx(txRequest);
+        }
         console.log('---- eth_sendTransaction ----- result', result);
         res.result = result;
         break;

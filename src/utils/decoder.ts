@@ -1,6 +1,7 @@
 import { TransactionRequest } from '@ethersproject/providers';
 import { ABIs } from '@utils/abi';
 import { Contracts, getContractByAddress } from '@utils/env';
+import { Weth9__factory } from 'contracts/factories/Weth9__factory';
 import { BytesLike, ethers } from 'ethers';
 
 interface BuyNowParams {
@@ -54,4 +55,17 @@ export const decodeMarketplaceCalldata = (
         `Unsupported transaction: ${JSON.stringify(transaction)}`
       );
   }
+};
+
+export const decodeMarketplaceFromApproveCalldata = (
+  calldata: string
+): string => {
+  const selector = ethers.utils.hexlify(calldata).slice(0, 10);
+  const args: any = Weth9__factory.createInterface().decodeFunctionData(
+    selector,
+    calldata
+  );
+  console.log('[weth] approve args: ', args);
+
+  return args.guy;
 };
