@@ -18,9 +18,6 @@ const Link: React.FunctionComponent<ILinkProps> = ({
     <Group spacing={0} {...props}>
       <a href={link} className={styles.link} target="_blank">
         <Text
-          // variant="link"
-          // component="a"
-          // href={link}
           size="lg"
           type="gradient"
           weight="bold"

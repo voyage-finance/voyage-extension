@@ -67,18 +67,7 @@ const Home: React.FC = () => {
       </div>
       <VoyagePaper className={styles.main}>
         <div>
-          <div>Main Vault</div>
-          <Link
-            link={getTxExpolerLink(
-              '0xe3290236d13b98b33e81965a77e5375f9a4c7d6f68ae20d6a83bec04eea04f2c'
-            )}
-            text={getShortenedAddress(
-              '0xe3290236d13b98b33e81965a77e5375f9a4c7d6f68ae20d6a83bec04eea04f2c'
-            )}
-          />
-          <div>
-            <Code>0xc494...5c43</Code>
-          </div>
+          <div>Main Page</div>
         </div>
       </VoyagePaper>
     </div>
