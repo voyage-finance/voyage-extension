@@ -4,6 +4,7 @@ import { openNotificationWindow } from '@utils/extension';
 import { IClientMeta } from '@walletconnect/types';
 import browser from 'webextension-polyfill';
 import { TransactionRequest } from '@ethersproject/providers';
+import { ApprovalType } from 'types';
 
 /**
  * VoyageRpcService defines all handlers for eth RPC methods.
@@ -41,13 +42,44 @@ class VoyageRpcService {
   ) =>
     new Promise<string>((resolve, reject) => {
       const id = nanoid();
-      this.store.transactionStore.addSignRequest({
+      this.store.walletConnectStore.addApprovalRequest({
         id,
-        address,
-        message,
-        metadata,
+        type: ApprovalType.SIGN_MESSAGE,
+        metadata: {
+          address,
+          message,
+        },
+        client: metadata,
         onApprove: async () =>
           resolve(await this.store.keyStore.signMessage(message)),
+        onReject: async () => reject('User rejected session request'),
+      });
+      openNotificationWindow({
+        url: 'notification.html',
+        type: 'popup',
+        width: 360,
+        height: 600,
+        left: 0,
+        top: 0,
+      });
+    });
+
+  handleApproveMarketplace = async (calldata: string, client: IClientMeta) =>
+    new Promise<string>((resolve, reject) => {
+      const id = nanoid();
+      this.store.walletConnectStore.addApprovalRequest({
+        id,
+        type: ApprovalType.APPROVE_MARKETPLACE,
+        client,
+        metadata: {
+          calldata,
+        },
+        onApprove: async () => {
+          const approveTx = await this.store.voyageStore.approveMarketplace(
+            calldata
+          );
+          resolve(approveTx.hash);
+        },
         onReject: async () => reject('User rejected session request'),
       });
       openNotificationWindow({

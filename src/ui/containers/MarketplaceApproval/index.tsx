@@ -4,19 +4,21 @@ import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAppSelector } from '@hooks/useRedux';
 import VoyagePaper from '@components/Card';
-import { Avatar, Box, Group, Title } from '@mantine/core';
+import { Avatar, Box, Group, Stack, Title } from '@mantine/core';
 import styles from './index.module.scss';
-import { ApprovalRequest } from 'types';
 import Text from '@components/Text';
+import Link from '@components/Link';
+import { getShortenedAddress, getTxExpolerLink } from '@utils/env';
+import { ReactComponent as CopySvg } from 'assets/img/copy-icon.svg';
+import { ApprovalRequest } from 'types';
 
-function SignMessage() {
+function MarketplaceApproval() {
   const voyageController = useVoyageController();
-  const { signRequestId } = useParams();
+  const { approvalId } = useParams();
   const pendingSignRequests = useAppSelector(
     (state) => state.core.pendingApprovals
   );
-  const pendingSignRequest: ApprovalRequest =
-    pendingSignRequests[signRequestId!];
+  const pendingSignRequest: ApprovalRequest = pendingSignRequests[approvalId!];
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
@@ -50,6 +52,7 @@ function SignMessage() {
       align="stretch"
       className={styles.root}
       spacing={0}
+      noWrap
     >
       <Group align="center" spacing={11}>
         <Title className={styles.title} order={1}>
@@ -72,17 +75,50 @@ function SignMessage() {
         </VoyagePaper>
       </Group>
       <Group direction="column" sx={{ flexGrow: 1 }} spacing={10} mt={10}>
-        <Text type="secondary">Message</Text>
+        <Text type="secondary">Permission Requested</Text>
         <VoyagePaper
           px={22}
           py={20}
           className={styles.messageBox}
           sx={{ width: 310, flexGrow: 1, maxHeight: 210 }}
         >
-          {pendingSignRequest.metadata.message}
+          <Stack spacing={10}>
+            {/* TODO: wETH should be dynamic */}
+            <Text weight="bold" size="lg">
+              Give permission to access your wETH
+            </Text>
+            <Text>
+              By granting permission, you are allowing the following contract to
+              access your funds:
+            </Text>
+            <Link
+              link={getTxExpolerLink(pendingSignRequest.metadata.calldata)}
+              text={getShortenedAddress(pendingSignRequest.metadata.calldata)}
+            />
+          </Stack>
         </VoyagePaper>
       </Group>
-      <Box mt={16} className={styles.buttons}>
+      <Group direction="column" sx={{ flexGrow: 1 }} spacing={10} mt={10}>
+        <Text type="secondary">Data</Text>
+        <VoyagePaper
+          px={22}
+          py={20}
+          className={styles.messageBox}
+          sx={{ width: 310, flexGrow: 1, maxHeight: 210 }}
+        >
+          <Stack spacing={10}>
+            {/* TODO: function name should be decoded from calldata */}
+            <Text weight="bold" size="lg">
+              Function: Approve
+            </Text>
+            <Text>
+              {getShortenedAddress(pendingSignRequest.metadata.calldata)}{' '}
+              <CopySvg />
+            </Text>
+          </Stack>
+        </VoyagePaper>
+      </Group>
+      <Box my={16} className={styles.buttons}>
         <Button
           className={styles.reject}
           onClick={() => handleReject(pendingSignRequest.id)}
@@ -98,11 +134,11 @@ function SignMessage() {
           disabled={loading}
           onClick={() => handleApprove(pendingSignRequest.id)}
         >
-          Sign
+          Confirm
         </Button>
       </Box>
     </Group>
   );
 }
 
-export default SignMessage;
+export default MarketplaceApproval;

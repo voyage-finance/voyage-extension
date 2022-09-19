@@ -5,15 +5,9 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useAppSelector } from '@hooks/useRedux';
 import VoyagePaper from '@components/Card';
 import { Text, Title } from '@mantine/core';
-import { IClientMeta } from '@walletconnect/types';
 import { ReactComponent as CircleCheck } from '@images/circle-check-icon.svg';
 import styles from './WalletConnect.module.scss';
-
-interface Approval<TMeta = any> {
-  id: string;
-  origin: string;
-  metadata: TMeta;
-}
+import { ApprovalRequest } from 'types';
 
 function WalletConnectApproval() {
   const voyageController = useVoyageController();
@@ -21,15 +15,15 @@ function WalletConnectApproval() {
   const pendingApprovals = useAppSelector(
     (state) => state.core.pendingApprovals
   );
-  const pendingApproval: Approval<IClientMeta> = pendingApprovals[approvalId!];
+  const pendingApproval: ApprovalRequest = pendingApprovals[approvalId!];
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
   const handleApproveSession = async (id: string) => {
     try {
       setLoading(true);
-      await voyageController.approveWalletConnectSession(id);
-      navigate('/home');
+      await voyageController.approveApprovalRequest(id);
+      navigate('/');
     } catch {
       console.error('failed to approve');
     } finally {
@@ -39,7 +33,7 @@ function WalletConnectApproval() {
   const handleRejectSession = async (id: string) => {
     try {
       setLoading(true);
-      await voyageController.rejectWalletConnectionSession(id);
+      await voyageController.rejectApprovalRequest(id);
     } catch {
       console.error('failed to reject');
     } finally {
@@ -60,7 +54,7 @@ function WalletConnectApproval() {
           </Text>
           <VoyagePaper className={styles.uri}>
             <Text className={styles.text} size="md" color="white">
-              {pendingApproval?.metadata?.url}
+              {pendingApproval?.client.url}
             </Text>
           </VoyagePaper>
           <div className={styles.permissions}>

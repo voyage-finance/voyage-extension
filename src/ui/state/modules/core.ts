@@ -5,7 +5,6 @@ import {
   ApprovalRequest,
   KeyStoreStage,
   AuthInfo,
-  SignRequest,
   Account,
 } from '../../../types';
 import { IWalletConnectSession } from '@walletconnect/types';
@@ -19,7 +18,6 @@ export type TabInfo = {
 
 interface CoreState {
   pendingApprovals: Record<string, ApprovalRequest>;
-  pendingSignRequests: Record<string, SignRequest>;
   transactions: Record<string, Transaction>;
   sessions: Record<string, IWalletConnectSession>;
   pendingLogin?: PendingLogin;
@@ -34,7 +32,6 @@ interface CoreState {
 const initialState: CoreState = {
   pendingApprovals: {},
   sessions: {},
-  pendingSignRequests: {},
   transactions: {},
   stage: KeyStoreStage.Uninitialized,
   isTermsSigned: false,

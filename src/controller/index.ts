@@ -22,6 +22,8 @@ import { sendSignInLinkToEmail } from 'firebase/auth';
 import { createRandomFingerprint } from '@utils/random';
 import { registerMessageListeners } from './runtimeMessage';
 import { getJsonProvider } from '@utils/env';
+import { ApprovalType } from 'types';
+import { IClientMeta } from '@walletconnect/types';
 
 interface WalletConnectSessionRequest {
   chainId: number | null;
@@ -101,16 +103,13 @@ export class VoyageController extends SafeEventEmitter {
       cancelLogin: this.cancelLogin,
       setTermsAgreed: this.setTermsAgreed,
       computeCounterfactualAddress: this.computeCounterfactualAddress,
-      approveWalletConnectSession:
-        this.store.walletConnectStore.approveConnectionRequest,
-      rejectWalletConnectionSession:
-        this.store.walletConnectStore.rejectConnectionRequest,
       getBalance: this.getBalance,
       fetchVault: this.fetchVault,
       registerVaultWatcher: this.registerVaultWatcher,
       openNotificationWindow: this.openNotificationWindow,
       populateBuyNow: this.populateBuyNow,
       createRelayHttpRequest: this.createRelayHttpRequest,
+      ...this.store.walletConnectStore.api,
       ...this.store.transactionStore.api,
     };
   }
@@ -147,11 +146,10 @@ export class VoyageController extends SafeEventEmitter {
             try {
               const [req] = payload.params!;
               const id = nanoid();
-              this.store.walletConnectStore.addConnectionRequest({
+              this.store.walletConnectStore.addApprovalRequest({
                 id,
-                origin: req.peerMeta.url,
-                type: 'wc',
-                metadata: req.peerMeta,
+                type: ApprovalType.WALLET_CONNECT,
+                client: req.peerMeta as IClientMeta,
                 onApprove: async () => {
                   const { chainId } = await this.provider.getNetwork();
                   console.log('chain id: ', chainId);

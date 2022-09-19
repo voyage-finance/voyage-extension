@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { useNetwork } from 'wagmi';
-import { Code } from '@mantine/core';
 import AppConnector from '@components/AppConnector';
 import VoyagePaper from '@components/Card';
 import styles from './index.module.scss';
@@ -8,8 +7,6 @@ import { App, getDappForTab } from '@utils/dapps';
 import { useAppDispatch, useAppSelector } from '@hooks/useRedux';
 import { useAutoConnect } from '@utils/chain';
 import { updateActiveTab } from '@state/modules/core';
-import Link from '@components/Link';
-import { getShortenedAddress, getTxExpolerLink } from '@utils/env';
 
 const Home: React.FC = () => {
   const { chain } = useNetwork();

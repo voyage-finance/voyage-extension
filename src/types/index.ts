@@ -25,22 +25,19 @@ export interface AuthInfo {
   email: string;
 }
 
-export interface ApprovalRequest {
+export interface ApprovalRequest<TMeta = any> {
   id: string;
-  origin: string;
-  type: string;
-  metadata: any;
+  type: ApprovalType;
+  metadata?: TMeta;
+  client: IClientMeta;
   onApprove: () => Promise<void>;
   onReject: () => Promise<void>;
 }
 
-export interface SignRequest {
-  id: string;
-  address: string;
-  message: string;
-  metadata: IClientMeta;
-  onApprove: () => Promise<void>;
-  onReject: () => Promise<void>;
+export enum ApprovalType {
+  WALLET_CONNECT,
+  SIGN_MESSAGE,
+  APPROVE_MARKETPLACE,
 }
 
 export enum MessageAction {

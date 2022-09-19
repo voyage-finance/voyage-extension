@@ -2,7 +2,6 @@ import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import Connect from '@containers/Connect';
 import styles from './index.module.scss';
 import Approval from '@containers/Approval';
-import SignMessage from '@containers/SignMessage';
 import Home from '@containers/Home';
 import MenuBar from '@components/MenuBar/MenuBar';
 import Settings from '@containers/Settings';
@@ -30,7 +29,7 @@ import {
   ONBOARD_LOGIN_ROUTE,
   ONBOARD_TERMS_ROUTE,
   PURCHASE_OVERVIEW_ROUTE,
-  SIGN_MESSAGE_ROUTE,
+  APPROVAL_ROUTE,
   VAULT_DEPOSIT_DEPLOYED_ROUTE,
   VAULT_DEPOSIT_METHODS_ROUTE,
 } from '@utils/constants';
@@ -51,8 +50,8 @@ const Router: React.FC = () => {
   const stage = useAppSelector((state) => state.core.stage);
   const isTermsSigned = useAppSelector((state) => state.core.isTermsSigned);
   const vault = useAppSelector((state) => state.core.vaultAddress);
-  const pendingSignRequests = useAppSelector((state) => {
-    return Object.values(state.core.pendingSignRequests);
+  const pendingApprovalRequests = useAppSelector((state) => {
+    return Object.values(state.core.pendingApprovals);
   });
 
   const [waitingDeploy, setWaitingDeploy] = useState(false);
@@ -63,12 +62,12 @@ const Router: React.FC = () => {
 
   const checkStatusAndNavigate = async () => {
     const [unconfirmedTx] = await controller.getUnconfirmedTransactions();
-    const [pendingSignRequest] = pendingSignRequests;
+    const [pendingApprovalRequest] = pendingApprovalRequests;
     const isNotification =
       getEnvironmentType() === ExtensionEnvType.Notification;
     const isTab = getEnvironmentType() === ExtensionEnvType.Fullscreen;
-    if (isNotification && pendingSignRequest) {
-      navigate(`${SIGN_MESSAGE_ROUTE}/${pendingSignRequest.id}`);
+    if (isNotification && pendingApprovalRequest) {
+      navigate(`${APPROVAL_ROUTE}/${pendingApprovalRequest.id}`);
     } else if (isTab && unconfirmedTx) {
       navigate(`${PURCHASE_OVERVIEW_ROUTE}/${unconfirmedTx.id}`);
     } else {
@@ -121,7 +120,6 @@ const Router: React.FC = () => {
         <Route path="/connect" element={<Connect />} />
         <Route path="/connections" element={<Connections />} />
         <Route path="/approval/:approvalId" element={<Approval />} />
-        <Route path="/sign/:signRequestId" element={<SignMessage />} />
         <Route path={PURCHASE_OVERVIEW_ROUTE} element={<Onboard />}>
           <Route path=":txId" element={<PurchaseCart />} />
           <Route path="confirmed/:txId" element={<PurchaseConfirmed />} />
