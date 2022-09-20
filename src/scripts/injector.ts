@@ -13,39 +13,37 @@ initializeProvider({
   connectionStream,
 });
 
-console.log('ran injected script');
-
 const mux = new ObjectMultiplex();
-pump(connectionStream, mux, connectionStream, (err) => {
+pump(connectionStream, mux, connectionStream, () => {
   console.error('DOM stream ended unexpectedly');
 });
 const domStream = mux.createStream('voyage-dom');
-domStream.on('end', (error) => {
+domStream.on('end', () => {
   console.error('dom stream ended!');
 });
 domStream.on('data', (data) => {
   console.log('dom stream received message: ', data);
 });
 
-const buttons = window.document.querySelectorAll('button');
-const buyNow = Array.from(buttons).find((btn) =>
-  btn?.innerText.includes('Buy now')
-);
+// const buttons = window.document.querySelectorAll('button');
+// const buyNow = Array.from(buttons).find((btn) =>
+//   btn?.innerText.includes('Buy now')
+// );
 
-console.log('buy now button: ', buyNow);
-if (!document.getElementById('vyg-buy-now')) {
-  const voyageBuyNow = document.createElement('button');
-  voyageBuyNow.className = 'voyageBNPL';
-  voyageBuyNow.innerText = 'Buy with Voyage';
-  document.body.appendChild(voyageBuyNow);
-  voyageBuyNow.onclick = function (evt) {
-    evt.stopPropagation();
-    evt.preventDefault();
-    console.log('buying now with voyage');
-  };
-}
+// console.log('buy now button: ', buyNow);
+// if (!document.getElementById('vyg-buy-now')) {
+//   const voyageBuyNow = document.createElement('button');
+//   voyageBuyNow.className = 'voyageBNPL';
+//   voyageBuyNow.innerText = 'Buy with Voyage';
+//   document.body.appendChild(voyageBuyNow);
+//   voyageBuyNow.onclick = function (evt) {
+//     evt.stopPropagation();
+//     evt.preventDefault();
+//     console.log('buying now with voyage');
+//   };
+// }
 
-(async function () {
-  const res = await window.voyage.request({ method: 'eth_requestAccounts' });
-  console.log('inpage received response: ', res);
-})();
+// (async function () {
+//   const res = await window.voyage.request({ method: 'eth_requestAccounts' });
+//   console.log('inpage received response: ', res);
+// })();
