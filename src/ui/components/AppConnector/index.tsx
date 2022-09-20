@@ -7,6 +7,7 @@ import styles from './index.module.scss';
 import { IWalletConnectSession } from '@walletconnect/types';
 import { App } from '@utils/dapps';
 import useVoyageController from '@hooks/useVoyageController';
+import PepePlacholderImg from '@images/pepe-placeholder.png';
 
 interface Props {
   app?: App;
@@ -23,12 +24,15 @@ const AppConnector = (props: Props) => {
     <Card className={styles.root}>
       <div className={styles.inner}>
         <div className={styles.icon}>
-          <img alt="todo" src={session?.peerMeta?.icons[0] ?? app?.icon} />
+          <img
+            alt="todo"
+            src={session?.peerMeta?.icons[0] ?? app?.icon ?? PepePlacholderImg}
+          />
         </div>
         <div className={styles.info}>
           <div>
             <Text color="white" size="md" className={styles.name}>
-              {app?.name ?? session?.peerMeta?.name}
+              {app?.name ?? session?.peerMeta?.name ?? 'Unrecognized App'}
             </Text>
           </div>
           <div className={styles.connectionInfo}>
