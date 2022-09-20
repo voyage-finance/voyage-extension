@@ -11,6 +11,23 @@ interface BuyNowParams {
   data: BytesLike;
 }
 
+export enum FUNCTIONS {
+  approve,
+  matchAskWithTakerBidUsingETHAndWETH,
+  matchAskWithTakerBid,
+}
+
+const FunctionSelectorMap: Record<string, FUNCTIONS> = {
+  '0x095ea7b3': FUNCTIONS.approve,
+  '0xb4e4b296': FUNCTIONS.matchAskWithTakerBidUsingETHAndWETH,
+  '0x38e29209': FUNCTIONS.matchAskWithTakerBid,
+};
+
+export const decodeFunctionName = (calldata: BytesLike = ''): FUNCTIONS => {
+  const selector = ethers.utils.hexlify(calldata).slice(0, 10);
+  return FunctionSelectorMap[selector];
+};
+
 export const decodeMarketplaceCalldata = (
   transaction: TransactionRequest
 ): BuyNowParams => {
