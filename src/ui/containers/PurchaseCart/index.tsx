@@ -12,6 +12,7 @@ import {
 import { useEffect, useState } from 'react';
 import { ReactComponent as WalletSvg } from 'assets/img/wallet.svg';
 import { ReactComponent as EthSvg } from 'assets/img/eth-icon.svg';
+import PepePlacholderImg from '@images/pepe-placeholder.png';
 import Button from '@components/Button';
 import BuyMethodSelect, { PaymentOption } from '@components/BuyMethodSelect';
 import PaymentHoverBoard from '@components/PaymentHoverBoard';
@@ -128,13 +129,13 @@ const PurchaseCart: React.FC = () => {
           <ErrorBox mt={20} mb={7} error={orderPreview.error} />
         )}
         <Group mt={15}>
-          {orderPreview?.metadata?.image ? (
+          {!isLoading ? (
             <Image
               width={50}
               fit="contain"
               radius={10}
               height={50}
-              src={orderPreview?.metadata.image}
+              src={orderPreview?.metadata?.image ?? PepePlacholderImg}
               alt="image"
             />
           ) : (
