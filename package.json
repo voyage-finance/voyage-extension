@@ -150,6 +150,7 @@
     "devtools:react": "react-devtools",
     "gentypes": "typechain --target=ethers-v5 ./src/abis/**/*.json --out-dir ./src/contracts",
     "build": "node scripts/build.js",
+    "package": "zip -r voyage-extension.zip build",
     "postinstall": "husky install"
   },
   "eslintConfig": {

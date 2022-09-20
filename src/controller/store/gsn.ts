@@ -30,9 +30,9 @@ export class GsnStore {
     );
     const config: Partial<GSNConfig> = {
       paymasterAddress:
-        '0x1181C3d48Dd70A162E88689377Da9341A95873d5'.toLowerCase(),
+        getNetworkConfiguration().contracts.paymaster.toLowerCase(), // do not remove toLowerCase, as this breaks `RelayClient`
       auditorsCount: 0,
-      preferredRelays: ['http://127.0.0.1:3000' || process.env.VOYAGE_API_URL],
+      preferredRelays: [process.env.VOYAGE_API_URL ?? 'http://127.0.0.1:3000'],
     };
 
     const endpoint = getNetworkConfiguration().endpoint;
