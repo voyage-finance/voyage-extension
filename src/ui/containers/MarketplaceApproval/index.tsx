@@ -11,6 +11,7 @@ import Link from '@components/Link';
 import { getShortenedAddress, getTxExpolerLink } from '@utils/env';
 import { ReactComponent as CopySvg } from 'assets/img/copy-icon.svg';
 import { ApprovalRequest } from 'types';
+import TitleWithLine from '@components/atoms/TitleWithLine';
 
 function MarketplaceApproval() {
   const voyageController = useVoyageController();
@@ -54,12 +55,7 @@ function MarketplaceApproval() {
       spacing={0}
       noWrap
     >
-      <Group align="center" spacing={11}>
-        <Title className={styles.title} order={1}>
-          Signature Request
-        </Title>
-        <span className={styles.line} />
-      </Group>
+      <TitleWithLine>Approval Request</TitleWithLine>
       <Group direction="column" spacing={10} mt={15}>
         <Text type="secondary">Origin</Text>
         <VoyagePaper px={25} py={17} sx={{ width: 310 }}>

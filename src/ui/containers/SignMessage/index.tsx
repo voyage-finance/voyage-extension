@@ -8,6 +8,7 @@ import { Avatar, Box, Group, Title } from '@mantine/core';
 import styles from './index.module.scss';
 import { ApprovalRequest } from 'types';
 import Text from '@components/Text';
+import TitleWithLine from '@components/atoms/TitleWithLine';
 
 function SignMessage() {
   const voyageController = useVoyageController();
@@ -51,12 +52,7 @@ function SignMessage() {
       className={styles.root}
       spacing={0}
     >
-      <Group align="center" spacing={11}>
-        <Title className={styles.title} order={1}>
-          Signature Request
-        </Title>
-        <span className={styles.line} />
-      </Group>
+      <TitleWithLine>Signature Request</TitleWithLine>
       <Group direction="column" spacing={10} mt={15}>
         <Text type="secondary">Origin</Text>
         <VoyagePaper px={25} py={17} sx={{ width: 310 }}>
