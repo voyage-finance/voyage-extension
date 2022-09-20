@@ -6,27 +6,29 @@
   padding: 6px 18px;
 
   .appConnector {
-    margin-bottom: 6px;
+    margin-top: 16px;
   }
-  .main {
+
+  .marketplaceCard{
+    flex: 1;
+    height: 125px;
+    padding: 0 19px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    text-align: center;
-    justify-content: center;
-    flex: 1;
-    padding: 12px;
-    .networkNotSupported {
-      align-items: center;
-      display: flex;
-      flex-direction: column;
-      width: 275px;
-      .title {
-        margin-bottom: 12px;
-      }
-      .copy {
-        margin-bottom: 22px;
-      }
+
+    .logo {
+      margin-top: auto;
+    }
+
+    .letsGoBtn {
+      background: rgba(255, 255, 255, 0.1);
+      font-weight: 700;
+      font-size: 14px !important;
+      line-height: 16px;
+      width: 100px;
+      margin-bottom: 26px;
+      margin-top: 14px;
     }
   }
 
