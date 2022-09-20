@@ -7,6 +7,12 @@ import { App, getDappForTab } from '@utils/dapps';
 import { useAppDispatch, useAppSelector } from '@hooks/useRedux';
 import { useAutoConnect } from '@utils/chain';
 import { updateActiveTab } from '@state/modules/core';
+import TitleWithLine from '@components/atoms/TitleWithLine';
+import { Group } from '@mantine/core';
+import { ReactComponent as LookrareIcon } from 'assets/img/looksrare-w-text.svg';
+import { ReactComponent as OpenseaIcon } from 'assets/img/opensea-w-text.svg';
+import Button from '@components/Button';
+import CollectionCarousel from './carousel';
 
 const Home: React.FC = () => {
   const { chain } = useNetwork();
@@ -59,14 +65,21 @@ const Home: React.FC = () => {
 
   return (
     <div className={styles.root}>
+      <TitleWithLine size="md">Discover</TitleWithLine>
       <div className={styles.appConnector}>
         <AppConnector app={app} session={session} />
       </div>
-      <VoyagePaper className={styles.main}>
-        <div>
-          <div>Main Page</div>
-        </div>
-      </VoyagePaper>
+      <Group spacing={11} my={16} noWrap>
+        <VoyagePaper className={styles.marketplaceCard}>
+          <OpenseaIcon className={styles.logo} />
+          <Button className={styles.letsGoBtn}>LET'S GO!</Button>
+        </VoyagePaper>
+        <VoyagePaper className={styles.marketplaceCard}>
+          <LookrareIcon className={styles.logo} />
+          <Button className={styles.letsGoBtn}>LET'S GO!</Button>
+        </VoyagePaper>
+      </Group>
+      <CollectionCarousel />
     </div>
   );
 };
