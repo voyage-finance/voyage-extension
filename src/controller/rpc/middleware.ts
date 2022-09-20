@@ -3,6 +3,7 @@ import { createAsyncMiddleware } from 'json-rpc-engine';
 import { ethers } from 'ethers';
 import { TransactionRequest } from '@ethersproject/providers';
 import { IClientMeta } from '@walletconnect/types';
+import { decodeFunctionName, FUNCTIONS } from '@utils/decoder';
 
 /**
  * Creates JsonRpcEngine middleware based on ethers.providers.JsonRpcProvider.
@@ -51,7 +52,8 @@ export const createVoyageMiddleware = (service: VoyageRpcService) => {
         const params = req.params as unknown[];
         const txRequest = params[0] as TransactionRequest;
         let result;
-        if (txRequest.data?.length === 138) {
+        const functionName = decodeFunctionName(txRequest.data);
+        if (functionName === FUNCTIONS.approve) {
           result = await service.handleApproveMarketplace(
             txRequest.data! as string,
             params[1] as IClientMeta
