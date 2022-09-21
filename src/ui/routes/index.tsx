@@ -36,6 +36,7 @@ import {
 import { ExtensionEnvType, getEnvironmentType } from '@utils/extension';
 import PurchaseCart from '@containers/PurchaseCart';
 import PurchaseConfirmed from '@containers/PurchaseConfirmed';
+import NavigationBar from '@components/NavigationBar';
 
 const Router: React.FC = () => {
   const location = useLocation();
@@ -136,6 +137,7 @@ const Router: React.FC = () => {
           <Route path="deposit/deployed" element={<VaultDeployed />} />
         </Route>
       </Routes>
+      <NavigationBar />
       {process.env.VOYAGE_DEBUG && (
         <div
           style={{ color: 'rgba(255, 255, 255, 0.1)' }}
