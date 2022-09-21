@@ -63,6 +63,8 @@ const Home: React.FC = () => {
     fetchCurrentTab();
   }, []);
 
+  const handleMarketplaceClick = (link: string) => window.open(link, '_blank');
+
   return (
     <div className={styles.root}>
       <TitleWithLine size="md">Discover</TitleWithLine>
@@ -72,11 +74,21 @@ const Home: React.FC = () => {
       <Group spacing={11} my={16} noWrap>
         <VoyagePaper className={styles.marketplaceCard}>
           <OpenseaIcon className={styles.logo} />
-          <Button className={styles.letsGoBtn}>LET'S GO!</Button>
+          <Button
+            className={styles.letsGoBtn}
+            onClick={() => handleMarketplaceClick('https://opensea.io/')}
+          >
+            LET'S GO!
+          </Button>
         </VoyagePaper>
         <VoyagePaper className={styles.marketplaceCard}>
           <LookrareIcon className={styles.logo} />
-          <Button className={styles.letsGoBtn}>LET'S GO!</Button>
+          <Button
+            className={styles.letsGoBtn}
+            onClick={() => handleMarketplaceClick('https://looksrare.org/')}
+          >
+            LET'S GO!
+          </Button>
         </VoyagePaper>
       </Group>
       <CollectionCarousel />
