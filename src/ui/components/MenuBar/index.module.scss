@@ -74,6 +74,10 @@
             line-height: 12px;
           }
         }
+        &:hover {
+          cursor: pointer;
+          opacity: 0.9;
+        }
       }
     }
   }
