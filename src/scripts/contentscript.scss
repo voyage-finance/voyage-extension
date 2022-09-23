@@ -1,12 +1,27 @@
-.voyage--bnpl {
+.voyage-btn {
   display: flex;
-  position: relative;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(90deg, #ffa620 0%, #ef5b25 100%);
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.voyage-btn--looks {
   height: 3rem;
   width: 100%;
   font-size: 0.875rem;
-  align-items: center;
-  justify-content: center;
+  font-weight: 600;
   border-radius: 4px;
-  background: linear-gradient(90deg, #ffa620 0%, #ef5b25 100%);
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.voyage-btn--os {
+  display: inline-flex;
+  padding: 17px 24px;
+  width: 50%;
+  color: #fff;
+  font-weight: 600;
+  margin-right: 8px;
+  box-shadow: none;
+  border: none;
+  border-radius: 12px;
 }
