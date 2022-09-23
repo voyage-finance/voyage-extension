@@ -1,9 +1,8 @@
 import Card from '@components/Card';
 import Text from '@components/Text';
-import { Box, Group, Stack } from '@mantine/core';
+import { Box, Group, Image, Stack } from '@mantine/core';
 import * as React from 'react';
 import { ReactComponent as EthSvg } from 'assets/img/eth-icon.svg';
-import { ReactComponent as DoodleSvg } from 'assets/img/doodle.svg';
 import Button from '@components/Button';
 import { PaymentOption } from '@components/BuyMethodSelect';
 import PaymentHoverBoard from '@components/PaymentHoverBoard';
@@ -12,6 +11,7 @@ import RepaymentSchedule from './RepaymentSchedule';
 import { useParams } from 'react-router-dom';
 import { formatAmount, fromBigNumber } from '@utils/bn';
 import BigNumber from 'bignumber.js';
+import PepePlacholderImg from '@images/pepe-placeholder.png';
 import Link from '@components/Link';
 import { getShortenedAddress, getTxExpolerLink } from '@utils/env';
 
@@ -60,7 +60,14 @@ const PurchaseConfirmed: React.FC = () => {
           You’ve got yourself a keeper :)
         </Text>
         <Group mt={23} position="center" spacing={0}>
-          <DoodleSvg />
+          <Image
+            width={50}
+            fit="contain"
+            radius={10}
+            height={50}
+            src={orderPreview?.metadata?.image ?? PepePlacholderImg}
+            alt="image"
+          />
           <Stack spacing={0} ml={16}>
             <Text weight={'bold'} size="lg">
               {name || 'undefined name'}
