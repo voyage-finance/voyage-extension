@@ -12,7 +12,7 @@ const TitleWithLine: React.FunctionComponent<IProps> = ({
   ...props
 }) => {
   return (
-    <Group align="center" spacing={11}>
+    <Group align="center" spacing={11} {...props}>
       <Title className={cn(styles.title, size == 'md' && styles.md)}>
         {props.children}
       </Title>
