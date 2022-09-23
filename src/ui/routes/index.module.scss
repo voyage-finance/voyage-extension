@@ -12,3 +12,14 @@
   align-items: center;
   justify-content: center;
 }
+
+.debugReset {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  font-size: 8px;
+  color: red;
+  &:hover {
+    cursor: pointer;
+  }
+}

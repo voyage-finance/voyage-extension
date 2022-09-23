@@ -8,11 +8,11 @@ import { useAppDispatch, useAppSelector } from '@hooks/useRedux';
 import { useAutoConnect } from '@utils/chain';
 import { updateActiveTab } from '@state/modules/core';
 import TitleWithLine from '@components/atoms/TitleWithLine';
-import { Group } from '@mantine/core';
+import { Group, Title } from '@mantine/core';
 import { ReactComponent as LookrareIcon } from 'assets/img/looksrare-w-text.svg';
 import { ReactComponent as OpenseaIcon } from 'assets/img/opensea-w-text.svg';
 import Button from '@components/Button';
-import CollectionCarousel from './carousel';
+import TopUpCard from '@components/TopUpCard';
 
 const Home: React.FC = () => {
   const { chain } = useNetwork();
@@ -67,10 +67,16 @@ const Home: React.FC = () => {
 
   return (
     <div className={styles.root}>
-      <TitleWithLine size="md">Discover</TitleWithLine>
+      <TopUpCard />
+      <TitleWithLine size="md" mt={14}>
+        Discover
+      </TitleWithLine>
       <div className={styles.appConnector}>
         <AppConnector app={app} session={session} />
       </div>
+      <Title order={3} mt={30} sx={{ color: 'white' }}>
+        Marketplaces
+      </Title>
       <Group spacing={11} my={16} noWrap>
         <VoyagePaper className={styles.marketplaceCard}>
           <OpenseaIcon className={styles.logo} />
@@ -91,7 +97,7 @@ const Home: React.FC = () => {
           </Button>
         </VoyagePaper>
       </Group>
-      <CollectionCarousel />
+      {/* <CollectionCarousel /> */}
     </div>
   );
 };

@@ -37,6 +37,8 @@ import { ExtensionEnvType, getEnvironmentType } from '@utils/extension';
 import PurchaseCart from '@containers/PurchaseCart';
 import PurchaseConfirmed from '@containers/PurchaseConfirmed';
 import NavigationBar from '@components/NavigationBar';
+import SelectTopUpMethod from '@containers/TopUp/SelectTopUpMethod';
+import DirectTopUp from '@containers/TopUp/DirectTopUp';
 
 const Router: React.FC = () => {
   const location = useLocation();
@@ -136,14 +138,15 @@ const Router: React.FC = () => {
           <Route path="deposit/await" element={<AwaitDeposit />} />
           <Route path="deposit/deployed" element={<VaultDeployed />} />
         </Route>
+        <Route path="/vault/">
+          <Route path="topup/method" element={<SelectTopUpMethod />} />
+          <Route path="topup/direct" element={<DirectTopUp />} />
+        </Route>
       </Routes>
-      <NavigationBar />
+      {!isFullscreenMode && <NavigationBar />}
       {process.env.VOYAGE_DEBUG && (
-        <div
-          style={{ color: 'rgba(255, 255, 255, 0.1)' }}
-          onClick={resetStorage}
-        >
-          Clear storage
+        <div className={styles.debugReset} onClick={resetStorage}>
+          RESET
         </div>
       )}
     </div>
