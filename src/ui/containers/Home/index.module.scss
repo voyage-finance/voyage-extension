@@ -3,13 +3,13 @@
   flex-direction: column;
   height: 100%;
   width: 100%;
-  padding: 6px 18px;
+  padding: 23px;
 
   .appConnector {
     margin-top: 16px;
   }
 
-  .marketplaceCard{
+  .marketplaceCard {
     flex: 1;
     height: 125px;
     padding: 0 19px;
@@ -31,5 +31,4 @@
       margin-top: 14px;
     }
   }
-
 }
