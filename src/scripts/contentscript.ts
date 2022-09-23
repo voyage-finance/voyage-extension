@@ -6,7 +6,7 @@ import {
 } from '@utils/constants';
 import { setupMultiplex } from '@utils/index';
 import { BaseProvider } from '@voyage-finance/providers';
-import { OrderData } from 'controller/store/types';
+import { NFTData, OrderData } from 'controller/store/types';
 import PortStream from 'extension-port-stream';
 import { debounce } from 'lodash';
 import controllerFactory from 'rpc/virtual/client';
@@ -17,7 +17,6 @@ import './contentscript.scss';
 const bgPort = chrome.runtime.connect({ name: 'voyage-contentscript' });
 const bgStream = new PortStream(bgPort as Runtime.Port);
 const mux = setupMultiplex(bgStream as unknown as Duplex, 'bootstrap');
-//eslint-disable-next-line
 const controller = controllerFactory(mux.createStream('controller') as Duplex);
 
 //eslint-disable-next-line
@@ -33,14 +32,12 @@ async function documentFullyLoaded(): Promise<void> {
   });
 }
 
-function getMarketplace(): Marketplace {
+function getMarketplace(): Marketplace | undefined {
   const host = window.location.host;
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const os = OPENSEA_HOSTS[+process.env.CHAIN_ID! as ChainID];
   const looks = LOOKS_HOSTS[+process.env.CHAIN_ID! as ChainID];
-  console.log('os: ', os);
-  console.log('looks: ', looks);
   switch (host) {
     case os:
       return Marketplace.Opensea;
@@ -53,13 +50,37 @@ function getMarketplace(): Marketplace {
 
 const LOOKS_ITEM_PATH_RE = /^\/collections\/(0x[a-fA-F0-9]{40})\/([0-9]+)$/i;
 
-function extractLooksData(
+function extractLooksData(path: string): NFTData | undefined {
+  const [, collection, tokenId] = path.match(LOOKS_ITEM_PATH_RE) ?? [];
+  return { collection, tokenId };
+}
+
+const OS_ITEM_PATH_RE = /^\/assets\/[a-z]+\/(0x[a-fA-F0-9]{40})\/([0-9]+)$/i;
+
+function extractOSData(path: string): NFTData | undefined {
+  const [, collection, tokenId] = path.match(OS_ITEM_PATH_RE) ?? [];
+  return { collection, tokenId };
+}
+
+function extractOrderData(
   path: string,
   marketplace: Marketplace
 ): OrderData | undefined {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [, collection, tokenId] = path.match(LOOKS_ITEM_PATH_RE) ?? [];
-  return { marketplace, collection, tokenId };
+  switch (marketplace) {
+    case Marketplace.Looks: {
+      const orderData = extractLooksData(path);
+      if (orderData) return { ...orderData, marketplace };
+      break;
+    }
+    case Marketplace.Opensea: {
+      const orderData = extractOSData(path);
+      if (orderData) return { ...orderData, marketplace };
+      break;
+    }
+    default:
+      return;
+  }
+  return;
 }
 
 let currentButton: HTMLElement | null = null;
@@ -69,11 +90,14 @@ async function dispatchOrder(order: OrderData) {
   return await controller.createOrder(order);
 }
 
-function createButtonNode(order: OrderData) {
+function createButtonNode(order: OrderData, marketplace: Marketplace) {
   const voyageButton = document.createElement('button');
   const text = document.createTextNode('Buy with Voyage');
+  const className =
+    marketplace === Marketplace.Looks ? 'voyage-btn--looks' : 'voyage-btn--os';
   voyageButton.appendChild(text);
-  voyageButton.classList.add('voyage--bnpl');
+  voyageButton.classList.add('voyage-btn');
+  voyageButton.classList.add(className);
   voyageButton.dataset.id = 'voyage-bnpl-button';
   voyageButton.dataset.collection = order.collection;
   voyageButton.dataset.tokenId = order.tokenId;
@@ -83,43 +107,90 @@ function createButtonNode(order: OrderData) {
   return voyageButton;
 }
 
-async function init() {
-  await documentFullyLoaded();
-  const marketplace = getMarketplace();
-  if (marketplace === Marketplace.Unsupported) {
+function getLooksButton(): HTMLElement {
+  const buyNowButton = document.querySelector('[data-id="buy-now-button"]');
+  return buyNowButton as HTMLElement;
+}
+
+function getOSButton(): HTMLElement {
+  const buttons = document.querySelectorAll('button');
+  let buyNowButton: HTMLElement | null = null;
+  for (const btn of buttons) {
+    if (
+      btn.innerText.includes('Buy now') ||
+      btn.textContent?.includes('Buy now')
+    ) {
+      buyNowButton = btn as HTMLElement;
+      break;
+    }
+  }
+  if (buyNowButton !== null) {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    buyNowButton = buyNowButton.parentElement!;
+  }
+
+  return buyNowButton as HTMLElement;
+}
+
+function getBuyButton(marketplace: Marketplace): HTMLElement | null {
+  let buyButton: HTMLElement | null = null;
+  switch (marketplace) {
+    case Marketplace.Looks:
+      buyButton = getLooksButton();
+      break;
+    case Marketplace.Opensea:
+      buyButton = getOSButton();
+      break;
+  }
+  return buyButton;
+}
+
+function insertButton(order: OrderData, marketplace: Marketplace) {
+  const buyButton = getBuyButton(marketplace);
+  if (!buyButton) {
+    console.error(
+      'Failed to locate the native marketplace buy button. Aborting.'
+    );
     return;
   }
-  console.log(getMarketplace());
-  console.log('location: ', location);
+  const container = buyButton.parentElement;
+  if (container === null) {
+    console.error('The buy button has no container. Aborting.');
+    return;
+  }
+
+  if (currentButton) {
+    if (
+      currentButton.dataset.collection === order.collection &&
+      currentButton.dataset.tokenId === order.tokenId
+    ) {
+      // in this case we already injected. do nothing.
+      return;
+    } else {
+      // we did inject but we have now navigated to another page.
+      currentButton.remove();
+    }
+  }
+  const vButton = createButtonNode(order, marketplace);
+  container.insertBefore(vButton, buyButton);
+  currentButton = vButton;
+}
+
+async function init() {
+  await documentFullyLoaded();
   // Options for the observer (which mutations to observe)
   const config = { attributes: false, childList: true, subtree: false };
 
   function observerCallback() {
+    const marketplace = getMarketplace();
+    if (!marketplace || marketplace === Marketplace.Unsupported) {
+      return;
+    }
     const order =
       pathnameCache[document.location.pathname] ??
-      extractLooksData(window.location.pathname, marketplace);
-    console.log('match: ', order);
+      extractOrderData(window.location.pathname, marketplace);
     if (order) {
-      const buyNowButton = document.querySelector('[data-id="buy-now-button"]');
-      console.log('buy now buton: ', buyNowButton);
-      // if we got the button let's replace it with our own
-      if (buyNowButton) {
-        if (currentButton) {
-          if (
-            currentButton.dataset.collection === order.collection &&
-            currentButton.dataset.tokenId === order.tokenId
-          ) {
-            // in this case we already injected. do nothing.
-            return;
-          } else {
-            // we did inject but we have now navigated to another page.
-            currentButton.remove();
-          }
-        }
-        const vButton = createButtonNode(order);
-        buyNowButton?.parentNode?.insertBefore(vButton, buyNowButton);
-        currentButton = vButton;
-      }
+      insertButton(order, marketplace);
     }
   }
 

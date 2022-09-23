@@ -43,8 +43,7 @@ export const NetworkConfigurationMap: Record<Network, NetworkConfiguration> = {
       [Contracts.Voyage]: VOYAGE_GOERLI,
       [Contracts.LooksRare]: LOOKS_EXCHANGE_TESTNET,
       [Contracts.Seaport]: SEAPORT_EXCHANGE_TESTNET,
-      // TODO: @ian use the VoyagePaymaster
-      [Contracts.Paymaster]: '0x1181C3d48Dd70A162E88689377Da9341A95873d5',
+      [Contracts.Paymaster]: '0x1442E8ba401e93E2C2b4B0026cD7AcD11fF7b095',
     },
     addressToContract: {
       [VOYAGE_GOERLI]: Contracts.Voyage,

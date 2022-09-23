@@ -3,8 +3,11 @@ export interface IControllerStore {
   state?: Record<string, any>;
 }
 
-export interface OrderData {
-  marketplace: string;
+export interface NFTData {
   tokenId: string;
   collection: string;
+}
+
+export interface OrderData extends NFTData {
+  marketplace: string;
 }
