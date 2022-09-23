@@ -5,30 +5,35 @@ import { Group, Stack } from '@mantine/core';
 import Text from '@components/Text';
 import { ReactComponent as WethSvg } from '@images/weth.svg';
 import { ReactComponent as RecycleArrowsSvg } from '@images/recycle-arrows.svg';
+import { ReactComponent as ArrowUpRightSvg } from '@images/arrow-up-right-icon.svg';
 import Button from '@components/Button';
 import { useNavigate } from 'react-router-dom';
 import { useEthBalance } from '@hooks/useEthBalance';
 import { useAppSelector } from '@hooks/useRedux';
-import { formatAmount } from '@utils/bn';
+import { ETHERS_DECIMALS, formatAmount, Zero } from '@utils/bn';
 import { useWEthBalance } from '@hooks/useWEthBalance';
 import cn from 'classnames';
-import BigNumber from 'bignumber.js';
 import showNotification from '@utils/notification';
 import { ethers } from 'ethers';
+import { getTxExpolerLink } from '@utils/env';
 
 const TopUpCard: React.FunctionComponent = () => {
   const vaultAddress = useAppSelector((state) => state.core.vaultAddress);
   const [ethBalance] = useEthBalance(vaultAddress, true);
+  const [prevEthBalance, setPrevEthBalance] = React.useState(Zero);
   const [wethBalance] = useWEthBalance(vaultAddress!, true);
 
   const [isWrapping, setIsWrapping] = React.useState(false);
+  const [lastWrappedHash, setLastWrappedHash] = React.useState('');
 
   const onWrapClick = async () => {
     if (isWrapping) return;
+    if (lastWrappedHash)
+      window.open(getTxExpolerLink(lastWrappedHash), '_blank');
     setIsWrapping(true);
     try {
       const tx = await controller.wrapVaultETH(
-        new BigNumber('1000000000000000')
+        ethBalance.shiftedBy(ETHERS_DECIMALS)
       );
       showNotification({
         title: 'Started wrapping eth',
@@ -36,16 +41,11 @@ const TopUpCard: React.FunctionComponent = () => {
         hash: tx.hash,
         type: 'success',
       });
-      // await tx.wait(+process.env.NUM_CONFIRMATIONS!); wait is underfined
+      // tx.wait is underfined, so using this
       await new ethers.providers.Web3Provider(provider).waitForTransaction(
         tx.hash
       );
-      showNotification({
-        title: 'Wrap success',
-        message: `Wrapped ${formatAmount(ethBalance)} ETH successfully.`,
-        hash: tx.hash,
-        type: 'success',
-      });
+      setLastWrappedHash(tx.hash);
     } catch (e: any) {
       console.error(e.message);
     }
@@ -53,6 +53,13 @@ const TopUpCard: React.FunctionComponent = () => {
   };
 
   const navigate = useNavigate();
+
+  React.useEffect(() => {
+    if (ethBalance.gt(prevEthBalance)) {
+      setLastWrappedHash('');
+    }
+    setPrevEthBalance(ethBalance);
+  }, [ethBalance]);
   return (
     <Card className={styles.root}>
       <Group position="apart" align="center" className={styles.inner}>
@@ -76,12 +83,28 @@ const TopUpCard: React.FunctionComponent = () => {
           >
             Top-Up
           </Button>
-          <Button className={styles.wrapButton} onClick={onWrapClick}>
-            Wrap ETH
-            <RecycleArrowsSvg
-              className={cn(styles.wrapIcon, isWrapping && styles.loading)}
-            />
-          </Button>
+          {(!ethBalance.isZero() || lastWrappedHash) && (
+            <Button
+              className={styles.wrapButton}
+              onClick={onWrapClick}
+              p={0}
+              pl={2}
+              disabled={isWrapping}
+            >
+              {lastWrappedHash
+                ? 'Wrap Success'
+                : isWrapping
+                ? 'Wrapping'
+                : 'Wrap ETH'}
+              {lastWrappedHash ? (
+                <ArrowUpRightSvg className={styles.wrapIcon} />
+              ) : (
+                <RecycleArrowsSvg
+                  className={cn(styles.wrapIcon, isWrapping && styles.loading)}
+                />
+              )}
+            </Button>
+          )}
         </Stack>
       </Group>
     </Card>
