@@ -8,12 +8,23 @@ import cn from 'classnames';
 import { ActionIcon } from '@mantine/core';
 import { DotsVertical } from 'tabler-icons-react';
 import { useNavigate } from 'react-router-dom';
+import browser from 'webextension-polyfill';
 
 const MenuBar = () => {
   const { address } = useAccount();
   const { chain } = useNetwork();
   const isSupportedChain = chains.some(({ id }) => id === chain?.id);
   const navigate = useNavigate();
+
+  const onClickHandler = async () => {
+    await navigator.clipboard.writeText(address ?? '');
+    browser.notifications.create({
+      type: 'basic',
+      iconUrl: 'icon.png',
+      title: 'Address copied',
+      message: 'Address was copied to your clipboard',
+    });
+  };
 
   return (
     <div className={styles.root}>
@@ -25,10 +36,7 @@ const MenuBar = () => {
           <div className={styles.mmLogo}>
             <MM />
           </div>
-          <div
-            className={styles.connectionInfo}
-            onClick={() => navigator.clipboard.writeText(address ?? '')}
-          >
+          <div className={styles.connectionInfo} onClick={onClickHandler}>
             <div className={styles.address}>{truncate(address)}</div>
             <div className={styles.network}>
               <div
