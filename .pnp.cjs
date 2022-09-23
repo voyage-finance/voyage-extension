@@ -46,6 +46,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@mantine/core", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:4.2.11"],\
             ["@mantine/form", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:4.2.11"],\
             ["@mantine/hooks", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:4.2.11"],\
+            ["@mantine/notifications", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:5.4.0"],\
             ["@metamask/object-multiplex", "npm:1.2.0"],\
             ["@metamask/post-message-stream", "npm:4.0.0"],\
             ["@metamask/providers", "npm:8.1.1"],\
@@ -2970,6 +2971,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@babel-runtime-npm-7.18.9-28ca6b5f61-36dd736bab.zip/node_modules/@babel/runtime/",\
           "packageDependencies": [\
             ["@babel/runtime", "npm:7.18.9"],\
+            ["regenerator-runtime", "npm:0.13.9"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:7.19.0", {\
+          "packageLocation": "./.yarn/cache/@babel-runtime-npm-7.19.0-86b37fbb72-fa69c351bb.zip/node_modules/@babel/runtime/",\
+          "packageDependencies": [\
+            ["@babel/runtime", "npm:7.19.0"],\
             ["regenerator-runtime", "npm:0.13.9"]\
           ],\
           "linkType": "HARD"\
@@ -6123,6 +6132,42 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["@mantine/notifications", [\
+        ["npm:5.4.0", {\
+          "packageLocation": "./.yarn/cache/@mantine-notifications-npm-5.4.0-aceb38942f-39e67d971f.zip/node_modules/@mantine/notifications/",\
+          "packageDependencies": [\
+            ["@mantine/notifications", "npm:5.4.0"]\
+          ],\
+          "linkType": "SOFT"\
+        }],\
+        ["virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:5.4.0", {\
+          "packageLocation": "./.yarn/__virtual__/@mantine-notifications-virtual-d6604e1560/0/cache/@mantine-notifications-npm-5.4.0-aceb38942f-39e67d971f.zip/node_modules/@mantine/notifications/",\
+          "packageDependencies": [\
+            ["@mantine/notifications", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:5.4.0"],\
+            ["@mantine/core", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:4.2.11"],\
+            ["@mantine/hooks", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:4.2.11"],\
+            ["@mantine/utils", "virtual:d6604e1560a912d6be00fa224dda6a7ec8756039c36ce88cff2996af5b6fb86dd3e62855461e90dd2f6134118828f7c5fa53912d10226ca901a52fecdf0dbb4b#npm:5.4.0"],\
+            ["@types/mantine__core", null],\
+            ["@types/mantine__hooks", null],\
+            ["@types/react", "npm:17.0.44"],\
+            ["@types/react-dom", "npm:17.0.15"],\
+            ["react", "npm:17.0.2"],\
+            ["react-dom", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:17.0.2"],\
+            ["react-transition-group", "virtual:d6604e1560a912d6be00fa224dda6a7ec8756039c36ce88cff2996af5b6fb86dd3e62855461e90dd2f6134118828f7c5fa53912d10226ca901a52fecdf0dbb4b#npm:4.4.2"]\
+          ],\
+          "packagePeers": [\
+            "@mantine/core",\
+            "@mantine/hooks",\
+            "@types/mantine__core",\
+            "@types/mantine__hooks",\
+            "@types/react-dom",\
+            "@types/react",\
+            "react-dom",\
+            "react"\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["@mantine/styles", [\
         ["npm:4.2.11", {\
           "packageLocation": "./.yarn/cache/@mantine-styles-npm-4.2.11-17b28f529a-f59a1f7f45.zip/node_modules/@mantine/styles/",\
@@ -6150,6 +6195,28 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             "@types/react-dom",\
             "@types/react",\
             "react-dom",\
+            "react"\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@mantine/utils", [\
+        ["npm:5.4.0", {\
+          "packageLocation": "./.yarn/cache/@mantine-utils-npm-5.4.0-389a83a89e-b07bdd7303.zip/node_modules/@mantine/utils/",\
+          "packageDependencies": [\
+            ["@mantine/utils", "npm:5.4.0"]\
+          ],\
+          "linkType": "SOFT"\
+        }],\
+        ["virtual:d6604e1560a912d6be00fa224dda6a7ec8756039c36ce88cff2996af5b6fb86dd3e62855461e90dd2f6134118828f7c5fa53912d10226ca901a52fecdf0dbb4b#npm:5.4.0", {\
+          "packageLocation": "./.yarn/__virtual__/@mantine-utils-virtual-1f48d09582/0/cache/@mantine-utils-npm-5.4.0-389a83a89e-b07bdd7303.zip/node_modules/@mantine/utils/",\
+          "packageDependencies": [\
+            ["@mantine/utils", "virtual:d6604e1560a912d6be00fa224dda6a7ec8756039c36ce88cff2996af5b6fb86dd3e62855461e90dd2f6134118828f7c5fa53912d10226ca901a52fecdf0dbb4b#npm:5.4.0"],\
+            ["@types/react", "npm:17.0.44"],\
+            ["react", "npm:17.0.2"]\
+          ],\
+          "packagePeers": [\
+            "@types/react",\
             "react"\
           ],\
           "linkType": "HARD"\
@@ -13722,6 +13789,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["dom-converter", "npm:0.2.0"],\
             ["utila", "npm:0.4.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["dom-helpers", [\
+        ["npm:5.2.1", {\
+          "packageLocation": "./.yarn/cache/dom-helpers-npm-5.2.1-b38bb4470b-863ba9e086.zip/node_modules/dom-helpers/",\
+          "packageDependencies": [\
+            ["dom-helpers", "npm:5.2.1"],\
+            ["@babel/runtime", "npm:7.19.0"],\
+            ["csstype", "npm:3.0.11"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -23989,6 +24067,36 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["react-transition-group", [\
+        ["npm:4.4.2", {\
+          "packageLocation": "./.yarn/cache/react-transition-group-npm-4.4.2-5052c30656-b67bf5b3e8.zip/node_modules/react-transition-group/",\
+          "packageDependencies": [\
+            ["react-transition-group", "npm:4.4.2"]\
+          ],\
+          "linkType": "SOFT"\
+        }],\
+        ["virtual:d6604e1560a912d6be00fa224dda6a7ec8756039c36ce88cff2996af5b6fb86dd3e62855461e90dd2f6134118828f7c5fa53912d10226ca901a52fecdf0dbb4b#npm:4.4.2", {\
+          "packageLocation": "./.yarn/__virtual__/react-transition-group-virtual-3f6a9e1f23/0/cache/react-transition-group-npm-4.4.2-5052c30656-b67bf5b3e8.zip/node_modules/react-transition-group/",\
+          "packageDependencies": [\
+            ["react-transition-group", "virtual:d6604e1560a912d6be00fa224dda6a7ec8756039c36ce88cff2996af5b6fb86dd3e62855461e90dd2f6134118828f7c5fa53912d10226ca901a52fecdf0dbb4b#npm:4.4.2"],\
+            ["@babel/runtime", "npm:7.18.6"],\
+            ["@types/react", "npm:17.0.44"],\
+            ["@types/react-dom", "npm:17.0.15"],\
+            ["dom-helpers", "npm:5.2.1"],\
+            ["loose-envify", "npm:1.4.0"],\
+            ["prop-types", "npm:15.8.1"],\
+            ["react", "npm:17.0.2"],\
+            ["react-dom", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:17.0.2"]\
+          ],\
+          "packagePeers": [\
+            "@types/react-dom",\
+            "@types/react",\
+            "react-dom",\
+            "react"\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["read-pkg", [\
         ["npm:5.2.0", {\
           "packageLocation": "./.yarn/cache/read-pkg-npm-5.2.0-50426bd8dc-eb696e6052.zip/node_modules/read-pkg/",\
@@ -27696,6 +27804,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@mantine/core", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:4.2.11"],\
             ["@mantine/form", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:4.2.11"],\
             ["@mantine/hooks", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:4.2.11"],\
+            ["@mantine/notifications", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:5.4.0"],\
             ["@metamask/object-multiplex", "npm:1.2.0"],\
             ["@metamask/post-message-stream", "npm:4.0.0"],\
             ["@metamask/providers", "npm:8.1.1"],\

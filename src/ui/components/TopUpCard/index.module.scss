@@ -15,5 +15,24 @@
       height: 24px !important;
       border-radius: 4px !important;
     }
+    .wrapButton {
+      height: 22px !important;
+      width: 100%;
+      border-radius: 4px !important;
+      background: rgba(27, 29, 44, 0.6);
+      .wrapIcon {
+        margin-left: 3px;
+        &.loading {
+          animation: spin 3s linear infinite;
+        }
+      }
+    }
+  }
+}
+
+@keyframes spin {
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
   }
 }

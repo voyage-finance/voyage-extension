@@ -8,6 +8,7 @@ import Router from './routes';
 import { ExtensionConnector } from '@web3/connector';
 import { chains as voyageChains } from '@utils/chain';
 import { getAlchemyProvider } from '@utils/env';
+import { NotificationsProvider } from '@mantine/notifications';
 
 function App({ store }: any) {
   const { provider: web3Provider, controller } = globalThis;
@@ -112,9 +113,11 @@ function App({ store }: any) {
               },
             }}
           >
-            <MemoryRouter>
-              <Router />
-            </MemoryRouter>
+            <NotificationsProvider position="top-right">
+              <MemoryRouter>
+                <Router />
+              </MemoryRouter>
+            </NotificationsProvider>
           </MantineProvider>
         </VoyageProvider>
       </WagmiConfig>

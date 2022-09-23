@@ -1,5 +1,5 @@
 import { Duplex } from 'stream';
-import { BytesLike, ethers } from 'ethers';
+import { ethers } from 'ethers';
 import pump from 'pump';
 import {
   createIdRemapMiddleware,
@@ -102,15 +102,12 @@ export class VoyageController extends SafeEventEmitter {
       sendMagicLinkToEmail: this.sendMagicLinkToEmail,
       cancelLogin: this.cancelLogin,
       setTermsAgreed: this.setTermsAgreed,
-      computeCounterfactualAddress: this.computeCounterfactualAddress,
-      getBalance: this.getBalance,
-      fetchVault: this.fetchVault,
       registerVaultWatcher: this.registerVaultWatcher,
       openNotificationWindow: this.openNotificationWindow,
-      populateBuyNow: this.populateBuyNow,
       createRelayHttpRequest: this.createRelayHttpRequest,
       ...this.store.walletConnectStore.api,
       ...this.store.transactionStore.api,
+      ...this.store.voyageStore.api,
     };
   }
 
@@ -217,36 +214,8 @@ export class VoyageController extends SafeEventEmitter {
     this.store.keyStore.cancelLogin();
   };
 
-  fetchVault = () => {
-    this.store.voyageStore.fetchVault();
-  };
-
   setTermsAgreed = () => {
     this.store.keyStore.setTermsSigned();
-  };
-
-  computeCounterfactualAddress = () => {
-    return this.store.voyageStore.computeCounterfactualAddress();
-  };
-
-  getBalance = (address: string) => {
-    return this.store.voyageStore.getBalance(address);
-  };
-
-  populateBuyNow = (
-    _collection: string,
-    _tokenId: string,
-    _vault: string,
-    _marketplace: string,
-    _data: BytesLike
-  ) => {
-    return this.store.voyageStore.populateBuyNow(
-      _collection,
-      _tokenId,
-      _vault,
-      _marketplace,
-      _data
-    );
   };
 
   registerVaultWatcher = async (): Promise<string> => {

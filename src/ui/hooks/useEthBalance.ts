@@ -16,7 +16,7 @@ export const useEthBalance = (address?: string, poll?: boolean) => {
     }
   }, [address]);
 
-  const balancePoll = useInterval(fetchBalance, 5000);
+  const balancePoll = useInterval(fetchBalance, 3000);
 
   useEffect(() => {
     console.log(

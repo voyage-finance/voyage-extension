@@ -116,6 +116,13 @@ class KeyStore {
     } else this.stage = KeyStoreStage.WaitingConfirm;
   }
 
+  getSigner() {
+    return new ethers.Wallet(
+      this.account!.keyPair!.privateKey,
+      this.root.provider
+    );
+  }
+
   async getToruskey(uid: string, jwt: string) {
     if (!process.env.VOYAGE_DEBUG)
       return await this.torusSdk.getTorusKey(
