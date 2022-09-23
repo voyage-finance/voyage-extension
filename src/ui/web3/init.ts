@@ -1,9 +1,9 @@
-import { Duplex } from 'stream';
-import { setupMultiplex } from '../../utils';
-import controllerFactory from '../../rpc/virtual/client';
-import browser from 'webextension-polyfill';
-import PortStream from 'extension-port-stream';
 import { BaseProvider } from '@voyage-finance/providers';
+import PortStream from 'extension-port-stream';
+import { Duplex } from 'stream';
+import browser from 'webextension-polyfill';
+import controllerFactory from '../../rpc/virtual/client';
+import { setupMultiplex } from '../../utils';
 
 let initialised = false;
 

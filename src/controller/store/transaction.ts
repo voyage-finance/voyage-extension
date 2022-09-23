@@ -17,7 +17,7 @@ interface SignRequestCallbacks {
   reject: (error?: Error) => Promise<void>;
 }
 
-class TransactionStore implements TransactionStore {
+class TransactionStore {
   root: ControllerStore;
   transactions: Record<string, Transaction> = {};
   requestCallbacks: Record<string, SignRequestCallbacks> = {};

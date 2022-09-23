@@ -2,12 +2,6 @@ import { Chain, defaultChains, useConnect } from 'wagmi';
 import { ReactComponent as Avax } from '@images/logo-avax.svg';
 import { useEffect } from 'react';
 
-export enum ChainID {
-  Mainnet = 1,
-  Goerli = 5,
-  Localhost = 31337,
-}
-
 export const chains: Chain[] = [...defaultChains];
 
 export const switchAccounts = async () => {

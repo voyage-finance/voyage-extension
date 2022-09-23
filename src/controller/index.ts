@@ -107,6 +107,7 @@ export class VoyageController extends SafeEventEmitter {
       createRelayHttpRequest: this.createRelayHttpRequest,
       ...this.store.walletConnectStore.api,
       ...this.store.transactionStore.api,
+      ...this.store.orderStore.api,
       ...this.store.voyageStore.api,
     };
   }
