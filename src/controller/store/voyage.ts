@@ -12,6 +12,7 @@ import {
   decodeMarketplaceCalldata,
 } from '@utils/decoder';
 import { storage } from 'webextension-polyfill';
+import BigNumber from 'bignumber.js';
 
 class VoyageStore {
   root: ControllerStore;
@@ -40,6 +41,16 @@ class VoyageStore {
   get state() {
     return {
       vaultAddress: this.vaultAddress,
+    };
+  }
+
+  get api() {
+    return {
+      wrapVaultETH: this.wrapVaultETH.bind(this),
+      computeCounterfactualAddress:
+        this.computeCounterfactualAddress.bind(this),
+      populateBuyNow: this.populateBuyNow.bind(this),
+      getBalance: this.getBalance.bind(this),
     };
   }
 
@@ -78,6 +89,12 @@ class VoyageStore {
       salt
     );
     return vaultAddress;
+  }
+
+  async wrapVaultETH(amount: BigNumber) {
+    return await this.voyage
+      .connect(this.root.keyStore.getSigner())
+      .wrapVaultETH(this.vaultAddress!, amount.toString());
   }
 
   async buyNow(transaction: TransactionRequest) {
