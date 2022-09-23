@@ -1,7 +1,7 @@
 import { ethers } from 'ethers';
 import { alchemyProvider } from 'wagmi/providers/alchemy';
-import { ChainID } from './chain';
 import {
+  ChainID,
   LOOKS_EXCHANGE_TESTNET,
   SEAPORT_EXCHANGE_TESTNET,
   VOYAGE_GOERLI,

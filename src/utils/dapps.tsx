@@ -1,5 +1,5 @@
 import { TabInfo } from '@state/modules/core';
-import { ChainID } from '@utils/chain';
+import { ChainID } from '@utils/constants';
 import { IWalletConnectSession } from '@walletconnect/types';
 
 export interface App {

@@ -1,5 +1,5 @@
 import { Box, BoxProps, LoadingOverlay } from '@mantine/core';
-import { ChainID } from '@utils/chain';
+import { ChainID } from '@utils/constants';
 import { getNetworkEnvironment, Network } from '@utils/env';
 import { BrowserQRCodeSvgWriter } from '@zxing/browser';
 import { useEffect } from 'react';
