@@ -8,13 +8,14 @@ import useVoyageController from '@hooks/useVoyageController';
 import QrCode from '@components/QrCode';
 import CopyButton from '@components/CopyButton';
 import WalletBalance from '../../../components/WalletBalance';
-import { useMinDepositAmount } from '@hooks/useMinDepositAmount';
 import { useUsdValueOfEth } from '@hooks/useCoinPrice';
 import { formatAmount } from '@utils/bn';
+import { useFetchVaultWatcherParams } from '@hooks/useFetchVaultWatcherParams';
 
 const AwaitDeposit: React.FC = () => {
   const controller = useVoyageController();
-  const [minDeposit] = useMinDepositAmount();
+  const [minDeposit, maxFeePerGas, maxPriorityFeePerGas] =
+    useFetchVaultWatcherParams();
   const [usdValue] = useUsdValueOfEth(minDeposit);
   const [isLoading, setIsLoading] = React.useState(false);
   const [depositedEnough, setDepositedEnough] = React.useState(false);
@@ -22,7 +23,10 @@ const AwaitDeposit: React.FC = () => {
 
   const fetchVaultAddress = async () => {
     setIsLoading(true);
-    const address = await controller.registerVaultWatcher();
+    const address = await controller.registerVaultWatcher(
+      maxFeePerGas.toString(),
+      maxPriorityFeePerGas.toString()
+    );
     setAddress(address || '');
     setIsLoading(false);
   };

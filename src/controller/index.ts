@@ -219,7 +219,10 @@ export class VoyageController extends SafeEventEmitter {
     this.store.keyStore.setTermsSigned();
   };
 
-  registerVaultWatcher = async (): Promise<string> => {
+  registerVaultWatcher = async (
+    maxFeePerGas: string,
+    maxPriorityFeePerGas: string
+  ): Promise<string> => {
     const userAddress = this.store.keyStore.getAccount()?.address;
     const blockNum = await this.provider.getBlockNumber();
     const token = this.store.keyStore.account?.auth.jwt;
@@ -230,6 +233,8 @@ export class VoyageController extends SafeEventEmitter {
     const data = {
       userAddress,
       blockNum,
+      maxFeePerGas,
+      maxPriorityFeePerGas,
     };
 
     const response = await fetch(`${process.env.VOYAGE_API_URL}/vault/`, {
