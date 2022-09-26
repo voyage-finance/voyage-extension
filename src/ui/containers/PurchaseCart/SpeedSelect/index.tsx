@@ -8,46 +8,17 @@ import useVoyageController from '@hooks/useVoyageController';
 import { useAppSelector } from '@hooks/useRedux';
 import { decodeMarketplaceCalldata } from '@utils/decoder';
 import { useParams } from 'react-router-dom';
-import { useInterval } from '@mantine/hooks';
 import cn from 'classnames';
 import styles from './index.module.scss';
+import { TxSpeed } from 'types';
+import { useGasSpeeds } from '@hooks/useGasSpeeds';
 
 interface ISpeedSelectProps extends Omit<BoxProps<'div'>, 'onChange'> {
-  value: Speed;
+  value: TxSpeed;
   vault?: string;
   user?: string;
-  onChange: (opt: Speed) => void;
+  onChange: (opt: TxSpeed) => void;
 }
-
-export enum Speed {
-  FAST = 'high',
-  NORMAL = 'medium',
-  SLOW = 'low',
-}
-
-export type SpeedConfig = {
-  type: Speed;
-  label: string;
-  values?: {
-    maxWaitTime: number;
-    maxFeePerGas: number;
-  };
-};
-
-const DEFAULT_SPEEDS: Record<string, SpeedConfig> = {
-  [Speed.FAST]: {
-    type: Speed.FAST,
-    label: '🚤 Fast',
-  },
-  [Speed.NORMAL]: {
-    type: Speed.NORMAL,
-    label: '⛵ Normal',
-  },
-  [Speed.SLOW]: {
-    type: Speed.SLOW,
-    label: '🛶 Slow',
-  },
-};
 
 const SpeedSelect: React.FunctionComponent<ISpeedSelectProps> = ({
   value,
@@ -58,10 +29,8 @@ const SpeedSelect: React.FunctionComponent<ISpeedSelectProps> = ({
 }) => {
   const { txId } = useParams();
   const [isGasLoading, setGasLoading] = React.useState(false);
-  const [isFeeLoading, setFeeLoading] = React.useState(false);
+  const [speeds, isSpeedsLoading] = useGasSpeeds();
   const [gas, setGas] = React.useState(0);
-  const [speeds, setSpeeds] =
-    React.useState<Record<string, SpeedConfig>>(DEFAULT_SPEEDS);
   const controller = useVoyageController();
   const transaction = useAppSelector((state) => {
     return state.core.transactions[txId!];
@@ -115,41 +84,13 @@ const SpeedSelect: React.FunctionComponent<ISpeedSelectProps> = ({
     setGasLoading(false);
   };
 
-  const getGasFees = async () => {
-    setFeeLoading(true);
-    try {
-      const estimateGasResponse = await fetch(
-        `${process.env.VOYAGE_API_URL}/v1/metadata/gasFee`
-      );
-      const body = await estimateGasResponse.json();
-      const newSpeedValues = speeds;
-      Object.keys(body).forEach((key) => {
-        if (newSpeedValues[key])
-          newSpeedValues[key].values = {
-            maxFeePerGas: body[key].suggestedMaxPriorityFeePerGas,
-            maxWaitTime: body[key].maxWaitTimeEstimate / 1000,
-          };
-      });
-      setSpeeds(newSpeedValues);
-    } catch (e) {
-      console.log('[FAILED] at getGasFees', e);
-    }
-    setTimeout(() => {
-      setFeeLoading(false);
-    }, 2000);
-  };
-
-  const getFeesPoll = useInterval(getGasFees, 5000);
-
   React.useEffect(() => {
     updateGasData();
-    getFeesPoll.start();
-    return getFeesPoll.stop;
   }, []);
 
   return (
     <Group position="apart" align="center" {...props}>
-      <Stack spacing={0} className={cn(isFeeLoading && styles.animatePulse)}>
+      <Stack spacing={0} className={cn(isSpeedsLoading && styles.animatePulse)}>
         <Group spacing={0}>
           <EthSvg style={{ width: 11 }} />
           <Text size="sm" sx={{ lineHeight: '12px' }} ml={1} weight={'bold'}>
@@ -250,7 +191,7 @@ const SpeedSelect: React.FunctionComponent<ISpeedSelectProps> = ({
                   type="secondary"
                   size="sm"
                   ml={2}
-                  className={cn(isFeeLoading && styles.animatePulse)}
+                  className={cn(isSpeedsLoading && styles.animatePulse)}
                 >
                   ~ {speed.values?.maxWaitTime || '...'} sec
                 </Text>
@@ -258,7 +199,7 @@ const SpeedSelect: React.FunctionComponent<ISpeedSelectProps> = ({
                   sx={{ whiteSpace: 'nowrap' }}
                   size="sm"
                   ml="auto"
-                  className={cn(isFeeLoading && styles.animatePulse)}
+                  className={cn(isSpeedsLoading && styles.animatePulse)}
                 >
                   {speed.values?.maxFeePerGas} Gwei
                 </Text>

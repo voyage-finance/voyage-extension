@@ -8,13 +8,16 @@ import useVoyageController from '@hooks/useVoyageController';
 import QrCode from '@components/QrCode';
 import CopyButton from '@components/CopyButton';
 import WalletBalance from '../../../components/WalletBalance';
-import { MIN_DEPOSIT } from '@utils/bn';
+import { useMinDepositAmount } from '@hooks/useMinDepositAmount';
+import { useUsdValueOfEth } from '@hooks/useCoinPrice';
+import { formatAmount } from '@utils/bn';
 
 const AwaitDeposit: React.FC = () => {
   const controller = useVoyageController();
+  const [minDeposit] = useMinDepositAmount();
+  const [usdValue] = useUsdValueOfEth(minDeposit);
   const [isLoading, setIsLoading] = React.useState(false);
   const [depositedEnough, setDepositedEnough] = React.useState(false);
-
   const [address, setAddress] = React.useState('');
 
   const fetchVaultAddress = async () => {
@@ -67,17 +70,17 @@ const AwaitDeposit: React.FC = () => {
           <Text>Minimum ETH Required</Text>
           <Group mt={5} align="center" spacing={2} ml={5}>
             <Text sx={{ fontSize: 24 }} weight={'bold'}>
-              {MIN_DEPOSIT.toString()}
+              {formatAmount(minDeposit)}
             </Text>
             <EthSvg />
           </Group>
           <Text type="secondary" mt={4}>
-            ~$100
+            {usdValue}
           </Text>
         </Group>
         {address && (
           <WalletBalance
-            minBalance={MIN_DEPOSIT}
+            minBalance={minDeposit}
             address={address}
             onEnoughBalance={() => setDepositedEnough(true)}
             mt={22}

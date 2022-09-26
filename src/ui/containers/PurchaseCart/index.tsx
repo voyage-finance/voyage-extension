@@ -18,7 +18,7 @@ import BuyMethodSelect, { PaymentOption } from '@components/BuyMethodSelect';
 import PaymentHoverBoard from '@components/PaymentHoverBoard';
 import BNPLSchedule from '@components/BNPLSchedule';
 import { useAppSelector } from '@hooks/useRedux';
-import SpeedSelect, { Speed } from './SpeedSelect';
+import SpeedSelect from './SpeedSelect';
 import { useEthBalance } from '@hooks/useEthBalance';
 import { formatAmount, fromBigNumber } from '@utils/bn';
 import useVoyageController from '@hooks/useVoyageController';
@@ -27,13 +27,14 @@ import { PURCHASE_OVERVIEW_ROUTE } from '@utils/constants';
 import { TransactionStatus } from 'types/transaction';
 import ErrorBox from '@components/PreviewErrorBox';
 import { getContractByAddress } from '@utils/env';
+import { TxSpeed } from 'types';
 
 const PurchaseCart: React.FC = () => {
   const { txId } = useParams();
   const [isLoading, setIsLoading] = useState(false);
   const [isPurchasing, setIsPurchasing] = useState(false);
   const [pmtOption, setPmtOption] = useState(PaymentOption.BNPL);
-  const [speed, setSpeed] = useState(Speed.FAST);
+  const [speed, setSpeed] = useState(TxSpeed.FAST);
   const transaction = useAppSelector((state) => {
     return state.core.transactions[txId!];
   });
