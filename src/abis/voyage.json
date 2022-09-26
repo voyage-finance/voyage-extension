@@ -222,6 +222,11 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "InvalidConfiguratorContract",
+    "type": "error"
+  },
+  {
     "anonymous": false,
     "inputs": [
       {
@@ -246,6 +251,19 @@
     ],
     "name": "Unpaused",
     "type": "event"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_configurator",
+        "type": "address"
+      }
+    ],
+    "name": "authorizeConfigurator",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
   },
   {
     "inputs": [
@@ -977,6 +995,16 @@
   },
   {
     "inputs": [],
+    "name": "InvalidCollection",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidCurrencyType",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "InvalidDebt",
     "type": "error"
   },
@@ -1077,6 +1105,12 @@
         "internalType": "uint256",
         "name": "_protocolFee",
         "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "_marketplace",
+        "type": "address"
       }
     ],
     "name": "Borrow",
@@ -1524,6 +1558,11 @@
   },
   {
     "inputs": [],
+    "name": "InvalidTreasuryAddress",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "InvalidVaultImpl",
     "type": "error"
   },
@@ -1551,6 +1590,12 @@
         "indexed": false,
         "internalType": "uint256",
         "name": "_numVaults",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "refundAmount",
         "type": "uint256"
       }
     ],
@@ -1643,6 +1688,11 @@
         "internalType": "address",
         "name": "_marketplace",
         "type": "address"
+      },
+      {
+        "internalType": "bool",
+        "name": "revoke",
+        "type": "bool"
       }
     ],
     "name": "approveMarketplace",
@@ -1704,6 +1754,16 @@
         "internalType": "bytes20",
         "name": "_salt",
         "type": "bytes20"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_gasUnits",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_gasPrice",
+        "type": "uint256"
       }
     ],
     "name": "createVault",
@@ -2098,6 +2158,19 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "getPaymasterAddr",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",
@@ -2229,6 +2302,32 @@
       }
     ],
     "name": "updateMarketPlaceData",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_impl",
+        "type": "address"
+      }
+    ],
+    "name": "upgradeJuniorDepositTokenImpl",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_impl",
+        "type": "address"
+      }
+    ],
+    "name": "upgradeSeniorDepositTokenImpl",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

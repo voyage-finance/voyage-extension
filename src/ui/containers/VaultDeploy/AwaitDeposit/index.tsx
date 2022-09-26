@@ -11,16 +11,20 @@ import WalletBalance from '../../../components/WalletBalance';
 import { useUsdValueOfEth } from '@hooks/useCoinPrice';
 import { formatAmount } from '@utils/bn';
 import { useFetchVaultWatcherParams } from '@hooks/useFetchVaultWatcherParams';
+import { useInterval } from '@mantine/hooks';
 
 const AwaitDeposit: React.FC = () => {
   const controller = useVoyageController();
-  const [minDeposit, maxFeePerGas, maxPriorityFeePerGas] =
-    useFetchVaultWatcherParams();
+  const [
+    minDeposit,
+    maxFeePerGas,
+    maxPriorityFeePerGas,
+    isVaultWatcherParamsLoading,
+  ] = useFetchVaultWatcherParams();
   const [usdValue] = useUsdValueOfEth(minDeposit);
   const [isLoading, setIsLoading] = React.useState(false);
   const [depositedEnough, setDepositedEnough] = React.useState(false);
   const [address, setAddress] = React.useState('');
-
   const fetchVaultAddress = async () => {
     setIsLoading(true);
     const address = await controller.registerVaultWatcher(
@@ -31,8 +35,16 @@ const AwaitDeposit: React.FC = () => {
     setIsLoading(false);
   };
 
+  const pollVaultAddress = useInterval(controller.fetchVault, 5000);
+
   React.useEffect(() => {
-    fetchVaultAddress();
+    if (!isVaultWatcherParamsLoading && !maxFeePerGas.isZero())
+      fetchVaultAddress();
+  }, [isVaultWatcherParamsLoading]);
+
+  React.useEffect(() => {
+    pollVaultAddress.start();
+    return pollVaultAddress.stop;
   }, []);
 
   return (

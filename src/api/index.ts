@@ -6,5 +6,10 @@ export const fetchGasFees = async () => {
 };
 
 export const fetchVaultGas = async () => {
-  return 515000;
+  const estimateGasResponse = await fetch(
+    `${process.env.VOYAGE_API_URL}/v1/metadata/vaultGas`
+  );
+  const body = await estimateGasResponse.json();
+
+  return body.CREATE_VAULT_GAS_LIMIT;
 };

@@ -224,7 +224,6 @@ export class VoyageController extends SafeEventEmitter {
     maxPriorityFeePerGas: string
   ): Promise<string> => {
     const userAddress = this.store.keyStore.getAccount()?.address;
-    const blockNum = await this.provider.getBlockNumber();
     const token = this.store.keyStore.account?.auth.jwt;
 
     if (!userAddress || !token || userAddress === ethers.constants.AddressZero)
@@ -232,12 +231,11 @@ export class VoyageController extends SafeEventEmitter {
 
     const data = {
       userAddress,
-      blockNum,
       maxFeePerGas,
       maxPriorityFeePerGas,
     };
 
-    const response = await fetch(`${process.env.VOYAGE_API_URL}/vault/`, {
+    const response = await fetch(`${process.env.VOYAGE_API_URL}/v1/vault/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -246,7 +244,7 @@ export class VoyageController extends SafeEventEmitter {
       body: JSON.stringify(data),
     });
     const body = await response.json();
-    return body.sentinelObj?.counterFactualAddress;
+    return body.sentinelObj?.vault;
   };
 
   private sendUpdate = (state: unknown) => {

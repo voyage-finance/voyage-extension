@@ -33,7 +33,7 @@ class VoyageStore {
     const storedVault = (await storage.local.get('vaultAddress'))
       .vaultAddress as string | undefined;
     console.log('----VoyageStore [storedVault] -----', storedVault);
-    if (storedVault) {
+    if (storedVault !== ethers.constants.AddressZero) {
       this.vaultAddress = storedVault;
     }
   }
@@ -51,6 +51,7 @@ class VoyageStore {
         this.computeCounterfactualAddress.bind(this),
       populateBuyNow: this.populateBuyNow.bind(this),
       getBalance: this.getBalance.bind(this),
+      fetchVault: this.fetchVault.bind(this),
     };
   }
 

@@ -4330,6 +4330,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@ramp-network/ramp-instant-sdk@npm:^3.2.3":
+  version: 3.2.3
+  resolution: "@ramp-network/ramp-instant-sdk@npm:3.2.3"
+  dependencies:
+    body-scroll-lock: ^3.1.5
+  checksum: 51cdc78bb0f812432ab1d87b1711cd22598875d25d6a893a68ca4998567c89e3e43f8ea056a88231613f57daf1f4f4452c8171ab21da99f232357ed663693567
+  languageName: node
+  linkType: hard
+
 "@reduxjs/toolkit@npm:^1.8.1":
   version: 1.8.1
   resolution: "@reduxjs/toolkit@npm:1.8.1"
@@ -7662,6 +7671,13 @@ __metadata:
     type-is: ~1.6.18
     unpipe: 1.0.0
   checksum: 12fffdeac82fe20dddcab7074215d5156e7d02a69ae90cbe9fee1ca3efa2f28ef52097cbea76685ee0a1509c71d85abd0056a08e612c09077cad6277a644cf88
+  languageName: node
+  linkType: hard
+
+"body-scroll-lock@npm:^3.1.5":
+  version: 3.1.5
+  resolution: "body-scroll-lock@npm:3.1.5"
+  checksum: 52c25b81d6e7a87cfbdd7870363c3e20a439dbc76535b735916e2df907abbce95c0da0d2c7a2cfe88f49775d53bbc4bd09445ffda2d61b999efa3f0b1dedfc5e
   languageName: node
   linkType: hard
 
@@ -21485,6 +21501,7 @@ __metadata:
     "@opengsn/common": 2.2.6
     "@opengsn/provider": 2.2.6
     "@pmmmwh/react-refresh-webpack-plugin": ^0.5.3
+    "@ramp-network/ramp-instant-sdk": ^3.2.3
     "@reduxjs/toolkit": ^1.8.1
     "@svgr/webpack": ^5.5.0
     "@tanstack/react-query": ^4.1.3
