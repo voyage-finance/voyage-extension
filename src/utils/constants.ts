@@ -52,3 +52,4 @@ export const LOOKS_ADDRESS: Record<ChainID, string> = {
   [ChainID.Goerli]: '0xD112466471b5438C1ca2D218694200e49d81D047',
   [ChainID.Localhost]: '0xD112466471b5438C1ca2D218694200e49d81D047',
 };
+export const COINGECKO_BASE_URL = 'https://api.coingecko.com/api/v3';
