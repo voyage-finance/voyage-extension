@@ -4,8 +4,12 @@ import { BigNumber, ethers } from 'ethers';
 import { useEffect, useState } from 'react';
 import { TxSpeed } from 'types';
 
-export const useMinDepositAmount = () => {
+export const useFetchVaultWatcherParams = () => {
   const [minAmount, setMinAmount] = useState(ethers.constants.Zero);
+  const [maxFeePerGas, setMaxFeePerGas] = useState(ethers.constants.Zero);
+  const [maxPriorityFeePerGas, setMaxPriorityFeePerGas] = useState(
+    ethers.constants.Zero
+  );
   const [loading, setLoading] = useState(false);
 
   const calculateMin = async () => {
@@ -13,16 +17,20 @@ export const useMinDepositAmount = () => {
     try {
       const gasFees = await fetchGasFees();
       const vaultGas = BigNumber.from(await fetchVaultGas());
-      const maxPriorityFeePerGas = ethers.utils.parseUnits(
+      const _maxPriorityFeePerGas = ethers.utils.parseUnits(
         gasFees[TxSpeed.NORMAL].suggestedMaxPriorityFeePerGas,
         'gwei'
       );
-      const maxFeePerGas = ethers.utils.parseUnits(
+      const _maxFeePerGas = ethers.utils.parseUnits(
         gasFees[TxSpeed.NORMAL].suggestedMaxFeePerGas,
         'gwei'
       );
 
-      setMinAmount(vaultGas.mul(maxPriorityFeePerGas.add(maxFeePerGas)).mul(2));
+      setMinAmount(
+        vaultGas.mul(_maxPriorityFeePerGas.add(_maxFeePerGas)).mul(2)
+      );
+      setMaxPriorityFeePerGas(_maxPriorityFeePerGas);
+      setMaxFeePerGas(_maxFeePerGas);
     } catch (e) {
       console.error('Failed at useMinDepositAmount', e);
     }
@@ -33,5 +41,10 @@ export const useMinDepositAmount = () => {
     calculateMin();
   }, []);
 
-  return [formatEthersBN(minAmount), loading] as const;
+  return [
+    formatEthersBN(minAmount),
+    maxFeePerGas,
+    maxPriorityFeePerGas,
+    loading,
+  ] as const;
 };

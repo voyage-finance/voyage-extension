@@ -6,7 +6,7 @@ import { ReactComponent as EthSvg } from 'assets/img/eth-icon.svg';
 import Button from '@components/Button';
 import { useNavigate } from 'react-router-dom';
 import { useUsdValueOfEth } from '@hooks/useCoinPrice';
-import { useMinDepositAmount } from '@hooks/useMinDepositAmount';
+import { useFetchVaultWatcherParams } from '@hooks/useFetchVaultWatcherParams';
 import { formatAmount } from '@utils/bn';
 
 const SelectDepositMethod: React.FC = () => {
@@ -20,7 +20,7 @@ const SelectDepositMethod: React.FC = () => {
 };
 
 const InfoCard: React.FC<{ onClick: () => void }> = ({ onClick }) => {
-  const [minDeposit, isLoading] = useMinDepositAmount();
+  const [minDeposit, , , isLoading] = useFetchVaultWatcherParams();
   const [usdValue, usdValueLoading] = useUsdValueOfEth(minDeposit);
 
   return (
