@@ -6,6 +6,7 @@ import { ReactComponent as EthSvg } from 'assets/img/eth-icon.svg';
 import Button from '@components/Button';
 import { useNavigate } from 'react-router-dom';
 import { MIN_DEPOSIT } from '@utils/bn';
+import { useUsdValueOfEth } from '@hooks/useCoinPrice';
 
 const SelectDepositMethod: React.FC = () => {
   const [isInfoCardShown, setIsInfoCardShown] = React.useState(true);
@@ -18,6 +19,8 @@ const SelectDepositMethod: React.FC = () => {
 };
 
 const InfoCard: React.FC<{ onClick: () => void }> = ({ onClick }) => {
+  const [usdValue, usdValueLoading] = useUsdValueOfEth(MIN_DEPOSIT);
+
   return (
     <Card
       style={{
@@ -44,7 +47,7 @@ const InfoCard: React.FC<{ onClick: () => void }> = ({ onClick }) => {
             <EthSvg />
           </Group>
           <Text type="secondary" mt={4}>
-            ~$100
+            {usdValueLoading ? '$...' : usdValue}
           </Text>
         </Group>
         <Button mt={25} onClick={onClick} sx={{ width: 300 }}>
