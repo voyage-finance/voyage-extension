@@ -22,11 +22,6 @@ async function bootstrapSW() {
     );
   });
 
-  // controller.store.voyageStore.listenVaultCreate((args) => {
-  //   console.log('----- [listenVaultCreate] -------', args);
-  //   controller.store.voyageStore.fetchVault();
-  // });
-
   browser.action.onClicked.addListener(() => {
     if (controller.getState().stage === KeyStoreStage.Initialized) {
       browser.action.setPopup({ popup: 'popup.html' });
