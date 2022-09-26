@@ -99,11 +99,11 @@ const Router: React.FC = () => {
             : checkStatusAndNavigate();
           setWaitingDeploy(false);
         } else {
+          setWaitingDeploy(true);
           if (isTermsSigned) {
             navigate(VAULT_DEPOSIT_METHODS_ROUTE);
           } else {
             navigate(ONBOARD_TERMS_ROUTE);
-            setWaitingDeploy(true);
           }
         }
         break;

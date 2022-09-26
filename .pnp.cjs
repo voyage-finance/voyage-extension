@@ -54,6 +54,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@opengsn/common", "npm:2.2.6"],\
             ["@opengsn/provider", "npm:2.2.6"],\
             ["@pmmmwh/react-refresh-webpack-plugin", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:0.5.5"],\
+            ["@ramp-network/ramp-instant-sdk", "npm:3.2.3"],\
             ["@reduxjs/toolkit", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:1.8.1"],\
             ["@svgr/webpack", "npm:5.5.0"],\
             ["@tanstack/react-query", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:4.1.3"],\
@@ -6802,6 +6803,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["@ramp-network/ramp-instant-sdk", [\
+        ["npm:3.2.3", {\
+          "packageLocation": "./.yarn/cache/@ramp-network-ramp-instant-sdk-npm-3.2.3-bf1f7ca5a6-51cdc78bb0.zip/node_modules/@ramp-network/ramp-instant-sdk/",\
+          "packageDependencies": [\
+            ["@ramp-network/ramp-instant-sdk", "npm:3.2.3"],\
+            ["body-scroll-lock", "npm:3.1.5"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["@reduxjs/toolkit", [\
         ["npm:1.8.1", {\
           "packageLocation": "./.yarn/cache/@reduxjs-toolkit-npm-1.8.1-cf386ae48d-be5cdea975.zip/node_modules/@reduxjs/toolkit/",\
@@ -11166,6 +11177,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["raw-body", "npm:2.5.1"],\
             ["type-is", "npm:1.6.18"],\
             ["unpipe", "npm:1.0.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["body-scroll-lock", [\
+        ["npm:3.1.5", {\
+          "packageLocation": "./.yarn/cache/body-scroll-lock-npm-3.1.5-fbe946063b-52c25b81d6.zip/node_modules/body-scroll-lock/",\
+          "packageDependencies": [\
+            ["body-scroll-lock", "npm:3.1.5"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -27812,6 +27832,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@opengsn/common", "npm:2.2.6"],\
             ["@opengsn/provider", "npm:2.2.6"],\
             ["@pmmmwh/react-refresh-webpack-plugin", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:0.5.5"],\
+            ["@ramp-network/ramp-instant-sdk", "npm:3.2.3"],\
             ["@reduxjs/toolkit", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:1.8.1"],\
             ["@svgr/webpack", "npm:5.5.0"],\
             ["@tanstack/react-query", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:4.1.3"],\
