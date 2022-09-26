@@ -56,3 +56,18 @@ export enum KeyStoreStage {
   Initializing, // initializing keys
   Initialized, // done
 }
+
+export enum TxSpeed {
+  FAST = 'high',
+  NORMAL = 'medium',
+  SLOW = 'low',
+}
+
+export type SpeedConfig = {
+  type: TxSpeed;
+  label: string;
+  values?: {
+    maxWaitTime: number;
+    maxFeePerGas: number;
+  };
+};

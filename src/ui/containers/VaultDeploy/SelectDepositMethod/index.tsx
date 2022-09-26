@@ -5,8 +5,9 @@ import * as React from 'react';
 import { ReactComponent as EthSvg } from 'assets/img/eth-icon.svg';
 import Button from '@components/Button';
 import { useNavigate } from 'react-router-dom';
-import { MIN_DEPOSIT } from '@utils/bn';
 import { useUsdValueOfEth } from '@hooks/useCoinPrice';
+import { useMinDepositAmount } from '@hooks/useMinDepositAmount';
+import { formatAmount } from '@utils/bn';
 
 const SelectDepositMethod: React.FC = () => {
   const [isInfoCardShown, setIsInfoCardShown] = React.useState(true);
@@ -19,7 +20,8 @@ const SelectDepositMethod: React.FC = () => {
 };
 
 const InfoCard: React.FC<{ onClick: () => void }> = ({ onClick }) => {
-  const [usdValue, usdValueLoading] = useUsdValueOfEth(MIN_DEPOSIT);
+  const [minDeposit, isLoading] = useMinDepositAmount();
+  const [usdValue, usdValueLoading] = useUsdValueOfEth(minDeposit);
 
   return (
     <Card
@@ -42,7 +44,7 @@ const InfoCard: React.FC<{ onClick: () => void }> = ({ onClick }) => {
           <Text>Minimum ETH Required</Text>
           <Group mt={5} align="center" spacing={2} ml={5}>
             <Text sx={{ fontSize: 24 }} weight={'bold'}>
-              {MIN_DEPOSIT.toString()}
+              {isLoading ? '...' : formatAmount(minDeposit)}
             </Text>
             <EthSvg />
           </Group>
