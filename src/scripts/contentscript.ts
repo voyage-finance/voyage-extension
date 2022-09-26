@@ -34,8 +34,6 @@ async function documentFullyLoaded(): Promise<void> {
 
 function getMarketplace(): Marketplace | undefined {
   const host = window.location.host;
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
   const os = OPENSEA_HOSTS[+process.env.CHAIN_ID! as ChainID];
   const looks = LOOKS_HOSTS[+process.env.CHAIN_ID! as ChainID];
   switch (host) {
