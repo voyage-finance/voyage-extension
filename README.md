@@ -20,23 +20,32 @@ npm run start
 
 In the project directory, you can run:
 
-### `npm start`
+### `yarn start`
 
 Runs the app in development mode. All compiled assets will be in `build`. To preview the extension, load it into Chrome.
 
 Note that the extension, including background and content scripts, are automatically hot reloaded thanks to [@voyage-finance/webpack-ext-loader](https://github.com/voyage-finance/webpack-ext-reloader), our fork of [SimplifyJob/webpack-ext-reloader](https://github.com/SimplifyJobs/webpack-ext-reloader).
 
-### `npm test`
+### `yarn test`
 
 Launches the test runner in the interactive watch mode.\
 See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### `npm run build`
+### `yarn run build`
 
 Builds the app for production to the `build` folder.\
 It correctly bundles React in production mode and optimizes the build for the best performance.
 
 The build is minified and the filenames include the hashes.\
+
+### Env variables
+There are `env.*.example` files that you can use for your environment
+For dev, you can switch on debugging mode. Also, by defining these variables, extension will bypass getTorusKey request for any email.
+```shell
+VOYAGE_DEBUG=true
+DEBUG_LOCALHOST_PRIVATE_KEY=  // First priority for generating wallet
+DEBUG_GOERLI_MNEMONIC= // Second priority for generating wallet
+```
 
 ## Architecture
 
