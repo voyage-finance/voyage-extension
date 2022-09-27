@@ -5,6 +5,7 @@ import { makeAutoObservable, toJS } from 'mobx';
 import Customauth from '@toruslabs/customauth';
 import { storage } from 'webextension-polyfill';
 import { omit } from 'lodash';
+import browser from 'webextension-polyfill';
 
 export interface PendingLogin {
   email: string;
@@ -184,6 +185,7 @@ class KeyStore {
     this.isTermsSigned = false;
     storage.local.remove('keyStore');
     storage.local.remove('vaultAddress');
+    browser.action.setPopup({ popup: '' });
   }
 }
 
