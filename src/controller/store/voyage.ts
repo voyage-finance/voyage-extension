@@ -13,6 +13,7 @@ import {
 } from '@utils/decoder';
 import { storage } from 'webextension-polyfill';
 import BigNumber from 'bignumber.js';
+import browser from 'webextension-polyfill';
 
 class VoyageStore {
   root: ControllerStore;
@@ -33,8 +34,9 @@ class VoyageStore {
     const storedVault = (await storage.local.get('vaultAddress'))
       .vaultAddress as string | undefined;
     console.log('----VoyageStore [storedVault] -----', storedVault);
-    if (storedVault !== ethers.constants.AddressZero) {
+    if (storedVault && storedVault !== ethers.constants.AddressZero) {
       this.vaultAddress = storedVault;
+      browser.action.setPopup({ popup: 'popup.html' });
     }
   }
 
@@ -77,6 +79,8 @@ class VoyageStore {
     );
 
     if (vaultAddress === ethers.constants.AddressZero) return;
+    // if we have vault, we always should show popup extension
+    browser.action.setPopup({ popup: 'popup.html' });
     return vaultAddress;
   }
 
