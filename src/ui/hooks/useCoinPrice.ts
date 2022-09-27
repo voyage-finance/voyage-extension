@@ -56,18 +56,18 @@ export const useCoinPrice = (coinId: string): [PriceData, boolean] => {
 
 export const usdValue = (amount: BigNumber, priceInUSD: number, dp = 2) => {
   if (amount.isZero()) {
-    return 'US$0';
+    return '0';
   }
 
   const bnPrice = new BigNumber(priceInUSD);
   const usdValue = amount
     .multipliedBy(bnPrice)
     .toFixed(dp, BigNumber.ROUND_HALF_DOWN);
-  return `US$${usdValue}`;
+  return usdValue;
 };
 
 export const useUsdValueOfEth = (amount: BigNumber) => {
   const [ethPrice, ethPriceLoading] = useCoinPrice('ethereum');
   const usdAmount = usdValue(amount, ethPrice.latestPrice);
-  return [usdAmount, ethPriceLoading];
+  return [usdAmount, ethPriceLoading] as const;
 };
