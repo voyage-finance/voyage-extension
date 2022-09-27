@@ -11,6 +11,7 @@ import { ethErrors } from 'eth-rpc-errors';
 import { formatEthersBN } from '@utils/bn';
 import { TransactionRequest } from '@ethersproject/providers';
 import { getContractByAddress } from '@utils/env';
+import { MIN_TTL } from '@utils/constants';
 
 interface SignRequestCallbacks {
   resolve: (value?: any) => Promise<void>;
@@ -73,6 +74,7 @@ class TransactionStore {
         onReject();
       },
     };
+    setTimeout(() => this.rejectTransaction(id), MIN_TTL);
   }
 
   async updateOrderPreviewData(id: string) {

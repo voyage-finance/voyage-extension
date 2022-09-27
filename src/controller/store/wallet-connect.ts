@@ -8,6 +8,7 @@ import { noop } from 'lodash';
 import ControllerStore from './root';
 import { createWcStream } from '../wcStream';
 import { Duplex } from 'stream';
+import { MIN_TTL } from '@utils/constants';
 
 const NS = 'finance.voyage.walletconnect.sessions';
 
@@ -131,6 +132,7 @@ class WalletConnectStore {
           reject(err);
         },
       };
+      setTimeout(() => this.rejectApprovalRequest(id), MIN_TTL);
     });
   };
 
