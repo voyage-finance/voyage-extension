@@ -49,7 +49,7 @@ const InfoCard: React.FC<{ onClick: () => void }> = ({ onClick }) => {
             <EthSvg />
           </Group>
           <Text type="secondary" mt={4}>
-            {usdValueLoading ? '$...' : usdValue}
+            {usdValueLoading ? '$...' : `$${usdValue}`}
           </Text>
         </Group>
         <Button mt={25} onClick={onClick} sx={{ width: 300 }}>
@@ -64,7 +64,11 @@ const MethodsCard = () => {
   const navigate = useNavigate();
 
   const onDepositClick = async () => {
-    navigate('/vault/deposit/await');
+    navigate('/vault/deposit/await/direct');
+  };
+
+  const onFiatClick = async () => {
+    navigate('/vault/deposit/await/ramp');
   };
 
   return (
@@ -116,8 +120,8 @@ const MethodsCard = () => {
           over 100 countries. ETH is deposited directly into your Voyage wallet
           after payment.
         </Text>
-        <Button mt={23} sx={{ width: 300 }} disabled>
-          Coming Soon
+        <Button mt={23} sx={{ width: 300 }} onClick={onFiatClick}>
+          Buy with Fiat
         </Button>
       </Group>
     </Card>

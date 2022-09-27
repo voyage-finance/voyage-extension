@@ -101,7 +101,8 @@ const Router: React.FC = () => {
         } else {
           setWaitingDeploy(true);
           if (isTermsSigned) {
-            navigate(VAULT_DEPOSIT_METHODS_ROUTE);
+            if (!location.pathname.startsWith('/vault/deposit'))
+              navigate(VAULT_DEPOSIT_METHODS_ROUTE);
           } else {
             navigate(ONBOARD_TERMS_ROUTE);
           }
@@ -135,7 +136,7 @@ const Router: React.FC = () => {
         </Route>
         <Route path="/vault/" element={<Onboard />}>
           <Route path="deposit/method" element={<SelectDepositMethod />} />
-          <Route path="deposit/await" element={<AwaitDeposit />} />
+          <Route path="deposit/await/:method" element={<AwaitDeposit />} />
           <Route path="deposit/deployed" element={<VaultDeployed />} />
         </Route>
         <Route path="/vault/">
