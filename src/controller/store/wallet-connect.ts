@@ -12,9 +12,9 @@ import { MIN_TTL } from '@utils/constants';
 
 const NS = 'finance.voyage.walletconnect.sessions';
 
-type ApprovalPromiseResolve = (value?: unknown) => void;
+type ApprovalPromiseResolve = (value?: unknown) => Promise<void>;
 
-type ApprovalPromiseReject = (error?: Error) => void;
+type ApprovalPromiseReject = (error?: Error) => Promise<void>;
 
 interface ApprovalCallbacks {
   resolve: ApprovalPromiseResolve;
@@ -88,7 +88,6 @@ class WalletConnectStore {
 
   private async hydrateConnections() {
     const storedSessions = await this.getSessions();
-    console.log('hydrating sessions: ', storedSessions);
     const connections: Record<string, WalletConnect> = {};
     for (const k of Object.keys(storedSessions)) {
       const session = storedSessions[k];

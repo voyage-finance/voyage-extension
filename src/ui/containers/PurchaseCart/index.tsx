@@ -23,11 +23,13 @@ import { useEthBalance } from '@hooks/useEthBalance';
 import { formatAmount, fromBigNumber } from '@utils/bn';
 import useVoyageController from '@hooks/useVoyageController';
 import { useNavigate, useParams } from 'react-router-dom';
-import { PURCHASE_OVERVIEW_ROUTE } from '@utils/constants';
+import { MAX_UINT256, PURCHASE_OVERVIEW_ROUTE } from '@utils/constants';
 import { TransactionStatus } from 'types/transaction';
 import ErrorBox from '@components/PreviewErrorBox';
-import { getContractByAddress } from '@utils/env';
+import { getContractByAddress, getTxExpolerLink } from '@utils/env';
 import { TxSpeed } from 'types';
+import { useWETHAllowance } from '@hooks/useWETHAllowance';
+import { ethers } from 'ethers';
 
 const PurchaseCart: React.FC = () => {
   const { txId } = useParams();
@@ -93,6 +95,36 @@ const PurchaseCart: React.FC = () => {
     fetchPreview();
   }, []);
 
+  const [allowance, isLoadingAllowance] = useWETHAllowance(
+    vaultAddress || ethers.constants.AddressZero,
+    orderPreview?.order?.marketplaceAddress
+  );
+  console.log(
+    `allowance of ${orderPreview?.order?.marketplaceAddress} is ${allowance}`
+  );
+  const approvalRequired = ethers.BigNumber.from(allowance).lt(MAX_UINT256);
+  console.log('approval required: ', approvalRequired);
+  const [approving, setApproving] = useState(false);
+  const [approvalTx, setApprovalTx] = useState('');
+  const handleApproveClick = async () => {
+    try {
+      if (!approving && approvalTx) {
+        window.open(getTxExpolerLink(approvalTx));
+        return;
+      }
+      setApproving(true);
+      const txHash = await controller.approveMarketplaceAddress(
+        orderPreview?.order?.marketplaceAddress
+      );
+      setApprovalTx(txHash);
+      console.log('tx hash: ', txHash);
+    } catch (err) {
+      console.error('failed to approve marketplace: ', err);
+    } finally {
+      setApproving(false);
+    }
+  };
+
   return (
     <Card
       style={{
@@ -103,7 +135,7 @@ const PurchaseCart: React.FC = () => {
       py={40}
       px={56}
     >
-      <LoadingOverlay visible={isLoading} />
+      <LoadingOverlay visible={isLoading || isLoadingAllowance} />
       <Stack spacing={0} align="stretch">
         <Group align="center" position="apart" noWrap>
           <Text sx={{ fontSize: 32 }} weight={'bold'}>
@@ -235,12 +267,27 @@ const PurchaseCart: React.FC = () => {
         )}
         {transaction.status === TransactionStatus.Unconfirmed ? (
           <>
+            {!isLoadingAllowance && (approvalRequired || !!approvalTx) && (
+              <Button
+                fullWidth
+                mt={24}
+                onClick={handleApproveClick}
+                loading={approving}
+                disabled={approving}
+              >
+                {approving
+                  ? 'Approving...'
+                  : approvalTx
+                  ? 'Approved'
+                  : 'Approve'}
+              </Button>
+            )}
             <Button
               fullWidth
               mt={24}
               onClick={handleBuyClick}
               loading={isPurchasing}
-              disabled={!!orderPreview?.error}
+              disabled={!!orderPreview?.error || approvalRequired}
             >
               {!isPurchasing ? (
                 <>
