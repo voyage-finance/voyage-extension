@@ -2,16 +2,17 @@ import { ReactComponent as Voyage } from '@images/logo-menu.svg';
 import { ReactComponent as MM } from '@images/logo-metamask.svg';
 import { truncate } from '@utils/address';
 import styles from './index.module.scss';
-import { useAccount, useNetwork } from 'wagmi';
+import { useNetwork } from 'wagmi';
 import { chains } from '@utils/chain';
 import cn from 'classnames';
 import { ActionIcon } from '@mantine/core';
 import { DotsVertical } from 'tabler-icons-react';
 import { useNavigate } from 'react-router-dom';
 import browser from 'webextension-polyfill';
+import { useAppSelector } from '@hooks/useRedux';
 
 const MenuBar = () => {
-  const { address } = useAccount();
+  const address = useAppSelector((state) => state.core.vaultAddress);
   const { chain } = useNetwork();
   const isSupportedChain = chains.some(({ id }) => id === chain?.id);
   const navigate = useNavigate();
