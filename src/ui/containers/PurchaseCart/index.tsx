@@ -267,7 +267,7 @@ const PurchaseCart: React.FC = () => {
         )}
         {transaction.status === TransactionStatus.Unconfirmed ? (
           <>
-            {!isLoadingAllowance && (approvalRequired || !!approvalTx) && (
+            {!isLoadingAllowance && approvalRequired && (
               <Button
                 fullWidth
                 mt={24}

@@ -1,11 +1,9 @@
-import ControllerStore from './root';
-import { Account, KeyStoreStage, AuthInfo, KeyStorePersist } from '../../types';
-import { ethers } from 'ethers';
-import { makeAutoObservable, toJS } from 'mobx';
 import Customauth from '@toruslabs/customauth';
-import { storage } from 'webextension-polyfill';
-import { omit } from 'lodash';
-import browser from 'webextension-polyfill';
+import { ethers } from 'ethers';
+import { makeAutoObservable, runInAction, toJS } from 'mobx';
+import browser, { storage } from 'webextension-polyfill';
+import { Account, AuthInfo, KeyStorePersist, KeyStoreStage } from '../../types';
+import ControllerStore from './root';
 
 export interface PendingLogin {
   email: string;
@@ -26,7 +24,7 @@ class KeyStore {
     this.isTermsSigned = false;
     this.torusSdk = new Customauth({
       baseUrl: process.env.VOYAGE_WEB_URL!,
-      network: 'testnet',
+      network: process.env.TORUS_NETWORK! as 'testnet',
     });
     makeAutoObservable(this, { root: false });
     this.initialize();
@@ -50,37 +48,22 @@ class KeyStore {
     const stateObject = (await storage.local.get('keyStore')).keyStore as
       | KeyStorePersist
       | undefined;
-    if (stateObject) {
-      this.stage = stateObject.stage;
-      this.isTermsSigned = stateObject.isTermsSigned;
-      this.account = stateObject.account;
-      this.reconstructKeyPair();
-    }
-  }
-
-  async reconstructKeyPair() {
-    if (!this.account) return;
-
-    const torusKeys = await this.getToruskey(
-      this.account.auth.uid,
-      this.account.auth.jwt
-    );
-
-    this.account = {
-      ...this.account,
-      keyPair: {
-        privateKey: torusKeys.privateKey,
-        publicKey: torusKeys.pubKey?.pub_key_X,
-      },
-    };
-    this.root.gsnStore.addAccount(torusKeys.privateKey);
+    runInAction(() => {
+      if (stateObject) {
+        this.stage = stateObject.stage;
+        this.isTermsSigned = stateObject.isTermsSigned;
+        this.account = stateObject.account;
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion, @typescript-eslint/no-non-null-asserted-optional-chain
+        this.root.gsnStore.addAccount(this.account?.keyPair?.privateKey!);
+      }
+    });
   }
 
   persistState() {
     const stateObject: KeyStorePersist = {
       stage: this.stage,
       isTermsSigned: this.isTermsSigned,
-      account: omit(toJS(this.account!), ['keyPair']),
+      account: toJS(this.account!),
     };
     storage.local.set({
       keyStore: stateObject,
@@ -127,7 +110,7 @@ class KeyStore {
   async getToruskey(uid: string, jwt: string) {
     if (!process.env.VOYAGE_DEBUG)
       return await this.torusSdk.getTorusKey(
-        'voyage-finance-firebase-testnet',
+        process.env.TORUS_VERIFIER!,
         uid,
         {
           verifier_id: uid,
