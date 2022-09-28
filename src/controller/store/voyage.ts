@@ -98,9 +98,12 @@ class VoyageStore {
   }
 
   async wrapVaultETH(amount: BigNumber) {
-    return await this.voyage
-      .connect(this.root.keyStore.getSigner())
-      .wrapVaultETH(this.vaultAddress!, amount.toString());
+    const txRequest = await this.voyage.populateTransaction.wrapVaultETH(
+      this.vaultAddress!,
+      amount.toString()
+    );
+    const tx = await this.root.gsnStore.relayTransaction(txRequest);
+    return tx.hash;
   }
 
   async buyNow(transaction: TransactionRequest) {

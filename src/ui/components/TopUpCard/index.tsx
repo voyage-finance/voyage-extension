@@ -32,20 +32,20 @@ const TopUpCard: React.FunctionComponent = () => {
       window.open(getTxExpolerLink(lastWrappedHash), '_blank');
     setIsWrapping(true);
     try {
-      const tx = await controller.wrapVaultETH(
+      const txHash = await controller.wrapVaultETH(
         ethBalance.shiftedBy(ETHERS_DECIMALS)
       );
       showNotification({
         title: 'Started wrapping eth',
         message: '',
-        hash: tx.hash,
+        hash: txHash,
         type: 'success',
       });
       // tx.wait is underfined, so using this
       await new ethers.providers.Web3Provider(provider).waitForTransaction(
-        tx.hash
+        txHash
       );
-      setLastWrappedHash(tx.hash);
+      setLastWrappedHash(txHash);
     } catch (e: any) {
       console.error(e.message);
     }

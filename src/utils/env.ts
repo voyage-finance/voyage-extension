@@ -38,10 +38,10 @@ const VOYAGE = VOYAGE_ADDRESS[getChainID()];
 const LOOKS = LOOKS_ADDRESS[getChainID()];
 const PAYMASTER = PAYMASTER_ADDRESS[getChainID()];
 const contracts = {
-  [Contracts.Voyage]: VOYAGE,
-  [Contracts.LooksRare]: LOOKS,
-  [Contracts.Seaport]: CROSS_CHAIN_SEAPORT_ADDRESS,
-  [Contracts.Paymaster]: PAYMASTER,
+  [Contracts.Voyage]: VOYAGE.toLowerCase(),
+  [Contracts.LooksRare]: LOOKS.toLowerCase(),
+  [Contracts.Seaport]: CROSS_CHAIN_SEAPORT_ADDRESS.toLowerCase(),
+  [Contracts.Paymaster]: PAYMASTER.toLowerCase(),
 };
 const addressToContract = Object.keys(contracts).reduce((acc, key: string) => {
   const address = contracts[key as Contracts];
