@@ -78,7 +78,8 @@ class VoyageRpcService {
           const approveTx = await this.store.voyageStore.approveMarketplace(
             calldata
           );
-          resolve(approveTx.hash);
+          const receipt = await approveTx.wait(+process.env.NUM_CONFIRMATIONS!);
+          resolve(receipt.transactionHash);
         },
         onReject: async () => reject('User rejected session request'),
       });

@@ -21,6 +21,7 @@
     "@metamask/safe-event-emitter": "^2.0.0",
     "@opengsn/common": "2.2.6",
     "@opengsn/provider": "2.2.6",
+    "@opensea/seaport-js": "^1.0.6",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.3",
     "@ramp-network/ramp-instant-sdk": "^3.2.3",
     "@reduxjs/toolkit": "^1.8.1",

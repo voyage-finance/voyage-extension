@@ -54,6 +54,7 @@ class VoyageStore {
       populateBuyNow: this.populateBuyNow.bind(this),
       getBalance: this.getBalance.bind(this),
       fetchVault: this.fetchVault.bind(this),
+      approveMarketplaceAddress: this.approveMarketplaceAddress.bind(this),
     };
   }
 
@@ -124,6 +125,17 @@ class VoyageStore {
     return this.root.gsnStore.relayTransaction(txRequest);
   }
 
+  async approveMarketplaceAddress(address: string) {
+    const txRequest = await this.voyage.populateTransaction.approveMarketplace(
+      this.vaultAddress!,
+      address,
+      false
+    );
+    const tx = await this.root.gsnStore.relayTransaction(txRequest);
+    const { transactionHash } = await tx.wait(+process.env.NUM_CONFIRMATIONS!);
+    return transactionHash;
+  }
+
   async approveMarketplace(calldata: string) {
     const marketplace = decodeMarketplaceFromApproveCalldata(calldata);
 
@@ -134,8 +146,10 @@ class VoyageStore {
 
     const txRequest = await this.voyage.populateTransaction.approveMarketplace(
       this.vaultAddress!,
-      marketplace
+      marketplace,
+      false
     );
+
     return this.root.gsnStore.relayTransaction(txRequest);
   }
 

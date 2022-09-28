@@ -22,7 +22,35 @@ export interface Transaction {
   onReject?: () => Promise<void>;
 }
 
+export enum OrderType {
+  Bid,
+  Ask,
+}
+
+export enum Marketplace {
+  LooksRare = 'looksrare',
+  Opensea = 'opensea',
+  Mocked = 'mocked',
+}
+export interface Order {
+  type: OrderType;
+  marketplace: Marketplace;
+  marketplaceAddress: string;
+  // the ERC721 contract address
+  collection: string;
+  // the ERC721 contract name
+  collectionName: string;
+  // the tokenId of the NFT to purchase
+  tokenId: BigNumber;
+  price: BigNumber;
+  // the address of the transaction currency
+  // for WETH it is the WETH address
+  // for plain native ETH, it is the 0 address (0x0000...40 repeating)
+  currency: string;
+}
+
 export interface OrderPreview {
+  order?: any;
   loanParameters?: {
     vault: string; // address of the borrowing vault
     term: string; // loan duration

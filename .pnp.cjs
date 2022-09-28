@@ -53,6 +53,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@metamask/safe-event-emitter", "npm:2.0.0"],\
             ["@opengsn/common", "npm:2.2.6"],\
             ["@opengsn/provider", "npm:2.2.6"],\
+            ["@opensea/seaport-js", "npm:1.0.6"],\
             ["@pmmmwh/react-refresh-webpack-plugin", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:0.5.5"],\
             ["@ramp-network/ramp-instant-sdk", "npm:3.2.3"],\
             ["@reduxjs/toolkit", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:1.8.1"],\
@@ -189,6 +190,54 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["yup", "npm:0.32.11"]\
           ],\
           "linkType": "SOFT"\
+        }]\
+      ]],\
+      ["@0xsequence/abi", [\
+        ["npm:0.39.6", {\
+          "packageLocation": "./.yarn/cache/@0xsequence-abi-npm-0.39.6-22728f1a9c-1a953e0c53.zip/node_modules/@0xsequence/abi/",\
+          "packageDependencies": [\
+            ["@0xsequence/abi", "npm:0.39.6"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@0xsequence/multicall", [\
+        ["npm:0.39.6", {\
+          "packageLocation": "./.yarn/cache/@0xsequence-multicall-npm-0.39.6-ddf2c2f3a6-cccfe1bf4d.zip/node_modules/@0xsequence/multicall/",\
+          "packageDependencies": [\
+            ["@0xsequence/multicall", "npm:0.39.6"],\
+            ["@0xsequence/abi", "npm:0.39.6"],\
+            ["@0xsequence/network", "npm:0.39.6"],\
+            ["@0xsequence/utils", "npm:0.39.6"],\
+            ["@ethersproject/providers", "npm:5.7.1"],\
+            ["ethers", "npm:5.7.1"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@0xsequence/network", [\
+        ["npm:0.39.6", {\
+          "packageLocation": "./.yarn/cache/@0xsequence-network-npm-0.39.6-719bc1ac20-18c739245b.zip/node_modules/@0xsequence/network/",\
+          "packageDependencies": [\
+            ["@0xsequence/network", "npm:0.39.6"],\
+            ["@0xsequence/utils", "npm:0.39.6"],\
+            ["@ethersproject/providers", "npm:5.7.1"],\
+            ["ethers", "npm:5.7.1"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@0xsequence/utils", [\
+        ["npm:0.39.6", {\
+          "packageLocation": "./.yarn/cache/@0xsequence-utils-npm-0.39.6-2542bf8544-baa6e31329.zip/node_modules/@0xsequence/utils/",\
+          "packageDependencies": [\
+            ["@0xsequence/utils", "npm:0.39.6"],\
+            ["@ethersproject/abstract-signer", "npm:5.7.0"],\
+            ["@ethersproject/properties", "npm:5.7.0"],\
+            ["ethers", "npm:5.7.1"],\
+            ["js-base64", "npm:3.7.2"]\
+          ],\
+          "linkType": "HARD"\
         }]\
       ]],\
       ["@ampproject/remapping", [\
@@ -3925,6 +3974,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@ethersproject/properties", "npm:5.6.0"]\
           ],\
           "linkType": "HARD"\
+        }],\
+        ["npm:5.7.0", {\
+          "packageLocation": "./.yarn/cache/@ethersproject-basex-npm-5.7.0-78ae312582-326087b7e1.zip/node_modules/@ethersproject/basex/",\
+          "packageDependencies": [\
+            ["@ethersproject/basex", "npm:5.7.0"],\
+            ["@ethersproject/bytes", "npm:5.7.0"],\
+            ["@ethersproject/properties", "npm:5.7.0"]\
+          ],\
+          "linkType": "HARD"\
         }]\
       ]],\
       ["@ethersproject/bignumber", [\
@@ -4106,6 +4164,25 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@ethersproject/wordlists", "npm:5.6.1"]\
           ],\
           "linkType": "HARD"\
+        }],\
+        ["npm:5.7.0", {\
+          "packageLocation": "./.yarn/cache/@ethersproject-hdnode-npm-5.7.0-c6d5c6aa1c-bfe5ca2d89.zip/node_modules/@ethersproject/hdnode/",\
+          "packageDependencies": [\
+            ["@ethersproject/hdnode", "npm:5.7.0"],\
+            ["@ethersproject/abstract-signer", "npm:5.7.0"],\
+            ["@ethersproject/basex", "npm:5.7.0"],\
+            ["@ethersproject/bignumber", "npm:5.7.0"],\
+            ["@ethersproject/bytes", "npm:5.7.0"],\
+            ["@ethersproject/logger", "npm:5.7.0"],\
+            ["@ethersproject/pbkdf2", "npm:5.7.0"],\
+            ["@ethersproject/properties", "npm:5.7.0"],\
+            ["@ethersproject/sha2", "npm:5.7.0"],\
+            ["@ethersproject/signing-key", "npm:5.7.0"],\
+            ["@ethersproject/strings", "npm:5.7.0"],\
+            ["@ethersproject/transactions", "npm:5.7.0"],\
+            ["@ethersproject/wordlists", "npm:5.7.0"]\
+          ],\
+          "linkType": "HARD"\
         }]\
       ]],\
       ["@ethersproject/json-wallets", [\
@@ -4124,6 +4201,26 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@ethersproject/random", "npm:5.6.1"],\
             ["@ethersproject/strings", "npm:5.6.1"],\
             ["@ethersproject/transactions", "npm:5.6.2"],\
+            ["aes-js", "npm:3.0.0"],\
+            ["scrypt-js", "npm:3.0.1"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:5.7.0", {\
+          "packageLocation": "./.yarn/cache/@ethersproject-json-wallets-npm-5.7.0-f73c4734e5-f583458d22.zip/node_modules/@ethersproject/json-wallets/",\
+          "packageDependencies": [\
+            ["@ethersproject/json-wallets", "npm:5.7.0"],\
+            ["@ethersproject/abstract-signer", "npm:5.7.0"],\
+            ["@ethersproject/address", "npm:5.7.0"],\
+            ["@ethersproject/bytes", "npm:5.7.0"],\
+            ["@ethersproject/hdnode", "npm:5.7.0"],\
+            ["@ethersproject/keccak256", "npm:5.7.0"],\
+            ["@ethersproject/logger", "npm:5.7.0"],\
+            ["@ethersproject/pbkdf2", "npm:5.7.0"],\
+            ["@ethersproject/properties", "npm:5.7.0"],\
+            ["@ethersproject/random", "npm:5.7.0"],\
+            ["@ethersproject/strings", "npm:5.7.0"],\
+            ["@ethersproject/transactions", "npm:5.7.0"],\
             ["aes-js", "npm:3.0.0"],\
             ["scrypt-js", "npm:3.0.1"]\
           ],\
@@ -4199,6 +4296,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@ethersproject/logger", "npm:5.7.0"]\
           ],\
           "linkType": "HARD"\
+        }],\
+        ["npm:5.7.1", {\
+          "packageLocation": "./.yarn/cache/@ethersproject-networks-npm-5.7.1-eb06956095-0339f31230.zip/node_modules/@ethersproject/networks/",\
+          "packageDependencies": [\
+            ["@ethersproject/networks", "npm:5.7.1"],\
+            ["@ethersproject/logger", "npm:5.7.0"]\
+          ],\
+          "linkType": "HARD"\
         }]\
       ]],\
       ["@ethersproject/pbkdf2", [\
@@ -4208,6 +4313,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@ethersproject/pbkdf2", "npm:5.6.1"],\
             ["@ethersproject/bytes", "npm:5.6.1"],\
             ["@ethersproject/sha2", "npm:5.6.1"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:5.7.0", {\
+          "packageLocation": "./.yarn/cache/@ethersproject-pbkdf2-npm-5.7.0-5b8e51d4b9-b895adb9e3.zip/node_modules/@ethersproject/pbkdf2/",\
+          "packageDependencies": [\
+            ["@ethersproject/pbkdf2", "npm:5.7.0"],\
+            ["@ethersproject/bytes", "npm:5.7.0"],\
+            ["@ethersproject/sha2", "npm:5.7.0"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -4283,6 +4397,33 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["ws", "virtual:e41fcd558c0ee362f8bf5f8e51299e4b43d0036be82a6ab22d453d59043d0dbceffdee4b5312f134b47f514b718da0cbb02ad4ecd19d2ead4bcf011727d8865f#npm:7.4.6"]\
           ],\
           "linkType": "HARD"\
+        }],\
+        ["npm:5.7.1", {\
+          "packageLocation": "./.yarn/cache/@ethersproject-providers-npm-5.7.1-7ba09fa2d7-673745e967.zip/node_modules/@ethersproject/providers/",\
+          "packageDependencies": [\
+            ["@ethersproject/providers", "npm:5.7.1"],\
+            ["@ethersproject/abstract-provider", "npm:5.7.0"],\
+            ["@ethersproject/abstract-signer", "npm:5.7.0"],\
+            ["@ethersproject/address", "npm:5.7.0"],\
+            ["@ethersproject/base64", "npm:5.7.0"],\
+            ["@ethersproject/basex", "npm:5.7.0"],\
+            ["@ethersproject/bignumber", "npm:5.7.0"],\
+            ["@ethersproject/bytes", "npm:5.7.0"],\
+            ["@ethersproject/constants", "npm:5.7.0"],\
+            ["@ethersproject/hash", "npm:5.7.0"],\
+            ["@ethersproject/logger", "npm:5.7.0"],\
+            ["@ethersproject/networks", "npm:5.7.0"],\
+            ["@ethersproject/properties", "npm:5.7.0"],\
+            ["@ethersproject/random", "npm:5.7.0"],\
+            ["@ethersproject/rlp", "npm:5.7.0"],\
+            ["@ethersproject/sha2", "npm:5.7.0"],\
+            ["@ethersproject/strings", "npm:5.7.0"],\
+            ["@ethersproject/transactions", "npm:5.7.0"],\
+            ["@ethersproject/web", "npm:5.7.0"],\
+            ["bech32", "npm:1.1.4"],\
+            ["ws", "virtual:e41fcd558c0ee362f8bf5f8e51299e4b43d0036be82a6ab22d453d59043d0dbceffdee4b5312f134b47f514b718da0cbb02ad4ecd19d2ead4bcf011727d8865f#npm:7.4.6"]\
+          ],\
+          "linkType": "HARD"\
         }]\
       ]],\
       ["@ethersproject/random", [\
@@ -4301,6 +4442,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@ethersproject/random", "npm:5.6.1"],\
             ["@ethersproject/bytes", "npm:5.6.1"],\
             ["@ethersproject/logger", "npm:5.6.0"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:5.7.0", {\
+          "packageLocation": "./.yarn/cache/@ethersproject-random-npm-5.7.0-a0466f53f9-017829c91c.zip/node_modules/@ethersproject/random/",\
+          "packageDependencies": [\
+            ["@ethersproject/random", "npm:5.7.0"],\
+            ["@ethersproject/bytes", "npm:5.7.0"],\
+            ["@ethersproject/logger", "npm:5.7.0"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -4351,6 +4501,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@ethersproject/sha2", "npm:5.6.1"],\
             ["@ethersproject/bytes", "npm:5.6.1"],\
             ["@ethersproject/logger", "npm:5.6.0"],\
+            ["hash.js", "npm:1.1.7"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:5.7.0", {\
+          "packageLocation": "./.yarn/cache/@ethersproject-sha2-npm-5.7.0-569c8bdff0-09321057c0.zip/node_modules/@ethersproject/sha2/",\
+          "packageDependencies": [\
+            ["@ethersproject/sha2", "npm:5.7.0"],\
+            ["@ethersproject/bytes", "npm:5.7.0"],\
+            ["@ethersproject/logger", "npm:5.7.0"],\
             ["hash.js", "npm:1.1.7"]\
           ],\
           "linkType": "HARD"\
@@ -4408,6 +4568,19 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@ethersproject/logger", "npm:5.6.0"],\
             ["@ethersproject/sha2", "npm:5.6.1"],\
             ["@ethersproject/strings", "npm:5.6.1"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:5.7.0", {\
+          "packageLocation": "./.yarn/cache/@ethersproject-solidity-npm-5.7.0-75baa4e133-9a02f37f80.zip/node_modules/@ethersproject/solidity/",\
+          "packageDependencies": [\
+            ["@ethersproject/solidity", "npm:5.7.0"],\
+            ["@ethersproject/bignumber", "npm:5.7.0"],\
+            ["@ethersproject/bytes", "npm:5.7.0"],\
+            ["@ethersproject/keccak256", "npm:5.7.0"],\
+            ["@ethersproject/logger", "npm:5.7.0"],\
+            ["@ethersproject/sha2", "npm:5.7.0"],\
+            ["@ethersproject/strings", "npm:5.7.0"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -4504,6 +4677,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@ethersproject/logger", "npm:5.6.0"]\
           ],\
           "linkType": "HARD"\
+        }],\
+        ["npm:5.7.0", {\
+          "packageLocation": "./.yarn/cache/@ethersproject-units-npm-5.7.0-1c1f5ec7ca-304714f848.zip/node_modules/@ethersproject/units/",\
+          "packageDependencies": [\
+            ["@ethersproject/units", "npm:5.7.0"],\
+            ["@ethersproject/bignumber", "npm:5.7.0"],\
+            ["@ethersproject/constants", "npm:5.7.0"],\
+            ["@ethersproject/logger", "npm:5.7.0"]\
+          ],\
+          "linkType": "HARD"\
         }]\
       ]],\
       ["@ethersproject/wallet", [\
@@ -4526,6 +4709,28 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@ethersproject/signing-key", "npm:5.6.2"],\
             ["@ethersproject/transactions", "npm:5.6.2"],\
             ["@ethersproject/wordlists", "npm:5.6.1"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:5.7.0", {\
+          "packageLocation": "./.yarn/cache/@ethersproject-wallet-npm-5.7.0-f553c726b7-a4009bf733.zip/node_modules/@ethersproject/wallet/",\
+          "packageDependencies": [\
+            ["@ethersproject/wallet", "npm:5.7.0"],\
+            ["@ethersproject/abstract-provider", "npm:5.7.0"],\
+            ["@ethersproject/abstract-signer", "npm:5.7.0"],\
+            ["@ethersproject/address", "npm:5.7.0"],\
+            ["@ethersproject/bignumber", "npm:5.7.0"],\
+            ["@ethersproject/bytes", "npm:5.7.0"],\
+            ["@ethersproject/hash", "npm:5.7.0"],\
+            ["@ethersproject/hdnode", "npm:5.7.0"],\
+            ["@ethersproject/json-wallets", "npm:5.7.0"],\
+            ["@ethersproject/keccak256", "npm:5.7.0"],\
+            ["@ethersproject/logger", "npm:5.7.0"],\
+            ["@ethersproject/properties", "npm:5.7.0"],\
+            ["@ethersproject/random", "npm:5.7.0"],\
+            ["@ethersproject/signing-key", "npm:5.7.0"],\
+            ["@ethersproject/transactions", "npm:5.7.0"],\
+            ["@ethersproject/wordlists", "npm:5.7.0"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -4566,6 +4771,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@ethersproject/strings", "npm:5.7.0"]\
           ],\
           "linkType": "HARD"\
+        }],\
+        ["npm:5.7.1", {\
+          "packageLocation": "./.yarn/cache/@ethersproject-web-npm-5.7.1-dabb653410-7028c47103.zip/node_modules/@ethersproject/web/",\
+          "packageDependencies": [\
+            ["@ethersproject/web", "npm:5.7.1"],\
+            ["@ethersproject/base64", "npm:5.7.0"],\
+            ["@ethersproject/bytes", "npm:5.7.0"],\
+            ["@ethersproject/logger", "npm:5.7.0"],\
+            ["@ethersproject/properties", "npm:5.7.0"],\
+            ["@ethersproject/strings", "npm:5.7.0"]\
+          ],\
+          "linkType": "HARD"\
         }]\
       ]],\
       ["@ethersproject/wordlists", [\
@@ -4578,6 +4795,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@ethersproject/logger", "npm:5.6.0"],\
             ["@ethersproject/properties", "npm:5.6.0"],\
             ["@ethersproject/strings", "npm:5.6.1"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:5.7.0", {\
+          "packageLocation": "./.yarn/cache/@ethersproject-wordlists-npm-5.7.0-00d314bfdb-30eb6eb073.zip/node_modules/@ethersproject/wordlists/",\
+          "packageDependencies": [\
+            ["@ethersproject/wordlists", "npm:5.7.0"],\
+            ["@ethersproject/bytes", "npm:5.7.0"],\
+            ["@ethersproject/hash", "npm:5.7.0"],\
+            ["@ethersproject/logger", "npm:5.7.0"],\
+            ["@ethersproject/properties", "npm:5.7.0"],\
+            ["@ethersproject/strings", "npm:5.7.0"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -6385,6 +6614,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["ethereumjs-wallet", "npm:0.6.5"],\
             ["loglevel", "npm:1.8.0"],\
             ["winston", "npm:3.8.1"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@opensea/seaport-js", [\
+        ["npm:1.0.6", {\
+          "packageLocation": "./.yarn/cache/@opensea-seaport-js-npm-1.0.6-49442eabf4-95f4b7f62e.zip/node_modules/@opensea/seaport-js/",\
+          "packageDependencies": [\
+            ["@opensea/seaport-js", "npm:1.0.6"],\
+            ["@0xsequence/multicall", "npm:0.39.6"],\
+            ["ethers", "npm:5.7.1"],\
+            ["merkletreejs", "npm:0.2.32"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -11045,6 +11286,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["bignumber.js", "npm:9.0.2"]\
           ],\
           "linkType": "HARD"\
+        }],\
+        ["npm:9.1.0", {\
+          "packageLocation": "./.yarn/cache/bignumber.js-npm-9.1.0-4f54bd1083-52ec2bb5a3.zip/node_modules/bignumber.js/",\
+          "packageDependencies": [\
+            ["bignumber.js", "npm:9.1.0"]\
+          ],\
+          "linkType": "HARD"\
         }]\
       ]],\
       ["binary-extensions", [\
@@ -11494,6 +11742,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/buffer-from-npm-1.1.2-03d2f20d7e-0448524a56.zip/node_modules/buffer-from/",\
           "packageDependencies": [\
             ["buffer-from", "npm:1.1.2"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["buffer-reverse", [\
+        ["npm:1.0.1", {\
+          "packageLocation": "./.yarn/cache/buffer-reverse-npm-1.0.1-2224e35393-e350872a89.zip/node_modules/buffer-reverse/",\
+          "packageDependencies": [\
+            ["buffer-reverse", "npm:1.0.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -12827,6 +13084,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["public-encrypt", "npm:4.0.3"],\
             ["randombytes", "npm:2.1.0"],\
             ["randomfill", "npm:1.0.4"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["crypto-js", [\
+        ["npm:3.3.0", {\
+          "packageLocation": "./.yarn/cache/crypto-js-npm-3.3.0-5b307000b5-193923143a.zip/node_modules/crypto-js/",\
+          "packageDependencies": [\
+            ["crypto-js", "npm:3.3.0"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -15329,6 +15595,43 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@ethersproject/wallet", "npm:5.6.2"],\
             ["@ethersproject/web", "npm:5.6.1"],\
             ["@ethersproject/wordlists", "npm:5.6.1"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:5.7.1", {\
+          "packageLocation": "./.yarn/cache/ethers-npm-5.7.1-da167a157a-7a61b7a105.zip/node_modules/ethers/",\
+          "packageDependencies": [\
+            ["ethers", "npm:5.7.1"],\
+            ["@ethersproject/abi", "npm:5.7.0"],\
+            ["@ethersproject/abstract-provider", "npm:5.7.0"],\
+            ["@ethersproject/abstract-signer", "npm:5.7.0"],\
+            ["@ethersproject/address", "npm:5.7.0"],\
+            ["@ethersproject/base64", "npm:5.7.0"],\
+            ["@ethersproject/basex", "npm:5.7.0"],\
+            ["@ethersproject/bignumber", "npm:5.7.0"],\
+            ["@ethersproject/bytes", "npm:5.7.0"],\
+            ["@ethersproject/constants", "npm:5.7.0"],\
+            ["@ethersproject/contracts", "npm:5.7.0"],\
+            ["@ethersproject/hash", "npm:5.7.0"],\
+            ["@ethersproject/hdnode", "npm:5.7.0"],\
+            ["@ethersproject/json-wallets", "npm:5.7.0"],\
+            ["@ethersproject/keccak256", "npm:5.7.0"],\
+            ["@ethersproject/logger", "npm:5.7.0"],\
+            ["@ethersproject/networks", "npm:5.7.1"],\
+            ["@ethersproject/pbkdf2", "npm:5.7.0"],\
+            ["@ethersproject/properties", "npm:5.7.0"],\
+            ["@ethersproject/providers", "npm:5.7.1"],\
+            ["@ethersproject/random", "npm:5.7.0"],\
+            ["@ethersproject/rlp", "npm:5.7.0"],\
+            ["@ethersproject/sha2", "npm:5.7.0"],\
+            ["@ethersproject/signing-key", "npm:5.7.0"],\
+            ["@ethersproject/solidity", "npm:5.7.0"],\
+            ["@ethersproject/strings", "npm:5.7.0"],\
+            ["@ethersproject/transactions", "npm:5.7.0"],\
+            ["@ethersproject/units", "npm:5.7.0"],\
+            ["@ethersproject/wallet", "npm:5.7.0"],\
+            ["@ethersproject/web", "npm:5.7.1"],\
+            ["@ethersproject/wordlists", "npm:5.7.0"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -18778,6 +19081,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["js-base64", [\
+        ["npm:3.7.2", {\
+          "packageLocation": "./.yarn/cache/js-base64-npm-3.7.2-706fb77a0b-573f28e9a2.zip/node_modules/js-base64/",\
+          "packageDependencies": [\
+            ["js-base64", "npm:3.7.2"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["js-sha256", [\
         ["npm:0.9.0", {\
           "packageLocation": "./.yarn/cache/js-sha256-npm-0.9.0-1aa718efaf-ffad54b337.zip/node_modules/js-sha256/",\
@@ -19947,6 +20259,20 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/merge2-npm-1.4.1-a2507bd06c-7268db63ed.zip/node_modules/merge2/",\
           "packageDependencies": [\
             ["merge2", "npm:1.4.1"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["merkletreejs", [\
+        ["npm:0.2.32", {\
+          "packageLocation": "./.yarn/cache/merkletreejs-npm-0.2.32-79a2b236fc-041b235add.zip/node_modules/merkletreejs/",\
+          "packageDependencies": [\
+            ["merkletreejs", "npm:0.2.32"],\
+            ["bignumber.js", "npm:9.1.0"],\
+            ["buffer-reverse", "npm:1.0.1"],\
+            ["crypto-js", "npm:3.3.0"],\
+            ["treeify", "npm:1.1.0"],\
+            ["web3-utils", "npm:1.8.0"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -26801,6 +27127,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["treeify", [\
+        ["npm:1.1.0", {\
+          "packageLocation": "./.yarn/cache/treeify-npm-1.1.0-abf9292333-aa00dded22.zip/node_modules/treeify/",\
+          "packageDependencies": [\
+            ["treeify", "npm:1.1.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["trim-newlines", [\
         ["npm:3.0.1", {\
           "packageLocation": "./.yarn/cache/trim-newlines-npm-3.0.1-22f1f216de-b530f3fadf.zip/node_modules/trim-newlines/",\
@@ -27831,6 +28166,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@metamask/safe-event-emitter", "npm:2.0.0"],\
             ["@opengsn/common", "npm:2.2.6"],\
             ["@opengsn/provider", "npm:2.2.6"],\
+            ["@opensea/seaport-js", "npm:1.0.6"],\
             ["@pmmmwh/react-refresh-webpack-plugin", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:0.5.5"],\
             ["@ramp-network/ramp-instant-sdk", "npm:3.2.3"],\
             ["@reduxjs/toolkit", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:1.8.1"],\
@@ -28715,6 +29051,20 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/web3-utils-npm-1.7.5-e7517bac62-7eaffb2e59.zip/node_modules/web3-utils/",\
           "packageDependencies": [\
             ["web3-utils", "npm:1.7.5"],\
+            ["bn.js", "npm:5.2.1"],\
+            ["ethereum-bloom-filters", "npm:1.0.10"],\
+            ["ethereumjs-util", "npm:7.1.5"],\
+            ["ethjs-unit", "npm:0.1.6"],\
+            ["number-to-bn", "npm:1.7.0"],\
+            ["randombytes", "npm:2.1.0"],\
+            ["utf8", "npm:3.0.0"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:1.8.0", {\
+          "packageLocation": "./.yarn/cache/web3-utils-npm-1.8.0-c9655684c8-9ac6b8be14.zip/node_modules/web3-utils/",\
+          "packageDependencies": [\
+            ["web3-utils", "npm:1.8.0"],\
             ["bn.js", "npm:5.2.1"],\
             ["ethereum-bloom-filters", "npm:1.0.10"],\
             ["ethereumjs-util", "npm:7.1.5"],\

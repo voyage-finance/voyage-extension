@@ -67,7 +67,6 @@ export class GsnStore {
   relayTransaction = (transaction: TransactionRequest) => {
     const account = this.root.keyStore.getAccount();
     const signer = this.ethersProvider.getSigner(account?.address);
-    console.log('signer: ', signer);
     return signer.sendTransaction(transaction);
   };
 

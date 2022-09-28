@@ -1,10 +1,6 @@
 import { TransactionRequest } from '@ethersproject/providers';
-import {
-  ChainID,
-  LOOKS_ADDRESS,
-  Marketplace,
-  SEAPORT_EXCHANGE_TESTNET,
-} from '@utils/constants';
+import { CROSS_CHAIN_SEAPORT_ADDRESS } from '@opensea/seaport-js/lib/constants';
+import { ChainID, LOOKS_ADDRESS, Marketplace } from '@utils/constants';
 import { ethers } from 'ethers';
 import browser from 'webextension-polyfill';
 import ControllerStore from './root';
@@ -30,11 +26,10 @@ class OrderStore implements IControllerStore {
       console.error('could not fetch vault.');
       return;
     }
-
     const res = await fetch(
       `${process.env.VOYAGE_API_URL}/v1/marketplace/${order.marketplace}/order?collection=${order.collection}&tokenId=${order.tokenId}&receiver=${vault}`
     );
-    const calldata = await res.json();
+    const { calldata } = await res.json();
     console.log('order calldata: ', calldata);
     const marketplaceAddress = this._getMarketplaceAddress(order.marketplace);
     const tx: TransactionRequest = {
@@ -42,7 +37,6 @@ class OrderStore implements IControllerStore {
       to: marketplaceAddress,
       data: calldata,
     };
-    console.log('sending tx: ', tx);
     await this.root.transactionStore.addNewTransaction(
       tx,
       this.onSuccess,
@@ -66,7 +60,7 @@ class OrderStore implements IControllerStore {
       case Marketplace.Looks:
         return LOOKS_ADDRESS[chainID];
       case Marketplace.Opensea:
-        return SEAPORT_EXCHANGE_TESTNET;
+        return CROSS_CHAIN_SEAPORT_ADDRESS;
       default:
         return ethers.constants.AddressZero;
     }
