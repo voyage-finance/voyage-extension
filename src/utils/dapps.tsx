@@ -26,6 +26,18 @@ export const SupportedApps: { [key: number]: { [origin: string]: App } } = {
       icon: 'https://rinkeby.looksrare.org/favicon-32x32.png',
     },
   },
+  [ChainID.Mainnet]: {
+    'https://opensea.io': {
+      uri: 'https://opensea.io',
+      name: 'OpenSea',
+      icon: 'https://opensea.io/static/images/favicon/32x32.png',
+    },
+    'https://looksrare.org': {
+      uri: 'https://looksrare.org',
+      name: 'Looksrare testnet',
+      icon: 'https://looksrare.org/favicon-32x32.png',
+    },
+  },
 };
 
 export const getDappForSession = (session: IWalletConnectSession) => {
