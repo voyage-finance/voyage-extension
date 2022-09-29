@@ -19,6 +19,10 @@
     { "resources": ["injector.bundle.js"], "matches": ["<all_urls>"] }
   ],
   "externally_connectable": {
-    "matches": ["*://localhost/*", "*://voyage.finance/*"]
+    "matches": [
+      "*://localhost/*",
+      "*://voyage.finance/*",
+      "*://app.voyage.finance/*"
+    ]
   }
 }

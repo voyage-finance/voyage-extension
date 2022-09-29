@@ -76,6 +76,7 @@ const hasJsxRuntime = (() => {
 module.exports = function (webpackEnv) {
   const isEnvDevelopment = webpackEnv === 'development';
   const isEnvProduction = webpackEnv === 'production';
+  const injectReactDevTools = process.env.REACT_DEV_TOOLS === 'true';
 
   // Variable used for enabling profiling in Production
   // passed into alias object. Uses a flag if passed into the build command
@@ -179,7 +180,9 @@ module.exports = function (webpackEnv) {
     entry: {
       ui: [
         require.resolve('globalthis/auto'),
-        isEnvDevelopment && require.resolve('react-devtools'),
+        isEnvDevelopment &&
+          injectReactDevTools &&
+          require.resolve('react-devtools'),
         paths.appJs,
       ].filter(Boolean),
       background: paths.appBackground,

@@ -150,6 +150,7 @@
   },
   "scripts": {
     "start": "node scripts/start.js",
+    "start:debug": "REACT_DEV_TOOLS=true yarn start",
     "clean": "rm -rf build",
     "devtools:react": "react-devtools",
     "gentypes": "typechain --target=ethers-v5 ./src/abis/**/*.json --out-dir ./src/contracts",
