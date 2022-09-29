@@ -12,7 +12,7 @@ const Approval: React.FC = () => {
     return state.core.pendingApprovals[approvalId as string];
   });
   return (
-    <div style={{ overflowY: 'scroll' }}>
+    <div style={{ overflowY: 'scroll', height: '100%' }}>
       {(() => {
         switch (approval?.type) {
           case ApprovalType.SIGN_MESSAGE:
