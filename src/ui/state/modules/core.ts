@@ -27,6 +27,7 @@ interface CoreState {
   vaultAddress?: string;
   account?: Account;
   activeTab?: TabInfo;
+  storedWrapEthTx?: string;
 }
 
 const initialState: CoreState = {

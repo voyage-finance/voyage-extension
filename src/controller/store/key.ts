@@ -183,6 +183,7 @@ class KeyStore {
     this.isTermsSigned = false;
     storage.local.remove('keyStore');
     storage.local.remove('vaultAddress');
+    storage.local.remove('storedWrapEthTx');
     browser.action.setPopup({ popup: '' });
   }
 }
