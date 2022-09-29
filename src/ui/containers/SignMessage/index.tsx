@@ -12,12 +12,11 @@ import TitleWithLine from '@components/atoms/TitleWithLine';
 
 function SignMessage() {
   const voyageController = useVoyageController();
-  const { signRequestId } = useParams();
+  const { approvalId } = useParams();
   const pendingSignRequests = useAppSelector(
     (state) => state.core.pendingApprovals
   );
-  const pendingSignRequest: ApprovalRequest =
-    pendingSignRequests[signRequestId!];
+  const pendingSignRequest: ApprovalRequest = pendingSignRequests[approvalId!];
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
