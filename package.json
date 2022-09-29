@@ -1,6 +1,6 @@
 {
   "name": "voyage-extension",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "packageManager": "yarn@3.2.0",
   "dependencies": {
@@ -153,8 +153,9 @@
     "clean": "rm -rf build",
     "devtools:react": "react-devtools",
     "gentypes": "typechain --target=ethers-v5 ./src/abis/**/*.json --out-dir ./src/contracts",
-    "build": "node scripts/build.js",
-    "package": "zip -r voyage-extension.zip build",
+    "pack": "yarn build && yarn zip",
+    "build": "rm -rf dist && BUILD_PATH=dist node scripts/build.js",
+    "zip": "zip -r voyage-extension.zip dist",
     "postinstall": "husky install"
   },
   "eslintConfig": {
