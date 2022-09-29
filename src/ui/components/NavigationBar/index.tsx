@@ -27,7 +27,7 @@ const items: NavigationItem[] = [
     icon: PaperIconSrc,
   },
   {
-    path: '/management',
+    path: '/settings',
     icon: SteeringIconSrc,
   },
 ];
