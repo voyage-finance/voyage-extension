@@ -91,7 +91,7 @@ class VoyageStore {
     const salt = keccak256(toUtf8Bytes(account.email)).slice(0, 42);
     console.log('salt', salt, 'address', account.address);
     const vaultAddress = await this.voyage.computeCounterfactualAddress(
-      account.address,
+      account.address!,
       salt
     );
     return vaultAddress;
