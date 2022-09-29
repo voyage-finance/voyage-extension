@@ -18,6 +18,7 @@ import browser from 'webextension-polyfill';
 class VoyageStore {
   root: ControllerStore;
   vaultAddress?: string;
+  storedWrapEthTx?: string;
   voyage: Voyage;
 
   constructor(root: ControllerStore, voyageDiamondAddress: string) {
@@ -33,16 +34,21 @@ class VoyageStore {
   async initialize() {
     const storedVault = (await storage.local.get('vaultAddress'))
       .vaultAddress as string | undefined;
+    const storedWrapEthTx = (await storage.local.get('storedWrapEthTx'))
+      .storedWrapEthTx as string | undefined;
     console.log('----VoyageStore [storedVault] -----', storedVault);
+    console.log('----VoyageStore [storedWrapEthTx] -----', storedWrapEthTx);
     if (storedVault && storedVault !== ethers.constants.AddressZero) {
       this.vaultAddress = storedVault;
       browser.action.setPopup({ popup: 'popup.html' });
     }
+    if (storedWrapEthTx) this.storedWrapEthTx = storedWrapEthTx;
   }
 
   get state() {
     return {
       vaultAddress: this.vaultAddress,
+      storedWrapEthTx: this.storedWrapEthTx,
     };
   }
 
@@ -97,13 +103,31 @@ class VoyageStore {
     return vaultAddress;
   }
 
+  _setstoredWrapEthTx(value: any) {
+    console.log('[storedWrapEthTx] setting to ', value);
+
+    this.storedWrapEthTx = value;
+    storage.local.set({
+      storedWrapEthTx: this.storedWrapEthTx,
+    });
+  }
+
   async wrapVaultETH(amount: BigNumber) {
-    const txRequest = await this.voyage.populateTransaction.wrapVaultETH(
-      this.vaultAddress!,
-      amount.toString()
-    );
-    const tx = await this.root.gsnStore.relayTransaction(txRequest);
-    return tx.hash;
+    try {
+      this._setstoredWrapEthTx('initializing');
+      const txRequest = await this.voyage.populateTransaction.wrapVaultETH(
+        this.vaultAddress!,
+        amount.toString()
+      );
+      const tx = await this.root.gsnStore.relayTransaction(txRequest);
+      this._setstoredWrapEthTx(tx.hash);
+      return tx.hash;
+    } catch (e: any) {
+      console.error('[wrapVaultETH]', e);
+
+      this._setstoredWrapEthTx(undefined);
+      throw new Error(e.message);
+    }
   }
 
   async buyNow(transaction: TransactionRequest) {

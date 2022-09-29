@@ -19,17 +19,53 @@ import { getTxExpolerLink } from '@utils/env';
 
 const TopUpCard: React.FunctionComponent = () => {
   const vaultAddress = useAppSelector((state) => state.core.vaultAddress);
+  const storedWrapEthTx = useAppSelector((state) => state.core.storedWrapEthTx);
+  const [prevStoredWrapEthTx, setPrevStoredWrapEthTx] = React.useState<
+    string | undefined
+  >();
   const [ethBalance] = useEthBalance(vaultAddress, true);
   const [prevEthBalance, setPrevEthBalance] = React.useState(Zero);
   const [wethBalance] = useWEthBalance(vaultAddress!, true);
 
   const [isWrapping, setIsWrapping] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
   const [lastWrappedHash, setLastWrappedHash] = React.useState('');
+
+  const web3Provider = new ethers.providers.Web3Provider(provider);
+
+  const checkForPendingWrapping = async () => {
+    if (storedWrapEthTx) {
+      if (storedWrapEthTx == 'initializing') {
+        setIsWrapping(true);
+        return;
+      }
+      setIsLoading(true);
+      try {
+        const txReceipt = await web3Provider.getTransactionReceipt(
+          storedWrapEthTx
+        );
+        // The receipt is not available for pending transactions and returns null. https://web3js.readthedocs.io/en/v1.2.11/web3-eth.html#gettransactionreceipt
+        if (!txReceipt) {
+          setIsWrapping(true);
+          await web3Provider.waitForTransaction(storedWrapEthTx);
+          setLastWrappedHash(storedWrapEthTx);
+        }
+      } catch (e) {
+        console.error('[checkForPendingWrapping]', checkForPendingWrapping);
+      }
+      setIsLoading(false);
+      setIsWrapping(false);
+    } else {
+      setIsWrapping(false);
+    }
+  };
 
   const onWrapClick = async () => {
     if (isWrapping) return;
-    if (lastWrappedHash)
+    if (lastWrappedHash) {
       window.open(getTxExpolerLink(lastWrappedHash), '_blank');
+      return;
+    }
     setIsWrapping(true);
     try {
       const txHash = await controller.wrapVaultETH(
@@ -42,9 +78,7 @@ const TopUpCard: React.FunctionComponent = () => {
         type: 'success',
       });
       // tx.wait is underfined, so using this
-      await new ethers.providers.Web3Provider(provider).waitForTransaction(
-        txHash
-      );
+      await web3Provider.waitForTransaction(txHash);
       setLastWrappedHash(txHash);
     } catch (e: any) {
       console.error(e.message);
@@ -55,11 +89,25 @@ const TopUpCard: React.FunctionComponent = () => {
   const navigate = useNavigate();
 
   React.useEffect(() => {
-    if (ethBalance.gt(prevEthBalance)) {
+    if (prevEthBalance && ethBalance.gt(prevEthBalance)) {
       setLastWrappedHash('');
     }
     setPrevEthBalance(ethBalance);
   }, [ethBalance]);
+
+  React.useEffect(() => {
+    checkForPendingWrapping();
+  }, []);
+
+  React.useEffect(() => {
+    if (
+      prevStoredWrapEthTx == 'initializing' &&
+      storedWrapEthTx != 'initializing'
+    )
+      checkForPendingWrapping();
+    setPrevStoredWrapEthTx(storedWrapEthTx);
+  }, [storedWrapEthTx]);
+
   return (
     <Card className={styles.root}>
       <Group position="apart" align="center" className={styles.inner}>
@@ -89,9 +137,11 @@ const TopUpCard: React.FunctionComponent = () => {
               onClick={onWrapClick}
               p={0}
               pl={2}
-              disabled={isWrapping}
+              disabled={isWrapping || isLoading}
             >
-              {lastWrappedHash
+              {isLoading
+                ? 'Loading'
+                : lastWrappedHash
                 ? 'Wrap Success'
                 : isWrapping
                 ? 'Wrapping'
@@ -100,7 +150,10 @@ const TopUpCard: React.FunctionComponent = () => {
                 <ArrowUpRightSvg className={styles.wrapIcon} />
               ) : (
                 <RecycleArrowsSvg
-                  className={cn(styles.wrapIcon, isWrapping && styles.loading)}
+                  className={cn(
+                    styles.wrapIcon,
+                    (isWrapping || isLoading) && styles.loading
+                  )}
                 />
               )}
             </Button>
