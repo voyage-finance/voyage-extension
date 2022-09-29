@@ -10,7 +10,7 @@ export const registerMessageListeners = (controller: VoyageController) => {
     if (params.url?.startsWith(process.env.VOYAGE_WEB_URL!)) {
       switch (msg.action) {
         case MessageAction.AUTH_SUCCESS:
-          controller.store.keyStore.finishLogin(msg.params as AuthInfo);
+          controller.store.keyStore.startInitializing(msg.params as AuthInfo);
           break;
         case MessageAction.GET_FINGERPRINT:
           response = toJS(controller.getState().pendingLogin)?.fingerprint;

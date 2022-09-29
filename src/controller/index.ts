@@ -110,6 +110,7 @@ export class VoyageController extends SafeEventEmitter {
       ...this.store.transactionStore.api,
       ...this.store.orderStore.api,
       ...this.store.voyageStore.api,
+      ...this.store.keyStore.api,
     };
   }
 

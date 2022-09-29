@@ -44,6 +44,12 @@ class KeyStore {
     };
   }
 
+  get api() {
+    return {
+      finishLogin: this.finishLogin.bind(this),
+    };
+  }
+
   async initialize() {
     const stateObject = (await storage.local.get('keyStore')).keyStore as
       | KeyStorePersist
@@ -91,7 +97,7 @@ class KeyStore {
       fingerprint,
     };
     if (process.env.VOYAGE_DEBUG) {
-      this.finishLogin({
+      this.startInitializing({
         jwt: 'jwt',
         accessToken: 'accessToken',
         uid: 'uid',
@@ -135,23 +141,31 @@ class KeyStore {
       return new ethers.Wallet(this.account?.keyPair?.privateKey);
   }
 
-  async finishLogin(currentUser: AuthInfo) {
+  async startInitializing(currentUser: AuthInfo) {
     this.stage = KeyStoreStage.Initializing;
     this.pendingLogin = undefined;
 
+    this.account = {
+      email: currentUser.email,
+      auth: currentUser,
+    };
+  }
+
+  async finishLogin() {
+    if (this.stage != KeyStoreStage.Initializing)
+      throw new Error('Not in pending login process');
     const torusResponse = await this.getToruskey(
-      currentUser.uid,
-      currentUser.jwt
+      this.account!.auth.uid!,
+      this.account!.auth.jwt!
     );
 
     this.account = {
+      ...this.account!,
       keyPair: {
         privateKey: torusResponse.privateKey,
         publicKey: torusResponse.pubKey?.pub_key_X,
       },
       address: torusResponse.publicAddress,
-      email: currentUser.email,
-      auth: currentUser,
     };
 
     await this.root.voyageStore.fetchVault();

@@ -1,7 +1,7 @@
 import { IClientMeta } from '@walletconnect/types';
 
 export interface Account {
-  address: string;
+  address?: string;
   email: string;
   keyPair?: KeyPair;
   auth: Omit<AuthInfo, 'email'>;
@@ -54,6 +54,7 @@ export enum KeyStoreStage {
   Uninitialized, // no pending sign in
   WaitingConfirm, // sign in started -> waiting confirm
   Initializing, // initializing keys
+  InitializingFailed,
   Initialized, // done
 }
 
