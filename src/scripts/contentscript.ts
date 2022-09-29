@@ -194,7 +194,7 @@ async function init() {
 
   // Create an observer instance linked to the callback function
   const observer = new MutationObserver(
-    debounce(observerCallback, 1000, { leading: false, trailing: true })
+    debounce(observerCallback, 500, { leading: false, trailing: true })
   );
 
   // Start observing the target node for configured mutations
