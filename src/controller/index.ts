@@ -101,7 +101,6 @@ export class VoyageController extends SafeEventEmitter {
       connectWithWC: this.connectWithWC,
       disconnectWC: this.disconnectWC,
       sendMagicLinkToEmail: this.sendMagicLinkToEmail,
-      cancelLogin: this.cancelLogin,
       setTermsAgreed: this.setTermsAgreed,
       registerVaultWatcher: this.registerVaultWatcher,
       openNotificationWindow: this.openNotificationWindow,
@@ -215,10 +214,6 @@ export class VoyageController extends SafeEventEmitter {
       });
     }
     this.store.keyStore.startLogin(email, generatedFingerPrint);
-  };
-
-  cancelLogin = () => {
-    this.store.keyStore.cancelLogin();
   };
 
   setTermsAgreed = () => {

@@ -47,6 +47,7 @@ class KeyStore {
   get api() {
     return {
       finishLogin: this.finishLogin.bind(this),
+      cancelLogin: this.cancelLogin.bind(this),
     };
   }
 
