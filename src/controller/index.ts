@@ -24,6 +24,7 @@ import { registerMessageListeners } from './runtimeMessage';
 import { getJsonProvider } from '@utils/env';
 import { ApprovalType } from 'types';
 import { IClientMeta } from '@walletconnect/types';
+import browser from 'webextension-polyfill';
 
 interface WalletConnectSessionRequest {
   chainId: number | null;
@@ -203,11 +204,15 @@ export class VoyageController extends SafeEventEmitter {
     const generatedFingerPrint = createRandomFingerprint();
     const encodedRedirectUri = encodeRedirectUri(email, generatedFingerPrint);
 
-    if (!process.env.VOYAGE_DEBUG)
+    if (!process.env.VOYAGE_DEBUG) {
+      const extension_id = browser.runtime.id;
+      const backUrl = `${process.env.VOYAGE_WEB_URL}/onboard?encoded=${encodedRedirectUri}&extension_id=${extension_id}`;
+      console.log('sending firebase email with backlink=', backUrl);
       await sendSignInLinkToEmail(auth, email, {
-        url: `${process.env.VOYAGE_WEB_URL}/onboard?encoded=${encodedRedirectUri}`,
+        url: backUrl,
         handleCodeInApp: true,
       });
+    }
     this.store.keyStore.startLogin(email, generatedFingerPrint);
   };
 
