@@ -39,6 +39,7 @@ import PurchaseConfirmed from '@containers/PurchaseConfirmed';
 import NavigationBar from '@components/NavigationBar';
 import SelectTopUpMethod from '@containers/TopUp/SelectTopUpMethod';
 import DirectTopUp from '@containers/TopUp/DirectTopUp';
+import { LoadingOverlay } from '@mantine/core';
 
 const Router: React.FC = () => {
   const location = useLocation();
@@ -58,6 +59,7 @@ const Router: React.FC = () => {
   });
 
   const [waitingDeploy, setWaitingDeploy] = useState(false);
+  const [isVaultLoading, setIsVaultLoading] = useState(false);
 
   const resetStorage = () => {
     controller.cancelLogin();
@@ -76,6 +78,12 @@ const Router: React.FC = () => {
     } else {
       navigate(DEFAULT_ROUTE);
     }
+  };
+
+  const checkForVault = async () => {
+    setIsVaultLoading(true);
+    await controller.fetchVault();
+    setIsVaultLoading(false);
   };
 
   useEffect(() => {
@@ -111,8 +119,13 @@ const Router: React.FC = () => {
     }
   }, [stage, isTermsSigned, vault]);
 
+  useEffect(() => {
+    if (!vault || vault == ethers.constants.AddressZero) checkForVault();
+  }, []);
+
   return (
     <div className={cn(styles.root, isFullscreenMode && styles.tabView)}>
+      <LoadingOverlay visible={isVaultLoading} />
       {!isFullscreenMode && <MenuBar />}
       <Routes>
         <Route path="/" element={<Home />} />
