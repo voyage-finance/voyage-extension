@@ -1,7 +1,7 @@
 import Text from '@components/Text';
 import { RampInstantSDK } from '@ramp-network/ramp-instant-sdk';
+import { initRamp } from '@utils/ramp';
 import * as React from 'react';
-import LogoUrl from '@images/icon.png';
 
 interface IRampViewProps {
   usdValue: string;
@@ -25,19 +25,7 @@ const RampView: React.FunctionComponent<IRampViewProps> = ({
   React.useEffect(() => {
     if (vaultAddress && usdValue) {
       const fiatValue = Math.max(MIN_RAMP_DEPOSIT, Number(usdValue));
-      setRampSdk(
-        new RampInstantSDK({
-          fiatCurrency: 'USD',
-          fiatValue: fiatValue.toString(),
-          userAddress: vaultAddress,
-          hostAppName: 'Voyage Finance',
-          hostLogoUrl: LogoUrl,
-          hostApiKey: '2zzk5n625k5oe4aftrh28yuucwezquh87ugmy5q5',
-          variant: 'hosted-desktop',
-          defaultAsset: 'ETH',
-          swapAmount: '1',
-        })
-      );
+      setRampSdk(initRamp(vaultAddress, fiatValue));
     }
   }, [vaultAddress, usdValue]);
 

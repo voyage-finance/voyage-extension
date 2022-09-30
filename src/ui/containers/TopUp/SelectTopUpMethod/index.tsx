@@ -4,13 +4,28 @@ import { Box, Group } from '@mantine/core';
 import * as React from 'react';
 import Button from '@components/Button';
 import { useNavigate } from 'react-router-dom';
+import { RampInstantSDK } from '@ramp-network/ramp-instant-sdk';
+import { useAppSelector } from '@hooks/useRedux';
+import { initRamp } from '@utils/ramp';
 
 const SelectTopUpMethod: React.FC = () => {
   const navigate = useNavigate();
+  const vaultAddress = useAppSelector((state) => state.core.vaultAddress);
+  const [rampSdk, setRampSdk] = React.useState<RampInstantSDK>();
 
   const onDepositClick = async () => {
     navigate('/vault/topup/direct');
   };
+
+  const onFiatClick = () => {
+    rampSdk?.show();
+  };
+
+  React.useEffect(() => {
+    if (vaultAddress) {
+      setRampSdk(initRamp(vaultAddress));
+    }
+  }, [vaultAddress]);
 
   return (
     <Box p={24}>
@@ -51,8 +66,8 @@ const SelectTopUpMethod: React.FC = () => {
           <Text mt={33} sx={{ fontSize: 20 }}>
             2 / <strong>Buy ETH with Fiat</strong>
           </Text>
-          <Button mt={23} fullWidth disabled>
-            Coming Soon
+          <Button mt={23} onClick={onFiatClick} fullWidth>
+            Buy with Fiat
           </Button>
         </Group>
       </Card>
