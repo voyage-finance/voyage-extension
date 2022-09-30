@@ -12,7 +12,6 @@ import { debounce } from 'lodash';
 import controllerFactory from 'rpc/virtual/client';
 import { Duplex } from 'stream';
 import { Runtime } from 'webextension-polyfill';
-import './contentscript.scss';
 
 const bgPort = chrome.runtime.connect({ name: 'voyage-contentscript' });
 const bgStream = new PortStream(bgPort as Runtime.Port);
