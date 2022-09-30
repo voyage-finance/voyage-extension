@@ -50,6 +50,7 @@ function SignMessage() {
       align="stretch"
       className={styles.root}
       spacing={0}
+      noWrap
     >
       <TitleWithLine>Signature Request</TitleWithLine>
       <Group direction="column" spacing={10} mt={15}>

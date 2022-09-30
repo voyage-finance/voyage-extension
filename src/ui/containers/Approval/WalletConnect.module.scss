@@ -4,6 +4,7 @@
   text-align: center;
   padding: 6px 18px;
   height: 100%;
+  flex-wrap: nowrap;
 
   .paper {
     display: flex;
@@ -18,7 +19,7 @@
         font-size: 24px;
         line-height: 28px;
         margin-bottom: 16px;
-        background: linear-gradient(90deg, #FFA620 0%, #EF5B25 100%);
+        background: linear-gradient(90deg, #ffa620 0%, #ef5b25 100%);
         background-clip: text;
         -webkit-background-clip: text;
         -moz-background-clip: text;
@@ -32,7 +33,7 @@
         justify-content: center;
         align-items: center;
         .text {
-          background: linear-gradient(90deg, #FFA620 0%, #EF5B25 100%);
+          background: linear-gradient(90deg, #ffa620 0%, #ef5b25 100%);
           background-clip: text;
           -webkit-background-clip: text;
           -moz-background-clip: text;
@@ -46,10 +47,10 @@
         flex-direction: column;
         align-items: center;
         .items {
-          &>:not(:last-child) {
+          & > :not(:last-child) {
             margin-bottom: 5px;
           }
-          .item{
+          .item {
             .icon {
               margin-right: 12px;
             }
