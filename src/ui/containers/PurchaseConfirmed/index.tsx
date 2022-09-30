@@ -9,7 +9,7 @@ import PaymentHoverBoard from '@components/PaymentHoverBoard';
 import { useAppSelector } from '@hooks/useRedux';
 import RepaymentSchedule from './RepaymentSchedule';
 import { useParams } from 'react-router-dom';
-import { formatAmount, fromBigNumber } from '@utils/bn';
+import { formatAmount, fromBigNumber, Zero } from '@utils/bn';
 import BigNumber from 'bignumber.js';
 import PepePlacholderImg from '@images/pepe-placeholder.png';
 import Link from '@components/Link';
@@ -36,7 +36,12 @@ const PurchaseConfirmed: React.FC = () => {
     orderPreview && orderPreview.loanParameters
       ? Number(orderPreview.loanParameters.epoch)
       : 0;
-
+  const price = orderPreview?.price
+    ? fromBigNumber(orderPreview.price)
+    : undefined;
+  const interest = orderPreview?.loanParameters
+    ? fromBigNumber(orderPreview.loanParameters.payment.interest)
+    : undefined;
   return (
     <Card
       style={{
@@ -106,7 +111,13 @@ const PurchaseConfirmed: React.FC = () => {
             <Text type="secondary" mr={4}>
               Payment
             </Text>
-            <PaymentHoverBoard />
+            <PaymentHoverBoard
+              price={price || Zero}
+              pmt={bnplPayment || Zero}
+              interest={interest || Zero}
+              nper={nper}
+              epoch={epoch}
+            />
             <Group ml="auto" direction="column" align="end" spacing={0}>
               <Group position="right" spacing={0}>
                 <Text

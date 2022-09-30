@@ -5,9 +5,28 @@ import { ReactComponent as InfoCircleSvg } from 'assets/img/info-circle.svg';
 import styles from './index.module.scss';
 import Text from '@components/Text';
 import { ReactComponent as EthSvg } from 'assets/img/eth-icon.svg';
+import BigNumber from 'bignumber.js';
+import { formatAmount } from '@utils/bn';
 
-const PaymentHoverBoard: React.FunctionComponent = () => {
+type IProps = {
+  price: BigNumber;
+  pmt: BigNumber;
+  interest: BigNumber;
+  nper: number;
+  epoch: number;
+};
+
+const PaymentHoverBoard: React.FunctionComponent<IProps> = ({
+  pmt,
+  price,
+  interest,
+  nper = 0,
+  epoch = 0,
+}) => {
   const [opened, setOpened] = useState(false);
+
+  console.log({ pmt, interest, nper, epoch });
+
   return (
     <Popover
       opened={opened}
@@ -58,29 +77,29 @@ const PaymentHoverBoard: React.FunctionComponent = () => {
           <Group align="center" spacing={0}>
             <Text>Purchase</Text>
             <Text weight={'bold'} ml="auto">
-              6
+              {formatAmount(price)}
             </Text>
             <EthSvg style={{ width: 19 }} />
           </Group>
           <Group align="center" spacing={0}>
-            <Text>Platform (1%)</Text>
+            <Text>Platform</Text>
             <Text weight={'bold'} ml="auto">
-              0.06
+              {formatAmount(interest.multipliedBy(nper))}
             </Text>
             <EthSvg style={{ width: 19 }} />
           </Group>
-          <Group align="center" spacing={0}>
-            <Text>Loan fee (4%)</Text>
+          {/* <Group align="center" spacing={0}>
+            <Text>Loan fee </Text>
             <Text weight={'bold'} ml="auto">
               0.24
             </Text>
             <EthSvg style={{ width: 19 }} />
-          </Group>
+          </Group> */}
           <Divider my={13} />
           <Group align="center" spacing={0}>
             <Text>Total Bill</Text>
             <Text weight="bold" ml="auto" type="gradient">
-              6.3
+              {formatAmount(pmt.multipliedBy(nper))}
             </Text>
             <EthSvg style={{ width: 19 }} />
           </Group>
@@ -92,13 +111,13 @@ const PaymentHoverBoard: React.FunctionComponent = () => {
                 type="gradient"
                 style={{ lineHeight: 1 }}
               >
-                6.3
+                {formatAmount(pmt)}
               </Text>
               <EthSvg style={{ width: 18 }} />
-              <Text style={{ lineHeight: 1 }}>/ 30 days</Text>
+              <Text style={{ lineHeight: 1 }}>/ {epoch} days</Text>
             </Group>
             <Text ml="auto" size="sm" style={{ lineHeight: 1, marginTop: -4 }}>
-              3 payments
+              {nper} payments
             </Text>
           </Group>
         </Group>

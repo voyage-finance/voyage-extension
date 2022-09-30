@@ -20,7 +20,7 @@ import BNPLSchedule from '@components/BNPLSchedule';
 import { useAppSelector } from '@hooks/useRedux';
 import SpeedSelect from './SpeedSelect';
 import { useEthBalance } from '@hooks/useEthBalance';
-import { formatAmount, fromBigNumber } from '@utils/bn';
+import { formatAmount, fromBigNumber, Zero } from '@utils/bn';
 import useVoyageController from '@hooks/useVoyageController';
 import { useNavigate, useParams } from 'react-router-dom';
 import { MAX_UINT256, PURCHASE_OVERVIEW_ROUTE } from '@utils/constants';
@@ -52,6 +52,9 @@ const PurchaseCart: React.FC = () => {
   const orderPreview = transaction?.orderPreview;
   const price = orderPreview?.price
     ? fromBigNumber(orderPreview.price)
+    : undefined;
+  const interest = orderPreview?.loanParameters
+    ? fromBigNumber(orderPreview.loanParameters.payment.interest)
     : undefined;
   const bnplPayment = orderPreview?.loanParameters
     ? fromBigNumber(orderPreview.loanParameters.payment.pmt)
@@ -209,7 +212,15 @@ const PurchaseCart: React.FC = () => {
             <Text type="secondary" mr={4}>
               Payment Option
             </Text>
-            {pmtOption === PaymentOption.BNPL && <PaymentHoverBoard />}
+            {pmtOption === PaymentOption.BNPL && (
+              <PaymentHoverBoard
+                price={price || Zero}
+                pmt={bnplPayment || Zero}
+                interest={interest || Zero}
+                nper={nper}
+                epoch={epoch}
+              />
+            )}
             <BuyMethodSelect
               ml="auto"
               value={pmtOption}
