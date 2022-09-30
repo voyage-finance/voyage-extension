@@ -25,7 +25,7 @@ const SelectTopUpMethod: React.FC = () => {
             Select TopUp Method
           </Text>
           <Text mt={31} sx={{ fontSize: 20, whiteSpace: 'nowrap' }}>
-            1 / <strong>Directly Deposit wETH</strong>
+            1 / <strong>Directly Deposit ETH</strong>
           </Text>
           <Box
             sx={{
@@ -42,14 +42,14 @@ const SelectTopUpMethod: React.FC = () => {
             </Text>
           </Box>
           <Text mt={10} sx={{ lineHeight: '16px' }} align="center">
-            If you’ve already got wETH, this is the quickest way to fund your
+            If you’ve already got ETH, this is the quickest way to fund your
             Voyage Wallet.
           </Text>
           <Button mt={23} fullWidth onClick={onDepositClick}>
-            Deposit wETH
+            Deposit ETH
           </Button>
           <Text mt={33} sx={{ fontSize: 20 }}>
-            2 / <strong>Buy wETH with Fiat</strong>
+            2 / <strong>Buy ETH with Fiat</strong>
           </Text>
           <Button mt={23} fullWidth disabled>
             Coming Soon
