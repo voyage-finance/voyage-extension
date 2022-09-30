@@ -102,10 +102,13 @@ const PurchaseCart: React.FC = () => {
     vaultAddress || ethers.constants.AddressZero,
     orderPreview?.order?.marketplaceAddress
   );
+  console.log('order currency: ', orderPreview?.order?.currency);
   console.log(
     `allowance of ${orderPreview?.order?.marketplaceAddress} is ${allowance}`
   );
-  const approvalRequired = ethers.BigNumber.from(allowance).lt(MAX_UINT256);
+  const approvalRequired =
+    orderPreview?.order?.currency !== ethers.constants.AddressZero &&
+    ethers.BigNumber.from(allowance).lt(MAX_UINT256);
   console.log('approval required: ', approvalRequired);
   const [approving, setApproving] = useState(false);
   const [approvalTx, setApprovalTx] = useState('');

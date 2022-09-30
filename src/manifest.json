@@ -10,7 +10,8 @@
   "content_scripts": [
     {
       "matches": ["http://*/*", "https://*/*"],
-      "js": ["contentScript.bundle.js"]
+      "js": ["contentScript.bundle.js"],
+      "css": ["contentscript.css"]
     }
   ],
   "icons": { "128": "icon.png" },
