@@ -5,6 +5,7 @@ import { IClientMeta } from '@walletconnect/types';
 import browser from 'webextension-polyfill';
 import { TransactionRequest } from '@ethersproject/providers';
 import { ApprovalType } from 'types';
+import { config } from '@utils/env';
 
 /**
  * VoyageRpcService defines all handlers for eth RPC methods.
@@ -78,7 +79,7 @@ class VoyageRpcService {
           const approveTx = await this.store.voyageStore.approveMarketplace(
             calldata
           );
-          const receipt = await approveTx.wait(+process.env.NUM_CONFIRMATIONS!);
+          const receipt = await approveTx.wait(config.numConfirmations);
           resolve(receipt.transactionHash);
         },
         onReject: async () => reject('User rejected session request'),

@@ -26,7 +26,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { MAX_UINT256, PURCHASE_OVERVIEW_ROUTE } from '@utils/constants';
 import { TransactionStatus } from 'types/transaction';
 import ErrorBox from '@components/PreviewErrorBox';
-import { getContractByAddress, getTxExpolerLink } from '@utils/env';
+import { getContractByAddress, getTxExplorerLink } from '@utils/env';
 import { TxSpeed } from 'types';
 import { useWETHAllowance } from '@hooks/useWETHAllowance';
 import { ethers } from 'ethers';
@@ -112,7 +112,7 @@ const PurchaseCart: React.FC = () => {
   const handleApproveClick = async () => {
     try {
       if (!approving && approvalTx) {
-        window.open(getTxExpolerLink(approvalTx));
+        window.open(getTxExplorerLink(approvalTx));
         return;
       }
       setApproving(true);

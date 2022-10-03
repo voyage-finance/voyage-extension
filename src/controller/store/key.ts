@@ -1,4 +1,5 @@
 import Customauth from '@toruslabs/customauth';
+import { config } from '@utils/env';
 import { ethers } from 'ethers';
 import { makeAutoObservable, runInAction, toJS } from 'mobx';
 import browser, { storage } from 'webextension-polyfill';
@@ -23,8 +24,8 @@ class KeyStore {
     this.stage = KeyStoreStage.Uninitialized;
     this.isTermsSigned = false;
     this.torusSdk = new Customauth({
-      baseUrl: process.env.VOYAGE_WEB_URL!,
-      network: process.env.TORUS_NETWORK! as 'testnet',
+      baseUrl: config.voyageWebUrl,
+      network: config.torusNetwork as 'testnet',
     });
     makeAutoObservable(this, { root: false });
     this.initialize();
@@ -97,7 +98,7 @@ class KeyStore {
       email,
       fingerprint,
     };
-    if (process.env.VOYAGE_DEBUG) {
+    if (config.debug) {
       this.startInitializing({
         jwt: 'jwt',
         accessToken: 'accessToken',
@@ -115,9 +116,9 @@ class KeyStore {
   }
 
   async getToruskey(uid: string, jwt: string) {
-    if (!process.env.VOYAGE_DEBUG)
+    if (!config.debug)
       return await this.torusSdk.getTorusKey(
-        process.env.TORUS_VERIFIER!,
+        config.torusVerifier,
         uid,
         {
           verifier_id: uid,

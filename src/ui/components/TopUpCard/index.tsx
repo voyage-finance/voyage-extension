@@ -15,7 +15,7 @@ import { useWEthBalance } from '@hooks/useWEthBalance';
 import cn from 'classnames';
 import showNotification from '@utils/notification';
 import { ethers } from 'ethers';
-import { getTxExpolerLink } from '@utils/env';
+import { getTxExplorerLink } from '@utils/env';
 
 const TopUpCard: React.FunctionComponent = () => {
   const vaultAddress = useAppSelector((state) => state.core.vaultAddress);
@@ -63,7 +63,7 @@ const TopUpCard: React.FunctionComponent = () => {
   const onWrapClick = async () => {
     if (isWrapping) return;
     if (lastWrappedHash) {
-      window.open(getTxExpolerLink(lastWrappedHash), '_blank');
+      window.open(getTxExplorerLink(lastWrappedHash), '_blank');
       return;
     }
     setIsWrapping(true);

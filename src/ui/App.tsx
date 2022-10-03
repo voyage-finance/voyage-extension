@@ -7,13 +7,14 @@ import './app.css';
 import Router from './routes';
 import { ExtensionConnector } from '@web3/connector';
 import { chains as voyageChains } from '@utils/chain';
-import { getAlchemyProvider } from '@utils/env';
 import { NotificationsProvider } from '@mantine/notifications';
+import { alchemyProvider } from 'wagmi/providers/alchemy';
+import { config } from '@utils/env';
 
 function App({ store }: any) {
   const { provider: web3Provider, controller } = globalThis;
   const { chains, provider } = configureChains(voyageChains, [
-    getAlchemyProvider(),
+    alchemyProvider({ apiKey: config.alchemyApiKey }),
   ]);
   const client = createClient({
     autoConnect: true,

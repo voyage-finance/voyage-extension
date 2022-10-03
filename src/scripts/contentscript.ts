@@ -1,9 +1,5 @@
-import {
-  ChainID,
-  LOOKS_HOSTS,
-  Marketplace,
-  OPENSEA_HOSTS,
-} from '@utils/constants';
+import { LOOKS_HOSTS, Marketplace, OPENSEA_HOSTS } from '@utils/constants';
+import { config } from '@utils/env';
 import { setupMultiplex } from '@utils/index';
 import { BaseProvider } from '@voyage-finance/providers';
 import { NFTData, OrderData } from 'controller/store/types';
@@ -34,8 +30,8 @@ async function documentFullyLoaded(): Promise<void> {
 
 function getMarketplace(): Marketplace | undefined {
   const host = window.location.host;
-  const os = OPENSEA_HOSTS[+process.env.CHAIN_ID! as ChainID];
-  const looks = LOOKS_HOSTS[+process.env.CHAIN_ID! as ChainID];
+  const os = OPENSEA_HOSTS[config.chainId];
+  const looks = LOOKS_HOSTS[config.chainId];
   switch (host) {
     case os:
       return Marketplace.Opensea;

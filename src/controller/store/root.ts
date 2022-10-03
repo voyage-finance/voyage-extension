@@ -1,4 +1,4 @@
-import { Contracts, getNetworkConfiguration } from '@utils/env';
+import { config } from '@utils/env';
 import { GsnStore } from 'controller/store/gsn';
 import { ethers } from 'ethers';
 import { makeAutoObservable } from 'mobx';
@@ -26,10 +26,7 @@ class ControllerStore {
     this.controller = controller;
     this.provider = provider;
     this.walletConnectStore = new WalletConnectStore(this);
-    this.voyageStore = new VoyageStore(
-      this,
-      getNetworkConfiguration().contracts[Contracts.Voyage]
-    );
+    this.voyageStore = new VoyageStore(this, config.voyage);
     this.gsnStore = new GsnStore(this);
     this.keyStore = new KeyStore(this);
     this.transactionStore = new TransactionStore(this);

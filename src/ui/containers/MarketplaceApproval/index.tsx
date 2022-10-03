@@ -8,7 +8,7 @@ import { Avatar, Box, Group, Stack, Title } from '@mantine/core';
 import styles from './index.module.scss';
 import Text from '@components/Text';
 import Link from '@components/Link';
-import { getShortenedAddress, getTxExpolerLink } from '@utils/env';
+import { getShortenedAddress, getTxExplorerLink } from '@utils/env';
 import { ReactComponent as CopySvg } from 'assets/img/copy-icon.svg';
 import { ApprovalRequest } from 'types';
 import TitleWithLine from '@components/atoms/TitleWithLine';
@@ -88,7 +88,7 @@ function MarketplaceApproval() {
               access your funds:
             </Text>
             <Link
-              link={getTxExpolerLink(pendingSignRequest.metadata.calldata)}
+              link={getTxExplorerLink(pendingSignRequest.metadata.calldata)}
               text={getShortenedAddress(pendingSignRequest.metadata.calldata)}
             />
           </Stack>

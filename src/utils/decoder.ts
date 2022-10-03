@@ -1,8 +1,9 @@
 import { TransactionRequest } from '@ethersproject/providers';
 import { ABIs } from '@utils/abi';
-import { Contracts, getContractByAddress } from '@utils/env';
+import { getContractByAddress } from '@utils/env';
 import { Weth9__factory } from 'contracts/factories/Weth9__factory';
 import { BytesLike, ethers } from 'ethers';
+import { VoyageContract } from './constants';
 
 interface BuyNowParams {
   marketplace: string;
@@ -41,7 +42,7 @@ export const decodeMarketplaceCalldata = (
     throw new Error(`${transaction.to} is not a supported destination address`);
   const instance = new ethers.Contract(transaction.to, abi);
   switch (contract) {
-    case Contracts.LooksRare: {
+    case VoyageContract.LooksRare: {
       const args: any = instance.interface.decodeFunctionData(
         selector,
         transaction.data
@@ -54,7 +55,7 @@ export const decodeMarketplaceCalldata = (
         data: transaction.data,
       };
     }
-    case Contracts.Seaport: {
+    case VoyageContract.Seaport: {
       const args: any = instance.interface.decodeFunctionData(
         selector,
         transaction.data

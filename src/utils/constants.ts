@@ -18,6 +18,19 @@ export enum ChainID {
   Localhost = 31337,
 }
 
+export enum Network {
+  Mainnet = 'mainnet',
+  Goerli = 'goerli',
+  Localhost = 'localhost',
+}
+
+export enum VoyageContract {
+  Voyage = 'voyage',
+  LooksRare = 'looksrare',
+  Seaport = 'opensea',
+  Paymaster = 'paymaster',
+}
+
 export enum Marketplace {
   Looks = 'looksrare',
   Opensea = 'opensea',
