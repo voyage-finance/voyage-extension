@@ -13,7 +13,7 @@ import { formatAmount, fromBigNumber, Zero } from '@utils/bn';
 import BigNumber from 'bignumber.js';
 import PepePlacholderImg from '@images/pepe-placeholder.png';
 import Link from '@components/Link';
-import { getShortenedAddress, getTxExpolerLink } from '@utils/env';
+import { getShortenedAddress, getTxExplorerLink } from '@utils/env';
 
 const PurchaseConfirmed: React.FC = () => {
   const { txId } = useParams();
@@ -103,7 +103,7 @@ const PurchaseConfirmed: React.FC = () => {
             </Text>
             <Link
               ml="auto"
-              link={getTxExpolerLink(transaction.hash || '')}
+              link={getTxExplorerLink(transaction.hash || '')}
               text={getShortenedAddress(transaction.hash || '')}
             />
           </Group>

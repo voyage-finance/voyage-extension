@@ -1,18 +1,18 @@
-import * as ethers from 'ethers';
-import { GSNConfig, RelayProvider } from '@opengsn/provider';
-import { Contracts, getNetworkConfiguration } from '@utils/env';
-import HttpProvider from 'web3-providers-http';
-import { HttpClient, HttpWrapper } from '@opengsn/common';
-import { RelayTransactionRequest } from '@opengsn/common/dist/types/RelayTransactionRequest';
-import { RelayInfo } from '@opengsn/common/dist/types/RelayInfo';
-import { RelayRegisteredEventInfo } from '@opengsn/common/dist/types/GSNContractsDataTypes';
-import { createClientLogger } from '@opengsn/provider/dist/ClientWinstonLogger';
-import { PingResponse } from '@opengsn/common/dist/PingResponse';
-import { GsnTransactionDetails } from '@opengsn/common/dist/types/GsnTransactionDetails';
-import fetchAdapter from '@vespaiach/axios-fetch-adapter';
-import sinon from 'sinon';
-import ControllerStore from './root';
 import { TransactionRequest } from '@ethersproject/providers';
+import { HttpClient, HttpWrapper } from '@opengsn/common';
+import { PingResponse } from '@opengsn/common/dist/PingResponse';
+import { RelayRegisteredEventInfo } from '@opengsn/common/dist/types/GSNContractsDataTypes';
+import { GsnTransactionDetails } from '@opengsn/common/dist/types/GsnTransactionDetails';
+import { RelayInfo } from '@opengsn/common/dist/types/RelayInfo';
+import { RelayTransactionRequest } from '@opengsn/common/dist/types/RelayTransactionRequest';
+import { GSNConfig, RelayProvider } from '@opengsn/provider';
+import { createClientLogger } from '@opengsn/provider/dist/ClientWinstonLogger';
+import { config as conf } from '@utils/env';
+import fetchAdapter from '@vespaiach/axios-fetch-adapter';
+import * as ethers from 'ethers';
+import sinon from 'sinon';
+import HttpProvider from 'web3-providers-http';
+import ControllerStore from './root';
 
 export class GsnStore {
   root: ControllerStore;
@@ -29,18 +29,16 @@ export class GsnStore {
       logger
     );
     const config: Partial<GSNConfig> = {
-      paymasterAddress:
-        getNetworkConfiguration().contracts.paymaster.toLowerCase(), // do not remove toLowerCase, as this breaks `RelayClient`
+      paymasterAddress: conf.paymaster, // do not remove toLowerCase, as this breaks `RelayClient`
       auditorsCount: 0,
-      preferredRelays: [process.env.VOYAGE_API_URL ?? 'http://127.0.0.1:3000'],
+      preferredRelays: [conf.voyageApiUrl],
     };
 
-    const endpoint = getNetworkConfiguration().endpoint;
-    console.log('---- [GsnStore] endpoint----', endpoint);
+    console.log('---- [GsnStore] endpoint----', process.env.ALCHEMY_RPC_URL);
     // bug in http provider typings. just cast it and forget about this.
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    const provider = new HttpProvider(endpoint) as unknown as any;
+    const provider = new HttpProvider(conf.alchemyRpcUrl) as unknown as any;
     this.gsnProvider = RelayProvider.newProvider({
       provider,
       config,
@@ -94,7 +92,7 @@ export class GsnStore {
     };
     const gsnTransactionDetails: GsnTransactionDetails = {
       from: userAddress,
-      to: getNetworkConfiguration().contracts[Contracts.Voyage],
+      to: conf.voyage,
       data: data,
     };
     if (gsnTransactionDetails.gas == null) {

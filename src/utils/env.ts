@@ -1,122 +1,87 @@
-import { ethers } from 'ethers';
-import { alchemyProvider } from 'wagmi/providers/alchemy';
-import { getChainID } from './config';
+import { CROSS_CHAIN_SEAPORT_ADDRESS } from '@opensea/seaport-js/lib/constants';
+import { TORUS_NETWORK, TORUS_NETWORK_TYPE } from '@toruslabs/customauth';
 import {
   ChainID,
   LOOKS_ADDRESS,
   PAYMASTER_ADDRESS,
+  VoyageContract,
   VOYAGE_ADDRESS,
 } from './constants';
-import { CROSS_CHAIN_SEAPORT_ADDRESS } from '@opensea/seaport-js/lib/constants';
 
-export enum Network {
-  Mainnet = 'mainnet',
-  Goerli = 'goerli',
-  Localhost = 'localhost',
+type AddressToContract = Record<string, VoyageContract>;
+
+export const getChainID = () => {
+  const configuredChainID = process.env.CHAIN_ID || '5';
+  return parseInt(configuredChainID, 10) as ChainID;
+};
+
+const CHAIN_ID = getChainID();
+const VOYAGE = VOYAGE_ADDRESS[CHAIN_ID];
+const LOOKS = LOOKS_ADDRESS[CHAIN_ID];
+const PAYMASTER = PAYMASTER_ADDRESS[CHAIN_ID];
+
+const contractToAddress = {
+  [VoyageContract.Voyage]: VOYAGE.toLowerCase(),
+  [VoyageContract.LooksRare]: LOOKS.toLowerCase(),
+  [VoyageContract.Seaport]: CROSS_CHAIN_SEAPORT_ADDRESS.toLowerCase(),
+  [VoyageContract.Paymaster]: PAYMASTER.toLowerCase(),
+};
+const addressToContract = Object.keys(contractToAddress).reduce(
+  (acc: AddressToContract, key: string) => {
+    const address = contractToAddress[key as VoyageContract];
+    return { ...acc, [address]: key } as AddressToContract;
+  },
+  {}
+);
+
+interface VoyageExtensionConfig {
+  debug: boolean;
+  chainId: ChainID;
+  alchemyRpcUrl: string;
+  alchemyApiKey: string;
+  explorerUrl: string;
+  voyageApiUrl: string;
+  voyageWebUrl: string;
+  torusNetwork: TORUS_NETWORK_TYPE;
+  torusVerifier: string;
+  numConfirmations: number;
+  paymaster: string;
+  voyage: string;
 }
 
-export enum Contracts {
-  Voyage = 'voyage',
-  LooksRare = 'looksrare',
-  Seaport = 'opensea',
-  Paymaster = 'paymaster',
-}
-
-type AddressToContract = Record<string, Contracts>;
-
-export interface NetworkConfiguration {
-  name: string;
-  apiKey?: string;
-  explorer: string;
-  endpoint: string;
-  chaindId: number;
-  contracts: Record<Contracts, string>;
-  addressToContract: AddressToContract;
-}
-
-const VOYAGE = VOYAGE_ADDRESS[getChainID()];
-const LOOKS = LOOKS_ADDRESS[getChainID()];
-const PAYMASTER = PAYMASTER_ADDRESS[getChainID()];
-const contracts = {
-  [Contracts.Voyage]: VOYAGE.toLowerCase(),
-  [Contracts.LooksRare]: LOOKS.toLowerCase(),
-  [Contracts.Seaport]: CROSS_CHAIN_SEAPORT_ADDRESS.toLowerCase(),
-  [Contracts.Paymaster]: PAYMASTER.toLowerCase(),
-};
-const addressToContract = Object.keys(contracts).reduce((acc, key: string) => {
-  const address = contracts[key as Contracts];
-  return { ...acc, [address]: key };
-}, {});
-
-export const NetworkConfigurationMap: Record<Network, NetworkConfiguration> = {
-  [Network.Goerli]: {
-    name: Network.Goerli,
-    apiKey: process.env.ALCHEMY_GOERLI_API_KEY,
-    explorer: 'https://goerli.etherscan.io/',
-    endpoint: `https://eth-goerli.g.alchemy.com/v2/${process.env.ALCHEMY_GOERLI_API_KEY}`,
-    chaindId: ChainID.Goerli,
-    contracts,
-    addressToContract,
-  },
-  [Network.Localhost]: {
-    name: Network.Localhost,
-    apiKey: process.env.ALCHEMY_RINKEBY_API_KEY,
-    endpoint: `http://localhost:8545`,
-    explorer: 'https://goerli.etherscan.io/',
-    chaindId: ChainID.Goerli,
-    contracts,
-    addressToContract,
-  },
-  [Network.Mainnet]: {
-    name: Network.Mainnet,
-    apiKey: process.env.MAINNET_API_KEY,
-    endpoint: `https://eth-mainnet.g.alchemy.com/v2/_ugyedYRT9AOVAGTuXNVKSgFuauulnkC`,
-    explorer: 'https://etherscan.io/',
-    chaindId: ChainID.Mainnet,
-    contracts,
-    addressToContract,
-  },
+export const resolveConfiguration = (): VoyageExtensionConfig => {
+  const chainId = parseInt(process.env.CHAIN_ID ?? '5', 10);
+  return {
+    chainId,
+    debug: process.env.VOYAGE_ENV === 'true',
+    alchemyRpcUrl:
+      process.env.ALCHEMY_RPC_URL ??
+      'https://eth-goerli.g.alchemy.com/v2/IG5Is2xWE1WkB-h0cN1NX58xw_74WEZj',
+    alchemyApiKey:
+      process.env.ALCHEMY_API_KEY ?? 'IG5Is2xWE1WkB-h0cN1NX58xw_74WEZj',
+    voyageApiUrl:
+      process.env.VOYAGE_API_URL ?? 'https://api.staging.voyage.finance',
+    voyageWebUrl:
+      process.env.VOYAGE_WEB_URL ?? 'https://app.staging.voyage.finance',
+    explorerUrl: process.env.EXPLORER_URL ?? 'https://goerli.etherscan.io',
+    torusNetwork: (process.env.TORUS_NETWORK ??
+      TORUS_NETWORK.TESTNET) as TORUS_NETWORK_TYPE,
+    torusVerifier: process.env.TORUS_VERIFIER ?? 'voyage-finance',
+    numConfirmations: parseInt(process.env.NUM_CONFIRMATIONS ?? '2', 10),
+    paymaster: PAYMASTER,
+    voyage: VOYAGE,
+  };
 };
 
-export const getContractByAddress = (address: string) =>
-  NetworkConfigurationMap[getNetworkEnvironment()].addressToContract[address];
+export const config = resolveConfiguration();
 
-export const getNetworkEnvironment = () => {
-  const env = (process.env.NETWORK_ENV as Network) || Network.Localhost;
-  console.log('network env: ', env);
-  return env;
-};
-
-export const getNetworkConfiguration = () =>
-  NetworkConfigurationMap[getNetworkEnvironment()];
-
-export const getAlchemyProvider = () =>
-  alchemyProvider({ apiKey: getNetworkConfiguration().apiKey });
-
-export const getJsonProvider = () => {
-  switch (getNetworkEnvironment()) {
-    case Network.Goerli:
-      return new ethers.providers.AlchemyProvider(
-        getNetworkConfiguration().name,
-        getNetworkConfiguration().apiKey
-      );
-    case Network.Localhost:
-    default:
-      return new ethers.providers.JsonRpcProvider(
-        getNetworkConfiguration().endpoint,
-        {
-          chainId: getNetworkConfiguration().chaindId,
-          name: getNetworkConfiguration().name,
-        }
-      );
-  }
-};
+export const getContractByAddress = (address: string): VoyageContract =>
+  addressToContract[address];
 
 export const getShortenedAddress = (address: string) => {
   return `${address.substring(0, 6)}...${address.slice(-4)}`;
 };
 
-export const getTxExpolerLink = (hash: string) => {
-  const { explorer: explorerUrl } = getNetworkConfiguration();
-  return `${explorerUrl}tx/${hash}`;
+export const getTxExplorerLink = (hash: string) => {
+  return `${config.explorerUrl}/tx/${hash}`;
 };

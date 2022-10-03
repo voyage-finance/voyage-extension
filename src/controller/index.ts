@@ -21,10 +21,10 @@ import { auth, encodeRedirectUri } from '@utils/auth';
 import { sendSignInLinkToEmail } from 'firebase/auth';
 import { createRandomFingerprint } from '@utils/random';
 import { registerMessageListeners } from './runtimeMessage';
-import { getJsonProvider } from '@utils/env';
 import { ApprovalType } from 'types';
 import { IClientMeta } from '@walletconnect/types';
 import browser from 'webextension-polyfill';
+import { config } from '@utils/env';
 
 interface WalletConnectSessionRequest {
   chainId: number | null;
@@ -49,7 +49,10 @@ export class VoyageController extends SafeEventEmitter {
   constructor() {
     super();
 
-    this.provider = getJsonProvider();
+    this.provider = new ethers.providers.AlchemyProvider(
+      ethers.providers.getNetwork(config.chainId),
+      config.alchemyApiKey
+    );
     this.store = new ControllerStore(this.provider, this);
     this.service = new VoyageRpcService(this.store);
     this.engine = this.createRpcEngine();
@@ -204,9 +207,9 @@ export class VoyageController extends SafeEventEmitter {
     const generatedFingerPrint = createRandomFingerprint();
     const encodedRedirectUri = encodeRedirectUri(email, generatedFingerPrint);
 
-    if (!process.env.VOYAGE_DEBUG) {
+    if (!config.debug) {
       const extension_id = browser.runtime.id;
-      const backUrl = `${process.env.VOYAGE_WEB_URL}/onboard?encoded=${encodedRedirectUri}&extension_id=${extension_id}`;
+      const backUrl = `${config.voyageWebUrl}/onboard?encoded=${encodedRedirectUri}&extension_id=${extension_id}`;
       console.log('sending firebase email with backlink=', backUrl);
       await sendSignInLinkToEmail(auth, email, {
         url: backUrl,

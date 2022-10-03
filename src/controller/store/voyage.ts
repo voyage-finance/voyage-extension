@@ -14,6 +14,7 @@ import {
 import { storage } from 'webextension-polyfill';
 import BigNumber from 'bignumber.js';
 import browser from 'webextension-polyfill';
+import { config } from '@utils/env';
 
 class VoyageStore {
   root: ControllerStore;
@@ -159,7 +160,7 @@ class VoyageStore {
       false
     );
     const tx = await this.root.gsnStore.relayTransaction(txRequest);
-    const { transactionHash } = await tx.wait(+process.env.NUM_CONFIRMATIONS!);
+    const { transactionHash } = await tx.wait(config.numConfirmations);
     return transactionHash;
   }
 

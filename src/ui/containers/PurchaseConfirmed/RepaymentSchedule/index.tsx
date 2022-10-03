@@ -7,7 +7,7 @@ import moment from 'moment';
 import BigNumber from 'bignumber.js';
 import { formatAmount } from '@utils/bn';
 import styles from './index.module.scss';
-import { getShortenedAddress, getTxExpolerLink } from '@utils/env';
+import { getShortenedAddress, getTxExplorerLink } from '@utils/env';
 
 interface IRepaymentScheduleProps extends GroupProps {
   nper: number;
@@ -24,7 +24,7 @@ const RepaymentSchedule: React.FunctionComponent<IRepaymentScheduleProps> = ({
   ...props
 }) => {
   const onPmtClick = (hash: string) => {
-    window.open(getTxExpolerLink(hash), '_blank');
+    window.open(getTxExplorerLink(hash), '_blank');
   };
   return (
     <Group direction="column" align="stretch" spacing={0} {...props}>

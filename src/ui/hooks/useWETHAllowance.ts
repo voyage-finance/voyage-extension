@@ -3,7 +3,7 @@ import { useContractRead } from 'wagmi';
 import Weth9Abi from 'abis/weth9.json';
 import { useInterval } from '@mantine/hooks';
 import { useEffect } from 'react';
-import { getChainID } from '@utils/config';
+import { getChainID } from '@utils/env';
 
 export const useWETHAllowance = (
   owner: string,

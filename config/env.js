@@ -69,9 +69,6 @@ function getClientEnvironment(publicUrl) {
       // Most importantly, it switches React into the correct mode.
       NODE_ENV: process.env.NODE_ENV || 'development',
       NETWORK_ENV: process.env.NETWORK_ENV || 'GOERLI',
-      VOYAGE_DEBUG: process.env.VOYAGE_DEBUG === 'true',
-      VOYAGE_WEB_URL: process.env.VOYAGE_WEB_URL || 'http://localhost:8080',
-      VOYAGE_API_URL: process.env.VOYAGE_API_URL,
       DEBUG_GOERLI_MNEMONIC: process.env.DEBUG_GOERLI_MNEMONIC,
       DEBUG_LOCALHOST_PRIVATE_KEY: process.env.DEBUG_LOCALHOST_PRIVATE_KEY,
       NUM_CONFIRMATIONS: process.env.NUM_CONFIRMATIONS || 1,

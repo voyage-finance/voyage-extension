@@ -1,45 +1,46 @@
-import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
-import Connect from '@containers/Connect';
-import styles from './index.module.scss';
-import Approval from '@containers/Approval';
-import Home from '@containers/Home';
 import MenuBar from '@components/MenuBar/MenuBar';
-import Settings from '@containers/Settings';
-import SwitchNetwork from '@containers/SwitchNetwork';
-import { networks } from '@utils/chain';
+import NavigationBar from '@components/NavigationBar';
+import Approval from '@containers/Approval';
+import Connect from '@containers/Connect';
 import Connections from '@containers/Connections';
-import EnterEmailStep from '@containers/Onboard/EnterEmail';
-import { useEffect, useState } from 'react';
-import cn from 'classnames';
+import Onboard from '@containers/FullscreenContainer';
+import Home from '@containers/Home';
 import BoardingState from '@containers/Onboard/BoardingState';
 import CheckEmailStep from '@containers/Onboard/CheckEmail';
-import { useAppSelector } from '@hooks/useRedux';
-import Onboard from '@containers/FullscreenContainer';
-import { KeyStoreStage } from 'types';
+import EnterEmailStep from '@containers/Onboard/EnterEmail';
 import SignTermsStep from '@containers/Onboard/SignTermsState';
-import SelectDepositMethod from '@containers/VaultDeploy/SelectDepositMethod';
+import PurchaseCart from '@containers/PurchaseCart';
+import PurchaseConfirmed from '@containers/PurchaseConfirmed';
+import Settings from '@containers/Settings';
+import SwitchNetwork from '@containers/SwitchNetwork';
+import DirectTopUp from '@containers/TopUp/DirectTopUp';
+import SelectTopUpMethod from '@containers/TopUp/SelectTopUpMethod';
 import AwaitDeposit from '@containers/VaultDeploy/AwaitDeposit';
 import VaultDeployed from '@containers/VaultDeploy/Deployed';
-import { ethers } from 'ethers';
+import SelectDepositMethod from '@containers/VaultDeploy/SelectDepositMethod';
+import { useAppSelector } from '@hooks/useRedux';
 import useVoyageController from '@hooks/useVoyageController';
+import { LoadingOverlay } from '@mantine/core';
+import { networks } from '@utils/chain';
 import {
+  APPROVAL_ROUTE,
   DEFAULT_ROUTE,
   ONBOARD_CHECK_EMAIL_ROUTE,
   ONBOARD_INITIALIZING_ROUTE,
   ONBOARD_LOGIN_ROUTE,
   ONBOARD_TERMS_ROUTE,
   PURCHASE_OVERVIEW_ROUTE,
-  APPROVAL_ROUTE,
   VAULT_DEPOSIT_DEPLOYED_ROUTE,
   VAULT_DEPOSIT_METHODS_ROUTE,
 } from '@utils/constants';
+import { config } from '@utils/env';
 import { ExtensionEnvType, getEnvironmentType } from '@utils/extension';
-import PurchaseCart from '@containers/PurchaseCart';
-import PurchaseConfirmed from '@containers/PurchaseConfirmed';
-import NavigationBar from '@components/NavigationBar';
-import SelectTopUpMethod from '@containers/TopUp/SelectTopUpMethod';
-import DirectTopUp from '@containers/TopUp/DirectTopUp';
-import { LoadingOverlay } from '@mantine/core';
+import cn from 'classnames';
+import { ethers } from 'ethers';
+import { useEffect, useState } from 'react';
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import { KeyStoreStage } from 'types';
+import styles from './index.module.scss';
 
 const Router: React.FC = () => {
   const location = useLocation();
@@ -158,7 +159,7 @@ const Router: React.FC = () => {
         </Route>
       </Routes>
       {!isFullscreenMode && <NavigationBar />}
-      {process.env.VOYAGE_DEBUG && (
+      {config.debug && (
         <div className={styles.debugReset} onClick={resetStorage}>
           RESET
         </div>
