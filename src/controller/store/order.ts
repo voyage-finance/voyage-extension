@@ -1,6 +1,7 @@
 import { TransactionRequest } from '@ethersproject/providers';
 import { CROSS_CHAIN_SEAPORT_ADDRESS } from '@opensea/seaport-js/lib/constants';
 import { ChainID, LOOKS_ADDRESS, Marketplace } from '@utils/constants';
+import { sleep } from '@utils/random';
 import { ethers } from 'ethers';
 import browser from 'webextension-polyfill';
 import ControllerStore from './root';
@@ -31,6 +32,10 @@ class OrderStore implements IControllerStore {
     );
     const { calldata } = await res.json();
     console.log('order calldata: ', calldata);
+    // wait for 1s to avoid getting rate limited
+    if (order.marketplace === 'opensea') {
+      await sleep(1000);
+    }
     const marketplaceAddress = this._getMarketplaceAddress(order.marketplace);
     const tx: TransactionRequest = {
       from: vault,
