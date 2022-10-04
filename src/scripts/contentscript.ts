@@ -79,8 +79,24 @@ function extractOrderData(
 let currentButton: HTMLElement | null = null;
 const pathnameCache: Record<string, OrderData> = {};
 
+function setButtonLoading(status: boolean) {
+  const textNode = currentButton?.childNodes[0];
+  if (textNode) {
+    if (status) {
+      textNode.nodeValue = 'Unfurling sails...';
+    } else {
+      textNode.nodeValue = 'Buy with Voyage';
+    }
+  }
+}
+
 async function dispatchOrder(order: OrderData) {
-  return await controller.createOrder(order);
+  try {
+    setButtonLoading(true);
+    await controller.createOrder(order);
+  } finally {
+    setButtonLoading(false);
+  }
 }
 
 function createButtonNode(order: OrderData, marketplace: Marketplace) {
