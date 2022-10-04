@@ -87,7 +87,9 @@ export class VoyageController extends SafeEventEmitter {
    */
   setupVoyageProviderConnection = (stream: Duplex) => {
     const engineStream = createEngineStream({ engine: this.engine });
-    pump(stream, engineStream, stream);
+    pump(stream, engineStream, stream, (err) => {
+      if (err) console.error('voyage provider error: ', err);
+    });
   };
 
   init() {

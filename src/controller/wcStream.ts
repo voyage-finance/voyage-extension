@@ -3,6 +3,8 @@ import { Duplex } from 'readable-stream';
 import { noop } from 'lodash';
 
 export const createWcStream = (connection: WalletConnect) => {
+  const stream = new Duplex({ objectMode: true, read: noop, write: write });
+
   connection.on('disconnect', (err, payload) => {
     if (err) {
       console.error('ending wc stream err: ', err);
@@ -16,21 +18,32 @@ export const createWcStream = (connection: WalletConnect) => {
       console.error('call_request error: ', err);
       return;
     }
-    console.log('call_request: ', payload);
+    console.log('[wcStream] call_request: ', payload);
     stream.push({
       ...payload,
       params: [...payload.params, connection.peerMeta],
     });
   });
 
-  const write = (res: any) => {
-    console.log('res: ', res);
+  function write(res: any, _: unknown, cb: (err?: Error) => void) {
+    console.log('[wc] res: ', res);
     // if we get a successful response, we should approveRequest
     if (res.result) {
-      console.log('[wc] approving', res.id);
+      console.log('[wc] approving: ', res.id);
       connection.approveRequest(res);
+      cb();
+      return;
     }
-  };
-  const stream = new Duplex({ objectMode: true, read: noop, write: write });
+
+    if (res.error) {
+      console.log('[wc] rejected request: ', res);
+      connection.rejectRequest(res);
+      cb();
+      return;
+    }
+
+    cb();
+  }
+
   return stream;
 };
