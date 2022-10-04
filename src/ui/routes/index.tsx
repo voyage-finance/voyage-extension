@@ -47,10 +47,12 @@ const Router: React.FC = () => {
   const navigate = useNavigate();
   const controller = useVoyageController();
 
+  const isNotification = getEnvironmentType() === ExtensionEnvType.Notification;
   const isFullscreenMode =
     location.pathname.startsWith('/onboard') ||
     location.pathname.startsWith(PURCHASE_OVERVIEW_ROUTE) ||
     location.pathname.startsWith('/vault/deposit');
+  const showNavigation = !isNotification && !isFullscreenMode;
 
   const stage = useAppSelector((state) => state.core.stage);
   const isTermsSigned = useAppSelector((state) => state.core.isTermsSigned);
@@ -158,7 +160,7 @@ const Router: React.FC = () => {
           <Route path="topup/direct" element={<DirectTopUp />} />
         </Route>
       </Routes>
-      {!isFullscreenMode && <NavigationBar />}
+      {showNavigation && <NavigationBar />}
       {config.debug && (
         <div className={styles.debugReset} onClick={resetStorage}>
           RESET
