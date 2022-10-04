@@ -127,6 +127,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["https-browserify", "npm:1.0.0"],\
             ["husky", "npm:8.0.1"],\
             ["identity-obj-proxy", "npm:3.0.0"],\
+            ["jazzicon", "npm:1.5.0"],\
             ["jest", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:27.5.1"],\
             ["jest-resolve", "npm:27.5.1"],\
             ["jest-watch-typeahead", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:1.0.0"],\
@@ -12314,6 +12315,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "HARD"\
         }],\
+        ["npm:1.0.4", {\
+          "packageLocation": "./.yarn/cache/clone-npm-1.0.4-a610fcbcf9-d06418b733.zip/node_modules/clone/",\
+          "packageDependencies": [\
+            ["clone", "npm:1.0.4"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
         ["npm:2.1.2", {\
           "packageLocation": "./.yarn/cache/clone-npm-2.1.2-1d491c6629-aaf106e9bc.zip/node_modules/clone/",\
           "packageDependencies": [\
@@ -12372,6 +12380,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["color", [\
+        ["npm:0.11.4", {\
+          "packageLocation": "./.yarn/cache/color-npm-0.11.4-9baf90f12a-a6f624fd15.zip/node_modules/color/",\
+          "packageDependencies": [\
+            ["color", "npm:0.11.4"],\
+            ["clone", "npm:1.0.4"],\
+            ["color-convert", "npm:1.9.3"],\
+            ["color-string", "npm:0.3.0"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
         ["npm:3.2.1", {\
           "packageLocation": "./.yarn/cache/color-npm-3.2.1-568cf1014f-f81220e8b7.zip/node_modules/color/",\
           "packageDependencies": [\
@@ -12417,6 +12435,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["color-string", [\
+        ["npm:0.3.0", {\
+          "packageLocation": "./.yarn/cache/color-string-npm-0.3.0-68ff549742-cc65013a94.zip/node_modules/color-string/",\
+          "packageDependencies": [\
+            ["color-string", "npm:0.3.0"],\
+            ["color-name", "npm:1.1.4"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
         ["npm:1.9.1", {\
           "packageLocation": "./.yarn/cache/color-string-npm-1.9.1-dc020e56be-c13fe7cff7.zip/node_modules/color-string/",\
           "packageDependencies": [\
@@ -15668,6 +15694,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["eve-raphael", [\
+        ["npm:0.5.0", {\
+          "packageLocation": "./.yarn/cache/eve-raphael-npm-0.5.0-6b4784aa4a-50a4bde612.zip/node_modules/eve-raphael/",\
+          "packageDependencies": [\
+            ["eve-raphael", "npm:0.5.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["event-target-shim", [\
         ["npm:5.0.1", {\
           "packageLocation": "./.yarn/cache/event-target-shim-npm-5.0.1-cb48709025-1ffe3bb22a.zip/node_modules/event-target-shim/",\
@@ -18496,6 +18531,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["jazzicon", [\
+        ["npm:1.5.0", {\
+          "packageLocation": "./.yarn/cache/jazzicon-npm-1.5.0-e5c498b78c-dddeed6a21.zip/node_modules/jazzicon/",\
+          "packageDependencies": [\
+            ["jazzicon", "npm:1.5.0"],\
+            ["color", "npm:0.11.4"],\
+            ["mersenne-twister", "npm:1.1.0"],\
+            ["raphael", "npm:2.3.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["jest", [\
         ["npm:27.5.1", {\
           "packageLocation": "./.yarn/cache/jest-npm-27.5.1-bacad4fe2a-96f1d69042.zip/node_modules/jest/",\
@@ -20273,6 +20320,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["crypto-js", "npm:3.3.0"],\
             ["treeify", "npm:1.1.0"],\
             ["web3-utils", "npm:1.8.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["mersenne-twister", [\
+        ["npm:1.1.0", {\
+          "packageLocation": "./.yarn/cache/mersenne-twister-npm-1.1.0-d969b9d094-7de1940ded.zip/node_modules/mersenne-twister/",\
+          "packageDependencies": [\
+            ["mersenne-twister", "npm:1.1.0"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -24046,6 +24102,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/range-parser-npm-1.2.1-1a470fa390-0a268d4fea.zip/node_modules/range-parser/",\
           "packageDependencies": [\
             ["range-parser", "npm:1.2.1"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["raphael", [\
+        ["npm:2.3.0", {\
+          "packageLocation": "./.yarn/cache/raphael-npm-2.3.0-80bbb50b03-bb8a5f2ecf.zip/node_modules/raphael/",\
+          "packageDependencies": [\
+            ["raphael", "npm:2.3.0"],\
+            ["eve-raphael", "npm:0.5.0"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -28240,6 +28306,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["https-browserify", "npm:1.0.0"],\
             ["husky", "npm:8.0.1"],\
             ["identity-obj-proxy", "npm:3.0.0"],\
+            ["jazzicon", "npm:1.5.0"],\
             ["jest", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:27.5.1"],\
             ["jest-resolve", "npm:27.5.1"],\
             ["jest-watch-typeahead", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:1.0.0"],\

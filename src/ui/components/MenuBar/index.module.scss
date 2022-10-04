@@ -10,7 +10,7 @@
     display: flex;
     align-items: center;
     height: 100%;
-    flex: 0 0 145px;
+    flex: 1 0 auto;
     border-right: 1px solid rgba(255, 255, 255, 0.08);
     min-width: 0;
     & > svg {
@@ -24,15 +24,13 @@
     align-items: center;
     padding: 0 18px;
     height: 100%;
-    border-right: 1px solid rgba(255, 255, 255, 0.08);
-    width: 165px;
 
     .wrapper {
       display: flex;
       flex-direction: row;
-      align-items: flex-start;
+      align-items: center;
       min-width: 0;
-      .mmLogo {
+      .jazzIcon {
         height: 26px;
         width: 26px;
         margin-right: 10px;
