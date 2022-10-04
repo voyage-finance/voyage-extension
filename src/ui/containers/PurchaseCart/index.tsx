@@ -30,6 +30,7 @@ import { getContractByAddress, getTxExplorerLink } from '@utils/env';
 import { TxSpeed } from 'types';
 import { useWETHAllowance } from '@hooks/useWETHAllowance';
 import { ethers } from 'ethers';
+import { useBeforeunload } from 'react-beforeunload';
 
 const PurchaseCart: React.FC = () => {
   const { txId } = useParams();
@@ -82,6 +83,10 @@ const PurchaseCart: React.FC = () => {
   const handleCancelClick = () => {
     controller.rejectTransaction(transaction.id);
   };
+
+  useBeforeunload(() => {
+    controller.rejectTransaction(transaction.id);
+  });
 
   const fetchPreview = async () => {
     setIsLoading(true);

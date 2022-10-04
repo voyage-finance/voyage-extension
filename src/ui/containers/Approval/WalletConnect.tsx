@@ -8,6 +8,7 @@ import { Text, Title } from '@mantine/core';
 import { ReactComponent as CircleCheck } from '@images/circle-check-icon.svg';
 import styles from './WalletConnect.module.scss';
 import { ApprovalRequest } from 'types';
+import { useBeforeunload } from 'react-beforeunload';
 
 function WalletConnectApproval() {
   const voyageController = useVoyageController();
@@ -40,6 +41,10 @@ function WalletConnectApproval() {
       setLoading(false);
     }
   };
+
+  useBeforeunload(() => {
+    voyageController.rejectApprovalRequest(approvalId!);
+  });
 
   return (
     <div className={styles.root}>
