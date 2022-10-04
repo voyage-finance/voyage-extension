@@ -70,6 +70,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/node", "npm:16.11.27"],\
             ["@types/pump", "npm:1.1.1"],\
             ["@types/react", "npm:17.0.44"],\
+            ["@types/react-beforeunload", "npm:2.1.1"],\
             ["@types/react-dom", "npm:17.0.15"],\
             ["@types/react-redux", "npm:7.1.24"],\
             ["@types/readable-stream", "npm:2.3.13"],\
@@ -152,6 +153,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["pump", "npm:3.0.0"],\
             ["react", "npm:17.0.2"],\
             ["react-app-polyfill", "npm:3.0.0"],\
+            ["react-beforeunload", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:2.5.3"],\
             ["react-dev-utils", "npm:12.0.1"],\
             ["react-devtools", "npm:4.24.4"],\
             ["react-dom", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:17.0.2"],\
@@ -8539,6 +8541,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/prop-types", "npm:15.7.5"],\
             ["@types/scheduler", "npm:0.16.2"],\
             ["csstype", "npm:3.0.11"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@types/react-beforeunload", [\
+        ["npm:2.1.1", {\
+          "packageLocation": "./.yarn/cache/@types-react-beforeunload-npm-2.1.1-ad10677563-ca84ce4f93.zip/node_modules/@types/react-beforeunload/",\
+          "packageDependencies": [\
+            ["@types/react-beforeunload", "npm:2.1.1"],\
+            ["@types/react", "npm:18.0.5"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -24179,6 +24191,30 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["react-beforeunload", [\
+        ["npm:2.5.3", {\
+          "packageLocation": "./.yarn/cache/react-beforeunload-npm-2.5.3-57a96e3f2b-3abc4d4022.zip/node_modules/react-beforeunload/",\
+          "packageDependencies": [\
+            ["react-beforeunload", "npm:2.5.3"]\
+          ],\
+          "linkType": "SOFT"\
+        }],\
+        ["virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:2.5.3", {\
+          "packageLocation": "./.yarn/__virtual__/react-beforeunload-virtual-ecde0c3ecc/0/cache/react-beforeunload-npm-2.5.3-57a96e3f2b-3abc4d4022.zip/node_modules/react-beforeunload/",\
+          "packageDependencies": [\
+            ["react-beforeunload", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:2.5.3"],\
+            ["@types/react", "npm:17.0.44"],\
+            ["prop-types", "npm:15.8.1"],\
+            ["react", "npm:17.0.2"],\
+            ["tiny-invariant", "npm:1.3.1"]\
+          ],\
+          "packagePeers": [\
+            "@types/react",\
+            "react"\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["react-dev-utils", [\
         ["npm:12.0.1", {\
           "packageLocation": "./.yarn/cache/react-dev-utils-npm-12.0.1-83ba06e3ee-2c6917e47f.zip/node_modules/react-dev-utils/",\
@@ -27065,6 +27101,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["tiny-invariant", [\
+        ["npm:1.3.1", {\
+          "packageLocation": "./.yarn/cache/tiny-invariant-npm-1.3.1-a8ca214e49-872dbd1ff2.zip/node_modules/tiny-invariant/",\
+          "packageDependencies": [\
+            ["tiny-invariant", "npm:1.3.1"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["tmp", [\
         ["npm:0.0.33", {\
           "packageLocation": "./.yarn/cache/tmp-npm-0.0.33-bcbf65df2a-902d7aceb7.zip/node_modules/tmp/",\
@@ -28249,6 +28294,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/node", "npm:16.11.27"],\
             ["@types/pump", "npm:1.1.1"],\
             ["@types/react", "npm:17.0.44"],\
+            ["@types/react-beforeunload", "npm:2.1.1"],\
             ["@types/react-dom", "npm:17.0.15"],\
             ["@types/react-redux", "npm:7.1.24"],\
             ["@types/readable-stream", "npm:2.3.13"],\
@@ -28331,6 +28377,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["pump", "npm:3.0.0"],\
             ["react", "npm:17.0.2"],\
             ["react-app-polyfill", "npm:3.0.0"],\
+            ["react-beforeunload", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:2.5.3"],\
             ["react-dev-utils", "npm:12.0.1"],\
             ["react-devtools", "npm:4.24.4"],\
             ["react-dom", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:17.0.2"],\

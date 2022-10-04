@@ -10,6 +10,7 @@ import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { ApprovalRequest } from 'types';
 import styles from './index.module.scss';
+import { useBeforeunload } from 'react-beforeunload';
 
 function SignMessage() {
   const voyageController = useVoyageController();
@@ -43,6 +44,10 @@ function SignMessage() {
       setLoading(false);
     }
   };
+
+  useBeforeunload(() => {
+    voyageController.rejectApprovalRequest(approvalId!);
+  });
 
   return (
     <Group

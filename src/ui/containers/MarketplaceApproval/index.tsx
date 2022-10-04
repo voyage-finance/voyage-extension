@@ -12,6 +12,7 @@ import { getShortenedAddress, getTxExplorerLink } from '@utils/env';
 import { ReactComponent as CopySvg } from 'assets/img/copy-icon.svg';
 import { ApprovalRequest } from 'types';
 import TitleWithLine from '@components/atoms/TitleWithLine';
+import { useBeforeunload } from 'react-beforeunload';
 
 function MarketplaceApproval() {
   const voyageController = useVoyageController();
@@ -46,6 +47,10 @@ function MarketplaceApproval() {
       setLoading(false);
     }
   };
+
+  useBeforeunload(() => {
+    voyageController.rejectApprovalRequest(approvalId!);
+  });
 
   return (
     <Group
