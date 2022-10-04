@@ -43,10 +43,9 @@ export const openNotificationWindow = (
   });
 };
 
-export const closeNotificationWindow = () => {
-  return browser.windows.getCurrent().then((windowDetails) => {
-    return browser.windows.remove(windowDetails.id || -1);
-  });
+export const closeNotificationWindow = async () => {
+  const windowDetails = await browser.windows.getCurrent();
+  return await browser.windows.remove(windowDetails.id || -1);
 };
 
 const getEnvironmentTypeMemo = memoize((url: string) => {

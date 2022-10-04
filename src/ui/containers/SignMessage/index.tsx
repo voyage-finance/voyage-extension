@@ -1,14 +1,15 @@
-import Button from '@components/Button';
-import useVoyageController from '@hooks/useVoyageController';
-import { useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { useAppSelector } from '@hooks/useRedux';
-import VoyagePaper from '@components/Card';
-import { Avatar, Box, Group, Title } from '@mantine/core';
-import styles from './index.module.scss';
-import { ApprovalRequest } from 'types';
-import Text from '@components/Text';
 import TitleWithLine from '@components/atoms/TitleWithLine';
+import Button from '@components/Button';
+import VoyagePaper from '@components/Card';
+import Text from '@components/Text';
+import { useAppSelector } from '@hooks/useRedux';
+import useVoyageController from '@hooks/useVoyageController';
+import { Avatar, Box, Group, Title } from '@mantine/core';
+import { closeNotificationWindow } from '@utils/extension';
+import { useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { ApprovalRequest } from 'types';
+import styles from './index.module.scss';
 
 function SignMessage() {
   const voyageController = useVoyageController();
@@ -19,13 +20,11 @@ function SignMessage() {
   const pendingSignRequest: ApprovalRequest = pendingSignRequests[approvalId!];
   const [loading, setLoading] = useState(false);
 
-  const navigate = useNavigate();
-
   const handleApprove = async (id: string) => {
     try {
       setLoading(true);
       await voyageController.approveApprovalRequest(id);
-      navigate('/');
+      closeNotificationWindow();
     } catch {
       console.error('failed to approve');
     } finally {
@@ -37,6 +36,7 @@ function SignMessage() {
     try {
       setLoading(true);
       await voyageController.rejectApprovalRequest(id);
+      closeNotificationWindow();
     } catch {
       console.error('failed to reject');
     } finally {
