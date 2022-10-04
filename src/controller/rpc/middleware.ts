@@ -40,6 +40,7 @@ export const createVoyageMiddleware = (service: VoyageRpcService) => {
         );
         const message = ethers.utils.toUtf8String(messageBytes);
         res.result = await service.handleEthSign(address, message, peerMeta);
+        console.log('[middleware] res: ', res);
         break;
       }
       case 'eth_sign': {

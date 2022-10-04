@@ -6,6 +6,7 @@ import browser from 'webextension-polyfill';
 import { TransactionRequest } from '@ethersproject/providers';
 import { ApprovalType } from 'types';
 import { config } from '@utils/env';
+import { ethErrors } from 'eth-rpc-errors';
 
 /**
  * VoyageRpcService defines all handlers for eth RPC methods.
@@ -53,7 +54,10 @@ class VoyageRpcService {
         client: metadata,
         onApprove: async () =>
           resolve(await this.store.keyStore.signMessage(message)),
-        onReject: async () => reject('User rejected session request'),
+        onReject: async () =>
+          reject(
+            ethErrors.provider.userRejectedRequest('User rejected request')
+          ),
       });
       openNotificationWindow({
         url: 'notification.html',
