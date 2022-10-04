@@ -89,6 +89,7 @@ function createButtonNode(order: OrderData, marketplace: Marketplace) {
   const className =
     marketplace === Marketplace.Looks ? 'voyage-btn--looks' : 'voyage-btn--os';
   voyageButton.appendChild(text);
+  voyageButton.id = 'voyage-btn';
   voyageButton.classList.add('voyage-btn');
   voyageButton.classList.add(className);
   voyageButton.dataset.id = 'voyage-bnpl-button';
@@ -155,7 +156,8 @@ function insertButton(order: OrderData, marketplace: Marketplace) {
   if (currentButton) {
     if (
       currentButton.dataset.collection === order.collection &&
-      currentButton.dataset.tokenId === order.tokenId
+      currentButton.dataset.tokenId === order.tokenId &&
+      document.body.contains(currentButton)
     ) {
       // in this case we already injected. do nothing.
       return;
@@ -182,14 +184,14 @@ async function init() {
     const order =
       pathnameCache[document.location.pathname] ??
       extractOrderData(window.location.pathname, marketplace);
-    if (order) {
+    if (order && order.collection && order.tokenId) {
       insertButton(order, marketplace);
     }
   }
 
   // Create an observer instance linked to the callback function
   const observer = new MutationObserver(
-    debounce(observerCallback, 500, { leading: false, trailing: true })
+    debounce(observerCallback, 500, { leading: true, trailing: true })
   );
 
   // Start observing the target node for configured mutations
