@@ -1,15 +1,18 @@
-import Input from '@components/Input';
-import { Group } from '@mantine/core';
-import * as React from 'react';
-import { useState } from 'react';
-import { useForm, yupResolver } from '@mantine/form';
-import { ReactComponent as Voyage } from '@images/logo-menu.svg';
-
-import * as Yup from 'yup';
-import Text from '@components/Text';
 import Button from '@components/Button';
 import Card from '@components/Card';
+import Input from '@components/Input';
+import Text from '@components/Text';
 import useVoyageController from '@hooks/useVoyageController';
+import { ReactComponent as Voyage } from '@images/logo-menu.svg';
+import { Group } from '@mantine/core';
+import { useForm, yupResolver } from '@mantine/form';
+import { encodeRedirectUri, webAuth } from '@utils/auth';
+import { config } from '@utils/env';
+import { createRandomFingerprint } from '@utils/random';
+import * as React from 'react';
+import { useState } from 'react';
+import browser from 'webextension-polyfill';
+import * as Yup from 'yup';
 
 const EnterEmailStep: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -27,16 +30,36 @@ const EnterEmailStep: React.FC = () => {
     ),
   });
 
-  const onFormSubmit = () => {
-    setIsLoading(true);
-    controller
-      .sendMagicLinkToEmail(form.values.email)
-      .catch((error) => {
-        setError(error.message);
-      })
-      .finally(() => {
-        setIsLoading(false);
+  const onFormSubmit = async () => {
+    try {
+      setIsLoading(true);
+      const { email } = form.values;
+      const generatedFingerPrint = createRandomFingerprint();
+      const encodedRedirectUri = encodeRedirectUri(email, generatedFingerPrint);
+      const extension_id = browser.runtime.id;
+      const redirectUri = `${config.voyageWebUrl}/onboard?encoded=${encodedRedirectUri}&extension_id=${extension_id}`;
+      await new Promise((resolve, reject) => {
+        webAuth.passwordlessStart(
+          {
+            connection: 'email',
+            send: 'link',
+            email,
+            authParams: { state: generatedFingerPrint, redirectUri },
+          },
+          (err, res) => {
+            if (err) {
+              return reject(err);
+            }
+            resolve(res);
+          }
+        );
       });
+      await controller.startLogin(email, generatedFingerPrint);
+    } catch (error) {
+      setError((error as any).message);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (

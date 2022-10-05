@@ -57,10 +57,19 @@ declare module '*.module.sass' {
 }
 
 declare global {
+  // eslint-disable-next-line no-var
   var voyage: BaseProvider;
+  // eslint-disable-next-line no-var
   var controller: ControllerClient;
+  // eslint-disable-next-line no-var
   var provider: BaseProvider;
   interface Window {
     voyage: BaseProvider;
+  }
+  namespace NodeJS {
+    interface ProcessEnv {
+      AUTH0_DOMAIN: string;
+      AUTH0_CLIENT_ID: string;
+    }
   }
 }
