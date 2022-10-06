@@ -36,12 +36,14 @@ const InfoCard: React.FC<{ onClick: () => void }> = ({ onClick }) => {
           Deposit ETH
         </Text>
         <Text mt={18} sx={{ lineHeight: '16px' }} align="center">
-          Deposit ETH (on Ethereum Network) to create your very own Voyage
-          vault. Gas used to deploy your Voyage Vault will be automatically
-          deducted from your deposited balance.
+          Deposit ETH to your very own Voyage App.
+          <br />
+          <br />
+          Note that some gas fee will be incurred in the creation of your wallet
+          and will be automatically deducted from your deposit.
         </Text>
         <Group direction="column" mt={25} align="center" spacing={0}>
-          <Text>Minimum ETH Required</Text>
+          <Text>ETH Required for Gas</Text>
           <Group mt={5} align="center" spacing={2} ml={5}>
             <Text sx={{ fontSize: 24 }} weight={'bold'}>
               {isLoading ? '...' : formatAmount(minDeposit)}
@@ -82,11 +84,6 @@ const MethodsCard = () => {
       <Group direction="column" align={'center'} spacing={0}>
         <Text sx={{ fontSize: 24 }} weight={'bold'} type="gradient">
           Select Deposit Method
-        </Text>
-        <Text mt={10} sx={{ lineHeight: '16px' }} align="center">
-          Deposit ETH (on Ethereum Network) to create your very own Voyage
-          vault. Gas used to deploy your Voyage Vault will be automatically
-          deducted from your deposited balance.
         </Text>
         <Text mt={31} sx={{ fontSize: 24 }}>
           1 / <strong>Directly Deposit ETH</strong>
