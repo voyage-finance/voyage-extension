@@ -65,14 +65,6 @@ const AwaitDeposit: React.FC = () => {
         <Text sx={{ fontSize: 24 }} weight={'bold'} type="gradient">
           {isDirectMethod ? 'Directly Deposit ETH' : 'Buy ETH with Fiat'}
         </Text>
-        <Text mt={18} sx={{ lineHeight: '16px' }} align="center">
-          {isDirectMethod
-            ? 'Deposit ETH (on Ethereum Network) '
-            : 'Buy ETH with Fiat '}
-          to create your very own Voyage vault. Gas used to deploy your own
-          Voyage Vault will be automatically deducted from your deposited
-          balance.
-        </Text>
         {isDirectMethod ? (
           <>
             <Text mt={23}>
