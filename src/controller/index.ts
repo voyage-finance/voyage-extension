@@ -227,7 +227,7 @@ export class VoyageController extends SafeEventEmitter {
       body: JSON.stringify(data),
     });
     const body = await response.json();
-    return body.sentinelObj?.vault;
+    return body.vaultObj?.vault;
   };
 
   private sendUpdate = (state: unknown) => {
