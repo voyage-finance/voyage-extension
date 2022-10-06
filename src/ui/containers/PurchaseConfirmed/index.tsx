@@ -7,7 +7,7 @@ import Button from '@components/Button';
 import { PaymentOption } from '@components/BuyMethodSelect';
 import PaymentHoverBoard from '@components/PaymentHoverBoard';
 import { useAppSelector } from '@hooks/useRedux';
-import RepaymentSchedule from './RepaymentSchedule';
+import RepaymentSchedule from '../../components/moleculas/RepaymentSchedule';
 import { useParams } from 'react-router-dom';
 import { formatAmount, fromBigNumber, Zero } from '@utils/bn';
 import BigNumber from 'bignumber.js';

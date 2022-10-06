@@ -62,6 +62,7 @@ class VoyageStore {
       getBalance: this.getBalance.bind(this),
       fetchVault: this.fetchVault.bind(this),
       approveMarketplaceAddress: this.approveMarketplaceAddress.bind(this),
+      repay: this.repay.bind(this),
     };
   }
 
@@ -127,6 +128,22 @@ class VoyageStore {
       console.error('[wrapVaultETH]', e);
 
       this._setstoredWrapEthTx(undefined);
+      throw new Error(e.message);
+    }
+  }
+
+  async repay(colleciton: string, loanId: number) {
+    try {
+      const txRequest = await this.voyage.populateTransaction.repay(
+        colleciton,
+        loanId,
+        this.vaultAddress!
+      );
+
+      const tx = await this.root.gsnStore.relayTransaction(txRequest);
+      return tx.hash;
+    } catch (e: any) {
+      console.error('[repay]', e);
       throw new Error(e.message);
     }
   }

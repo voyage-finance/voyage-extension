@@ -14,9 +14,9 @@ type Props<C> = Omit<SharedButtonProps, 'size'> & {
 type ButtonType = 'button';
 
 function Button<C = ButtonType>({
-  kind,
+  kind = 'primary',
   children,
-  size,
+  size = 'regular',
   style,
   sx,
   ...rest

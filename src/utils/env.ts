@@ -41,6 +41,7 @@ interface VoyageExtensionConfig {
   alchemyApiKey: string;
   explorerUrl: string;
   voyageApiUrl: string;
+  voyageGraphQLUrl: string;
   voyageWebUrl: string;
   torusNetwork: TORUS_NETWORK_TYPE;
   torusVerifier: string;
@@ -61,6 +62,9 @@ export const resolveConfiguration = (): VoyageExtensionConfig => {
       process.env.ALCHEMY_API_KEY ?? 'IG5Is2xWE1WkB-h0cN1NX58xw_74WEZj',
     voyageApiUrl:
       process.env.VOYAGE_API_URL ?? 'https://api.staging.voyage.finance',
+    voyageGraphQLUrl:
+      process.env.VOYAGE_GRAPHQL_URL ??
+      'https://api.thegraph.com/subgraphs/name/voyage-finance/protocol-v1-goerli',
     voyageWebUrl:
       process.env.VOYAGE_WEB_URL ?? 'https://app.staging.voyage.finance',
     explorerUrl: process.env.EXPLORER_URL ?? 'https://goerli.etherscan.io',
@@ -78,7 +82,7 @@ export const config = resolveConfiguration();
 export const getContractByAddress = (address: string): VoyageContract =>
   addressToContract[address];
 
-export const getShortenedAddress = (address: string) => {
+export const getShortenedAddress = (address = '') => {
   return `${address.substring(0, 6)}...${address.slice(-4)}`;
 };
 
