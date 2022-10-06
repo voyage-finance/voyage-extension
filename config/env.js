@@ -7,21 +7,22 @@ const paths = require('./paths');
 // Make sure that including paths.js after env.js will read .env variables.
 delete require.cache[require.resolve('./paths')];
 
-const NODE_ENV = process.env.NODE_ENV;
-if (!NODE_ENV) {
+// allow overriding via process.env.VOYAGE_BUILD_ENV
+const BUILD_ENV = process.env.VOYAGE_BUILD_ENV || process.env.NODE_ENV;
+if (!BUILD_ENV) {
   throw new Error(
-    'The NODE_ENV environment variable is required but was not specified.'
+    'Either the VOYAGE_BUILD_ENV or NODE_ENV environment variable is required but was not specified.'
   );
 }
 
 // https://github.com/bkeepers/dotenv#what-other-env-files-can-i-use
 const dotenvFiles = [
-  `${paths.dotenv}.${NODE_ENV}.local`,
+  `${paths.dotenv}.${BUILD_ENV}.local`,
   // Don't include `.env.local` for `test` environment
   // since normally you expect tests to produce the same
   // results for everyone
-  NODE_ENV !== 'test' && `${paths.dotenv}.local`,
-  `${paths.dotenv}.${NODE_ENV}`,
+  BUILD_ENV !== 'test' && `${paths.dotenv}.local`,
+  `${paths.dotenv}.${BUILD_ENV}`,
   paths.dotenv,
 ].filter(Boolean);
 
@@ -91,14 +92,6 @@ function getClientEnvironment(publicUrl) {
       ALCHEMY_GOERLI_API_KEY: process.env.ALCHEMY_GOERLI_API_KEY,
       ALCHEMY_RINKEBY_API_KEY: process.env.ALCHEMY_RINKEBY_API_KEY,
       ALCHEMY_MAINNET_API_KEY: process.env.ALCHEMY_MAINNET_API_KEY,
-
-      FIREBASE_API_KEY: process.env.FIREBASE_API_KEY,
-      FIREBASE_AUTH_DOMAIN: process.env.FIREBASE_AUTH_DOMAIN,
-      FIREBASE_PROJECT_ID: process.env.FIREBASE_PROJECT_ID,
-      FIREBASE_STORAGE_BUCKET: process.env.FIREBASE_STORAGE_BUCKET,
-      FIREBASE_MESSAGAING_SENDER_ID: process.env.FIREBASE_MESSAGAING_SENDER_ID,
-      FIREBASE_APP_ID: process.env.FIREBASE_APP_ID,
-      FIREBASE_MEASUREMENT_ID: process.env.FIREBASE_MEASUREMENT_ID,
     }
   );
   // Stringify all values so we can feed into webpack DefinePlugin

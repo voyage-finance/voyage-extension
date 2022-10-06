@@ -1,0 +1,47 @@
+name: Build
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    name: Build
+    strategy:
+      matrix:
+        configuration: [testnet,mainnet]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@v3
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 17
+      - name: Install
+        run: yarn install
+      - name: Generate types
+        run: yarn gentypes
+      - name: Build
+        run: yarn build:${{matrix.configuration}}
+      - name: Set zip name
+        id: filename
+        run: |
+          export SHORT_SHA=$(git rev-parse --short HEAD)
+          echo "::set-output name=filename::voyage-extension-${{matrix.configuration}}_${SHORT_SHA}.zip"
+      - name: Zip
+        run: zip -r ${{steps.filename.outputs.filename}} dist
+      - name: Upload
+        uses: adityak74/google-drive-upload-git-action@main
+        with:
+          credentials: ${{secrets.GOOGLE_SA}}
+          filename: ${{steps.filename.outputs.filename}}
+          folderId: ${{secrets.GDRIVE_FOLDER_ID}}
+          overwrite: true
+      - name: Notify
+        uses: appleboy/discord-action@master
+        with:
+          webhook_id: ${{secrets.WEBHOOK_ID}}
+          webhook_token: ${{secrets.WEBHOOK_TOKEN}}
+          username: "Franky"
+          color: "#uu811u"
+          message: "A new build has become available: ${{steps.filename.outputs.filename}}."

@@ -161,7 +161,10 @@
     "devtools:react": "react-devtools",
     "gentypes": "typechain --target=ethers-v5 ./src/abis/**/*.json --out-dir ./src/contracts",
     "pack": "yarn build && yarn zip",
+    "lint": "eslint ./src",
     "build": "rm -rf dist && BUILD_PATH=dist node scripts/build.js",
+    "build:testnet": "VOYAGE_BUILD_ENV=development yarn build",
+    "build:mainnet": "VOYAGE_BUILD_ENV=production yarn build",
     "zip": "zip -r voyage-extension.zip dist",
     "postinstall": "husky install"
   },
