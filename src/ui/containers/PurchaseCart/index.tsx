@@ -19,7 +19,6 @@ import PaymentHoverBoard from '@components/PaymentHoverBoard';
 import BNPLSchedule from '@components/BNPLSchedule';
 import { useAppSelector } from '@hooks/useRedux';
 import SpeedSelect from './SpeedSelect';
-import { useEthBalance } from '@hooks/useEthBalance';
 import { formatAmount, fromBigNumber, Zero } from '@utils/bn';
 import useVoyageController from '@hooks/useVoyageController';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -31,6 +30,7 @@ import { TxSpeed } from 'types';
 import { useWETHAllowance } from '@hooks/useWETHAllowance';
 import { ethers } from 'ethers';
 import { useBeforeunload } from 'react-beforeunload';
+import { useTotalBalance } from '@hooks/useTotalBalance';
 
 const PurchaseCart: React.FC = () => {
   const { txId } = useParams();
@@ -45,7 +45,7 @@ const PurchaseCart: React.FC = () => {
 
   const vaultAddress = useAppSelector((state) => state.core.vaultAddress);
   const userAddress = useAppSelector((state) => state.core.account?.address);
-  const [balance, balanceLoading] = useEthBalance(vaultAddress);
+  const [balance, balanceLoading] = useTotalBalance(vaultAddress);
 
   const controller = useVoyageController();
   const navigate = useNavigate();

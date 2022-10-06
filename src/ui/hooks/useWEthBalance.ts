@@ -1,11 +1,11 @@
 import { ChainID, WETH_ADDRESS } from '@utils/constants';
 import { useContractRead } from 'wagmi';
 import Weth9Abi from 'abis/weth9.json';
-import { formatEthersBN } from '@utils/bn';
+import { formatEthersBN, Zero } from '@utils/bn';
 import { useInterval } from '@mantine/hooks';
 import { useEffect } from 'react';
 
-export const useWEthBalance = (address: string, poll?: boolean) => {
+export const useWEthBalance = (address?: string, poll?: boolean) => {
   const weth = WETH_ADDRESS[+process.env.CHAIN_ID! as ChainID];
   const {
     data,
@@ -27,5 +27,5 @@ export const useWEthBalance = (address: string, poll?: boolean) => {
     return balancePoll.stop;
   }, [address]);
 
-  return [data ? formatEthersBN(data) : data, isLoading] as const;
+  return [data ? formatEthersBN(data) : Zero, isLoading] as const;
 };
