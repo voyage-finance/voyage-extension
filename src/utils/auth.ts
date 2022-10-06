@@ -10,4 +10,5 @@ export const webAuth = new auth0.WebAuth({
   domain: process.env.AUTH0_DOMAIN,
   clientID: process.env.AUTH0_CLIENT_ID,
   responseType: 'token id_token',
+  scope: 'openid profile email',
 });
