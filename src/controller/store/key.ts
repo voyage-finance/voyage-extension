@@ -26,6 +26,10 @@ class KeyStore {
     this.torusSdk = new Customauth({
       baseUrl: config.voyageWebUrl,
       network: config.torusNetwork as 'testnet',
+      networkUrl:
+        config.torusNetwork === 'testnet'
+          ? 'https://nd-897-493-541.p2pify.com/8e00c5f7fb1c3aaf861c6fde167b83a2' // override default sdk ropsten node
+          : undefined,
     });
     makeAutoObservable(this, { root: false });
     this.initialize();
