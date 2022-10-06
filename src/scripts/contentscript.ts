@@ -122,13 +122,15 @@ function getLooksButton(): HTMLElement {
   return buyNowButton as HTMLElement;
 }
 
+const OS_BTN_COPY = 'Add to cart';
+
 function getOSButton(): HTMLElement {
   const buttons = document.querySelectorAll('button');
   let buyNowButton: HTMLElement | null = null;
   for (const btn of buttons) {
     if (
-      btn.innerText.includes('Buy now') ||
-      btn.textContent?.includes('Buy now')
+      btn.innerText.includes(OS_BTN_COPY) ||
+      btn.textContent?.includes(OS_BTN_COPY)
     ) {
       buyNowButton = btn as HTMLElement;
       break;
