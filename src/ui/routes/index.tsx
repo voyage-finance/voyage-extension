@@ -1,5 +1,4 @@
 import MenuBar from '@components/MenuBar/MenuBar';
-import NavigationBar from '@components/NavigationBar';
 import Approval from '@containers/Approval';
 import Connect from '@containers/Connect';
 import Connections from '@containers/Connections';
@@ -20,7 +19,6 @@ import VaultDeployed from '@containers/VaultDeploy/Deployed';
 import SelectDepositMethod from '@containers/VaultDeploy/SelectDepositMethod';
 import { useAppSelector } from '@hooks/useRedux';
 import useVoyageController from '@hooks/useVoyageController';
-import { LoadingOverlay } from '@mantine/core';
 import { networks } from '@utils/chain';
 import {
   APPROVAL_ROUTE,
@@ -41,6 +39,10 @@ import { useEffect, useState } from 'react';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { KeyStoreStage } from 'types';
 import styles from './index.module.scss';
+import NavigationBar from '@components/NavigationBar';
+import { LoadingOverlay } from '@mantine/core';
+import LoanListPage from 'ui/pages/loans';
+import LoanItemPage from 'ui/pages/loanItem';
 
 const Router: React.FC = () => {
   const location = useLocation();
@@ -137,6 +139,8 @@ const Router: React.FC = () => {
           path="/settings/network"
           element={<SwitchNetwork networks={networks} />}
         />
+        <Route path="/loans" element={<LoanListPage />} />
+        <Route path="/loans/:id" element={<LoanItemPage />} />
         <Route path="/connect" element={<Connect />} />
         <Route path="/connections" element={<Connections />} />
         <Route path="/approval/:approvalId" element={<Approval />} />

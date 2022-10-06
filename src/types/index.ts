@@ -1,4 +1,5 @@
 import { IClientMeta } from '@walletconnect/types';
+import BigNumber from 'bignumber.js';
 
 export interface Account {
   address?: string;
@@ -72,3 +73,30 @@ export type SpeedConfig = {
     maxFeePerGas: number;
   };
 };
+
+export interface ILoan {
+  id: string;
+  collection: string;
+  tokenId: string;
+  loanId?: number;
+  metadata?: {
+    image?: string;
+    name?: string;
+    description?: string;
+    txHash?: string;
+    platform?: string;
+  };
+  borrowAt?: number;
+  principal: BigNumber;
+  interest?: BigNumber;
+  pmtPmt?: BigNumber;
+  pmtInterest?: BigNumber;
+  pmtFee?: BigNumber;
+  pmtPrincipal?: BigNumber;
+  paidTimes: number;
+  nextPaymentDue: number;
+  nper: number;
+  epoch?: number;
+  closed: boolean;
+  liquidated: boolean;
+}

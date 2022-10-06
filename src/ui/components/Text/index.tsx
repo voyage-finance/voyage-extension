@@ -7,6 +7,7 @@ type IProps<C> = TextProps<C> & {
     | 'secondary'
     | 'tertiary'
     | 'accent'
+    | 'warning'
     | 'danger'
     | 'success'
     | 'gradient';
@@ -23,6 +24,8 @@ function Text<C = 'div'>({ type, sx, ...props }: PropsWithChildren<IProps<C>>) {
         return colors.gray[0];
       case 'accent':
         return colors.brand[6];
+      case 'warning':
+        return '#FFA620';
       case 'danger':
         return colors['accent-pink'][6];
       case 'success':

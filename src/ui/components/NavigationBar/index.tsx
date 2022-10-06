@@ -23,7 +23,7 @@ const items: NavigationItem[] = [
     icon: SwordIconSrc,
   },
   {
-    path: '/bills',
+    path: '/loans',
     icon: PaperIconSrc,
   },
   {
