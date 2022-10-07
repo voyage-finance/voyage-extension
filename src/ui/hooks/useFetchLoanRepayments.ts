@@ -18,6 +18,7 @@ export const useFetchLoanRepayments = (
       id: `${vaultAddress!.toLowerCase()}_${loanId}`,
     },
     notifyOnNetworkStatusChange: true,
+    fetchPolicy: 'no-cache',
   });
 
   return {
