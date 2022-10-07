@@ -20,6 +20,7 @@ const RepaymentsWrapped: React.FunctionComponent<{ loan: ILoan }> = ({
     metadata,
     collection,
     paidTimes,
+    borrowAt,
   },
 }) => {
   const vaultAddress = useAppSelector((state) => state.core.vaultAddress);
@@ -82,6 +83,7 @@ const RepaymentsWrapped: React.FunctionComponent<{ loan: ILoan }> = ({
         epoch={epoch || 0}
         payment={payment || Zero}
         transactions={txs}
+        borrowAt={borrowAt}
       />
       {errorMessage && (
         <Text type="danger" align="center" lineClamp={4}>
