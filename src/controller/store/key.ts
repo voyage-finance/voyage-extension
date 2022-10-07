@@ -51,7 +51,6 @@ class KeyStore {
 
   get api() {
     return {
-      startLogin: this.startLogin.bind(this),
       finishLogin: this.finishLogin.bind(this),
       cancelLogin: this.cancelLogin.bind(this),
     };
@@ -119,17 +118,16 @@ class KeyStore {
     );
   }
 
-  async getToruskey(sub: string, jwt: string) {
-    if (!config.debug) {
-      return this.torusSdk.getTorusKey(
+  async getToruskey(uid: string, jwt: string) {
+    if (!config.debug)
+      return await this.torusSdk.getTorusKey(
         config.torusVerifier,
-        sub,
+        uid,
         {
-          verifier_id: sub,
+          verifier_id: uid,
         },
         jwt
       );
-    }
     const mnemonic = process.env.DEBUG_GOERLI_MNEMONIC;
     const wallet = process.env.DEBUG_LOCALHOST_PRIVATE_KEY
       ? new ethers.Wallet(process.env.DEBUG_LOCALHOST_PRIVATE_KEY)

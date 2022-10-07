@@ -1,26 +1,30 @@
-import SafeEventEmitter from '@metamask/safe-event-emitter';
-import { config } from '@utils/env';
-import { openNotificationWindow } from '@utils/extension';
-import WalletConnect from '@walletconnect/client';
-import { IClientMeta } from '@walletconnect/types';
+import { Duplex } from 'stream';
 import { ethers } from 'ethers';
+import pump from 'pump';
 import {
   createIdRemapMiddleware,
   JsonRpcEngine,
   JsonRpcRequest,
 } from 'json-rpc-engine';
 import { createEngineStream } from 'json-rpc-middleware-stream';
-import { IReactionDisposer, reaction, toJS } from 'mobx';
-import { nanoid } from 'nanoid';
-import pump from 'pump';
-import { Duplex } from 'stream';
-import { ApprovalType } from 'types';
 import createMetaRPCHandler from '../rpc/virtual/server';
+import WalletConnect from '@walletconnect/client';
+import { ControllerStore } from './store';
+import { IReactionDisposer, reaction, toJS } from 'mobx';
+import SafeEventEmitter from '@metamask/safe-event-emitter';
+import { nanoid } from 'nanoid';
+import { openNotificationWindow } from '@utils/extension';
+import { createWcStream } from './wcStream';
 import { createProviderMiddleware, createVoyageMiddleware } from './rpc';
 import VoyageRpcService from './rpc/service';
+import { auth, encodeRedirectUri } from '@utils/auth';
+import { sendSignInLinkToEmail } from 'firebase/auth';
+import { createRandomFingerprint } from '@utils/random';
 import { registerMessageListeners } from './runtimeMessage';
-import { ControllerStore } from './store';
-import { createWcStream } from './wcStream';
+import { ApprovalType } from 'types';
+import { IClientMeta } from '@walletconnect/types';
+import browser from 'webextension-polyfill';
+import { config } from '@utils/env';
 
 interface WalletConnectSessionRequest {
   chainId: number | null;
@@ -101,6 +105,7 @@ export class VoyageController extends SafeEventEmitter {
       getState: this.getState,
       connectWithWC: this.connectWithWC,
       disconnectWC: this.disconnectWC,
+      sendMagicLinkToEmail: this.sendMagicLinkToEmail,
       setTermsAgreed: this.setTermsAgreed,
       registerVaultWatcher: this.registerVaultWatcher,
       openNotificationWindow: this.openNotificationWindow,
@@ -159,7 +164,9 @@ export class VoyageController extends SafeEventEmitter {
                 client: req.peerMeta as IClientMeta,
                 onApprove: async () => {
                   const { chainId } = await this.provider.getNetwork();
+                  console.log('chain id: ', chainId);
                   const vault = await this.store.voyageStore.fetchVault();
+                  console.log('vault: ', vault);
                   if (!vault) {
                     connector.rejectSession(
                       new Error('User does not have any vaults')
@@ -204,6 +211,22 @@ export class VoyageController extends SafeEventEmitter {
         resolve();
       });
     });
+  };
+
+  sendMagicLinkToEmail = async (email: string) => {
+    const generatedFingerPrint = createRandomFingerprint();
+    const encodedRedirectUri = encodeRedirectUri(email, generatedFingerPrint);
+
+    if (!config.debug) {
+      const extension_id = browser.runtime.id;
+      const backUrl = `${config.voyageWebUrl}/onboard?encoded=${encodedRedirectUri}&extension_id=${extension_id}`;
+      console.log('sending firebase email with backlink=', backUrl);
+      await sendSignInLinkToEmail(auth, email, {
+        url: backUrl,
+        handleCodeInApp: true,
+      });
+    }
+    this.store.keyStore.startLogin(email, generatedFingerPrint);
   };
 
   setTermsAgreed = () => {

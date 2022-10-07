@@ -17,5 +17,5 @@
     "@typescript-eslint/no-non-null-assertion": "off",
     "@typescript-eslint/no-unused-vars": "error"
   },
-  "ignorePatterns": ["build", "dist", "node_modules", "react-app-env.d.ts"]
+  "ignorePatterns": ["build", "dist", "node_modules"]
 }
