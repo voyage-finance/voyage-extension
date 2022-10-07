@@ -12,14 +12,24 @@ import { config } from '@utils/env';
 import { ILoan } from 'types';
 
 const RepaymentsWrapped: React.FunctionComponent<{ loan: ILoan }> = ({
-  loan: { loanId, nper, epoch, pmtPmt: payment, metadata, collection },
+  loan: {
+    loanId,
+    nper,
+    epoch,
+    pmtPmt: payment,
+    metadata,
+    collection,
+    paidTimes,
+  },
 }) => {
   const vaultAddress = useAppSelector((state) => state.core.vaultAddress);
   const [txs, setTxs] = React.useState<string[]>([]);
-  const [isPurchasing, setIsPurchasing] = React.useState(false);
+  const [isSendingTx, setIsSendingTx] = React.useState(false);
+  const [isMining, setIsMining] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState('');
   const web3Provider = new ethers.providers.Web3Provider(provider);
   const buyNowTx = metadata?.txHash;
+
   const {
     data: loanWithRepayments,
     loading,
@@ -27,34 +37,45 @@ const RepaymentsWrapped: React.FunctionComponent<{ loan: ILoan }> = ({
   } = useFetchLoanRepayments(vaultAddress!, loanId!);
 
   const handleRepayClick = async () => {
-    setIsPurchasing(true);
+    setIsSendingTx(true);
     setErrorMessage('');
     try {
       const txHash = await controller.repay(collection, loanId!);
+      setIsSendingTx(false);
+      setIsMining(true);
       await web3Provider.waitForTransaction(txHash, config.numConfirmations);
       refetch();
     } catch (e: any) {
       setErrorMessage(e.message);
       console.error(e.message);
+    } finally {
+      setIsSendingTx(false);
+      setIsMining(false);
     }
-    setIsPurchasing(false);
   };
+
   React.useEffect(() => {
     if (
       loanWithRepayments?.loan?.repayments &&
       loanWithRepayments.loan.repayments.length > 0
     ) {
-      const txHashes = loanWithRepayments.loan.repayments.map(
+      let txHashes = loanWithRepayments.loan.repayments.map(
         (repay) => repay.txHash
       );
       if (buyNowTx && txHashes[0] == constants.AddressZero)
         txHashes[0] = buyNowTx;
+      else if (buyNowTx) {
+        txHashes = [buyNowTx, ...txHashes];
+      }
       setTxs(txHashes);
     }
   }, [loanWithRepayments]);
 
   return (
-    <Box sx={{ position: 'relative' }}>
+    <Box
+      sx={{ position: 'relative' }}
+      key={`${vaultAddress}_${collection}_${loanId}`}
+    >
       <LoadingOverlay visible={loading} />
       <RepaymentSchedule
         nper={nper}
@@ -67,11 +88,25 @@ const RepaymentsWrapped: React.FunctionComponent<{ loan: ILoan }> = ({
           {errorMessage}
         </Text>
       )}
-      <Box my={24}>
-        <Button fullWidth onClick={handleRepayClick} loading={isPurchasing}>
-          Repay {formatAmount(payment)} <EthSvg />
-        </Button>
-      </Box>
+      {paidTimes != nper && (
+        <Box my={24}>
+          <Button
+            fullWidth
+            onClick={handleRepayClick}
+            loading={isSendingTx || isMining}
+          >
+            {isMining ? (
+              'Mining'
+            ) : isSendingTx ? (
+              'Repaying'
+            ) : (
+              <>
+                Repay {formatAmount(payment)} <EthSvg />
+              </>
+            )}
+          </Button>
+        </Box>
+      )}
     </Box>
   );
 };
