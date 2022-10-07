@@ -34,9 +34,24 @@ export const fetchLoanList = async (vault: string) => {
   return loans as ILoan[];
 };
 
-export const fetchLoan = async (id: string) => {
+export const fetchLoan = async (
+  vault: string,
+  collection: string,
+  loanId: string
+) => {
   const loanListResponse = await fetch(
-    `${process.env.VOYAGE_API_URL}/v1/metadata/loans/${id}`
+    `${process.env.VOYAGE_API_URL}/v1/metadata/loans/retrieve`,
+    {
+      method: 'POST',
+      body: JSON.stringify({
+        vault,
+        collection,
+        loanId,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
   );
   const loan = await loanListResponse.json();
 

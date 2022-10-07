@@ -17,7 +17,9 @@ import PaymentHoverBoard from '@components/PaymentHoverBoard';
 const LoanItemPage: React.FunctionComponent = () => {
   const { id } = useParams();
 
-  const [loan, isLoanLoading] = useFetchLoan(id!);
+  const [vault, collection, loanId] = id!.split('_');
+
+  const [loan, isLoanLoading] = useFetchLoan(vault, collection, loanId);
 
   const getDaysLeft = (nextPaymentDue: number) =>
     moment(nextPaymentDue * 1000).diff(moment(), 'days');
@@ -51,19 +53,6 @@ const LoanItemPage: React.FunctionComponent = () => {
             Purchase Details
           </Text>
           <Stack spacing={12}>
-            <Group position="apart" align="center" spacing={0}>
-              <Text type="secondary">Platform</Text>
-              <Text
-                px={12}
-                py={2}
-                sx={{
-                  borderRadius: 10,
-                  background: 'rgba(255, 255, 255, 0.1)',
-                }}
-              >
-                {loan?.metadata?.platform}
-              </Text>
-            </Group>
             <Group position="apart" align="center" spacing={0}>
               <Text type="secondary" mr={4}>
                 Transaction ID

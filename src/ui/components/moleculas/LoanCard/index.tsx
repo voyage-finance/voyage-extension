@@ -59,7 +59,9 @@ const LoanCard: React.FunctionComponent<{ loan: ILoan }> = ({ loan }) => {
   return (
     <VoyagePaper
       className={styles.card}
-      onClick={() => navigate(`/loans/${loan.id}`)}
+      onClick={() =>
+        navigate(`/loans/${loan.vault}_${loan.collection}_${loan.loanId}`)
+      }
     >
       <Group spacing={0} align="center" noWrap>
         <Image
