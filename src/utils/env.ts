@@ -72,8 +72,8 @@ export const resolveConfiguration = (): VoyageExtensionConfig => {
       TORUS_NETWORK.TESTNET) as TORUS_NETWORK_TYPE,
     torusVerifier: process.env.TORUS_VERIFIER ?? 'voyage-finance',
     numConfirmations: parseInt(process.env.NUM_CONFIRMATIONS ?? '2', 10),
-    paymaster: PAYMASTER,
-    voyage: VOYAGE,
+    paymaster: PAYMASTER.toLowerCase(),
+    voyage: VOYAGE.toLowerCase(),
   };
 };
 
