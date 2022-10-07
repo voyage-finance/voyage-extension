@@ -77,6 +77,7 @@ export type SpeedConfig = {
 export interface ILoan {
   id: string;
   collection: string;
+  vault: string;
   tokenId: string;
   loanId?: number;
   metadata?: {

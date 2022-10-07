@@ -3,14 +3,18 @@ import { fetchLoan } from 'api';
 import { useEffect, useState } from 'react';
 import { ILoan } from 'types';
 
-export const useFetchLoan = (id: string) => {
+export const useFetchLoan = (
+  vault: string,
+  collection: string,
+  loanId: string
+) => {
   const [loan, setLoan] = useState<ILoan>();
   const [isLoading, setIsLoading] = useState(false);
 
   const fetchItem = async () => {
     setIsLoading(true);
     try {
-      const loanRes = await fetchLoan(id);
+      const loanRes = await fetchLoan(vault, collection, loanId);
       setLoan({
         ...loanRes,
         principal: formatEthersBN(loanRes.principal),
