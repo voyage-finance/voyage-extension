@@ -20,7 +20,7 @@ const VOYAGE = VOYAGE_ADDRESS[CHAIN_ID];
 const LOOKS = LOOKS_ADDRESS[CHAIN_ID];
 const PAYMASTER = PAYMASTER_ADDRESS[CHAIN_ID];
 
-const contractToAddress = {
+export const contractToAddress = {
   [VoyageContract.Voyage]: VOYAGE.toLowerCase(),
   [VoyageContract.LooksRare]: LOOKS.toLowerCase(),
   [VoyageContract.Seaport]: CROSS_CHAIN_SEAPORT_ADDRESS.toLowerCase(),
