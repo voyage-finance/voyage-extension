@@ -77,6 +77,7 @@ const LoanItemPage: React.FunctionComponent = () => {
                   price={loan?.principal || Zero}
                   pmt={loan?.pmtPmt || Zero}
                   interest={loan?.pmtInterest || Zero}
+                  fee={loan?.pmtFee || Zero}
                   nper={loan?.nper || 0}
                   epoch={loan?.epoch || 0}
                 />

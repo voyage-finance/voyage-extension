@@ -65,6 +65,9 @@ const PurchaseCart: React.FC = () => {
   const interest = orderPreview?.loanParameters
     ? fromBigNumber(orderPreview.loanParameters.payment.interest)
     : undefined;
+  const fee = orderPreview?.loanParameters
+    ? fromBigNumber(orderPreview.loanParameters.payment.fee)
+    : undefined;
   const bnplPayment = orderPreview?.loanParameters
     ? fromBigNumber(orderPreview.loanParameters.payment.pmt)
     : undefined;
@@ -248,15 +251,6 @@ const PurchaseCart: React.FC = () => {
             <Text type="secondary" mr={4}>
               Payment Option
             </Text>
-            {pmtOption === PaymentOption.BNPL && (
-              <PaymentHoverBoard
-                price={price || Zero}
-                pmt={bnplPayment || Zero}
-                interest={interest || Zero}
-                nper={nper}
-                epoch={epoch}
-              />
-            )}
             <BuyMethodSelect
               ml="auto"
               value={pmtOption}
@@ -275,27 +269,37 @@ const PurchaseCart: React.FC = () => {
                 <EthSvg style={{ width: 24 }} />
               </Group>
             ) : (
-              <Group ml="auto" direction="column" align="end" spacing={0}>
-                <Group position="right" spacing={0}>
+              <>
+                <PaymentHoverBoard
+                  price={price || Zero}
+                  pmt={bnplPayment || Zero}
+                  fee={fee || Zero}
+                  interest={interest || Zero}
+                  nper={nper}
+                  epoch={epoch}
+                />
+                <Group ml="auto" direction="column" align="end" spacing={0}>
+                  <Group position="right" spacing={0}>
+                    <Text
+                      ml="auto"
+                      weight="bold"
+                      type="gradient"
+                      style={{ lineHeight: 1 }}
+                    >
+                      {bnplPayment ? formatAmount(bnplPayment) : '-'}
+                    </Text>
+                    <EthSvg style={{ width: 18 }} />
+                    <Text style={{ lineHeight: 1 }}>/ {epoch} days</Text>
+                  </Group>
                   <Text
                     ml="auto"
-                    weight="bold"
-                    type="gradient"
-                    style={{ lineHeight: 1 }}
+                    size="sm"
+                    style={{ lineHeight: 1, marginTop: -4 }}
                   >
-                    {bnplPayment ? formatAmount(bnplPayment) : '-'}
+                    {nper} payments
                   </Text>
-                  <EthSvg style={{ width: 18 }} />
-                  <Text style={{ lineHeight: 1 }}>/ {epoch} days</Text>
                 </Group>
-                <Text
-                  ml="auto"
-                  size="sm"
-                  style={{ lineHeight: 1, marginTop: -4 }}
-                >
-                  {nper} payments
-                </Text>
-              </Group>
+              </>
             )}
           </Group>
         </Stack>

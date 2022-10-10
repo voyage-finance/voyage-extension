@@ -61,6 +61,7 @@ export interface OrderPreview {
     payment: {
       principal: BigNumber;
       interest: BigNumber;
+      fee: BigNumber;
       pmt: BigNumber;
     };
   };

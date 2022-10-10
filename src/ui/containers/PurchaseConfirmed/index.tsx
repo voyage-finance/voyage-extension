@@ -42,6 +42,9 @@ const PurchaseConfirmed: React.FC = () => {
   const interest = orderPreview?.loanParameters
     ? fromBigNumber(orderPreview.loanParameters.payment.interest)
     : undefined;
+  const fee = orderPreview?.loanParameters
+    ? fromBigNumber(orderPreview.loanParameters.payment.fee)
+    : undefined;
   return (
     <Card
       style={{
@@ -113,6 +116,7 @@ const PurchaseConfirmed: React.FC = () => {
             </Text>
             <PaymentHoverBoard
               price={price || Zero}
+              fee={fee || Zero}
               pmt={bnplPayment || Zero}
               interest={interest || Zero}
               nper={nper}

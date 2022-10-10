@@ -153,6 +153,7 @@ class TransactionStore {
             payment: {
               pmt: formatEthersBN(data.loanParameters.pmt.pmt),
               principal: formatEthersBN(data.loanParameters.pmt.principal),
+              fee: formatEthersBN(data.loanParameters.pmt.fee),
               interest: formatEthersBN(data.loanParameters.pmt.interest),
             },
           }
