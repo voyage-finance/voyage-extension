@@ -38,7 +38,7 @@ const RepaymentSchedule: React.FunctionComponent<IRepaymentScheduleProps> = ({
           const n = i + 1;
           const pmtDate =
             i == 0 ? loanStartDate : loanStartDate.add(epoch, 'days');
-          const daysLeft = pmtDate.diff(now, 'days');
+          const daysLeft = pmtDate.endOf('day').diff(now, 'days');
           return (
             <Group mt={10} align="center" spacing={0} key={i} noWrap>
               <div style={{ position: 'relative' }}>

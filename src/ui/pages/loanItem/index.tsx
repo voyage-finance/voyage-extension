@@ -26,7 +26,9 @@ const LoanItemPage: React.FunctionComponent = () => {
   } = useFetchLoan(vault, collection, loanId);
 
   const getDaysLeft = (nextPaymentDue: number) =>
-    moment(nextPaymentDue * 1000).diff(moment(), 'days');
+    moment(nextPaymentDue * 1000)
+      .endOf('day')
+      .diff(moment(), 'days');
 
   return (
     <div className={styles.wrapper}>
