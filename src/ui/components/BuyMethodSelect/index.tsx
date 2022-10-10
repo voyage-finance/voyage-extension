@@ -9,8 +9,8 @@ interface IBuyMethodSelectProps extends Omit<BoxProps<'div'>, 'onChange'> {
 }
 
 export enum PaymentOption {
-  PAY_NOW = 'Pay Now',
-  BNPL = 'Voyage BNPL',
+  PAY_NOW = 'Pay Now (coming soon)',
+  BNPL = '3x Leverage',
 }
 
 const BuyMethodSelect: React.FunctionComponent<IBuyMethodSelectProps> = ({
@@ -57,6 +57,7 @@ const BuyMethodSelect: React.FunctionComponent<IBuyMethodSelectProps> = ({
             <Box mr={14} />
           )
         }
+        disabled
         onClick={() => onChange(PaymentOption.PAY_NOW)}
       >
         {PaymentOption.PAY_NOW}

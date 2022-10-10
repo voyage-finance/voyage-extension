@@ -25,10 +25,9 @@ const PaymentInfoLabel = ({
   nextPaymentDue: number;
 }) => {
   const now = moment();
-  const daysToNextPayment = moment((nextPaymentDue ?? 0) * 1000).diff(
-    now,
-    'days'
-  );
+  const daysToNextPayment = moment((nextPaymentDue ?? 0) * 1000)
+    .endOf('day')
+    .diff(now, 'days');
 
   return (
     <Text
