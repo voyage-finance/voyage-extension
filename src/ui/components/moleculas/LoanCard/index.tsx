@@ -48,7 +48,7 @@ const PaymentInfoLabel = ({
         : liquidated
         ? 'Defaulted'
         : daysToNextPayment > 0
-        ? `${paidTimes}/${nper} • Due in ${daysToNextPayment} days`
+        ? `${paidTimes + 1}/${nper} • Due in ${daysToNextPayment} days`
         : 'Overdue'}
     </Text>
   );

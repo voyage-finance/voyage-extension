@@ -141,7 +141,8 @@ class VoyageStore {
       );
 
       const tx = await this.root.gsnStore.relayTransaction(txRequest);
-      return tx.hash;
+      const { transactionHash } = await tx.wait(config.numConfirmations);
+      return transactionHash;
     } catch (e: any) {
       console.error('[repay]', e);
       throw new Error(e.message);

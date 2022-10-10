@@ -84,8 +84,6 @@ export interface ILoan {
     image?: string;
     name?: string;
     description?: string;
-    txHash?: string;
-    platform?: string;
   };
   borrowAt?: number;
   principal: BigNumber;
@@ -100,4 +98,8 @@ export interface ILoan {
   epoch?: number;
   closed: boolean;
   liquidated: boolean;
+  transaction: {
+    txHash: string;
+    platform: string;
+  };
 }
