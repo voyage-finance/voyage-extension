@@ -5,6 +5,7 @@ import Card from '@components/Card';
 import PaymentHoverBoard from '@components/PaymentHoverBoard';
 import ErrorBox from '@components/PreviewErrorBox';
 import Text from '@components/Text';
+import { useUsdValueOfEth } from '@hooks/useCoinPrice';
 import { useAppSelector } from '@hooks/useRedux';
 import { useTotalBalance } from '@hooks/useTotalBalance';
 import useVoyageController from '@hooks/useVoyageController';
@@ -71,6 +72,7 @@ const PurchaseCart: React.FC = () => {
   const bnplPayment = orderPreview?.loanParameters
     ? fromBigNumber(orderPreview.loanParameters.payment.pmt)
     : undefined;
+  const [pmtUsdValue] = useUsdValueOfEth(bnplPayment || Zero);
   const nper = orderPreview?.loanParameters
     ? Number(orderPreview.loanParameters.nper)
     : 3;
@@ -241,7 +243,7 @@ const PurchaseCart: React.FC = () => {
               <EthSvg style={{ width: 24 }} />
             </Group>
             <Text type="secondary" mr={8}>
-              $ —
+              $ {pmtUsdValue}
             </Text>
           </Stack>
         </Group>
