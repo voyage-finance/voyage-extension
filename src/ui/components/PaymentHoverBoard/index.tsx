@@ -12,6 +12,7 @@ type IProps = {
   price: BigNumber;
   pmt: BigNumber;
   interest: BigNumber;
+  fee: BigNumber;
   nper: number;
   epoch: number;
 };
@@ -20,6 +21,7 @@ const PaymentHoverBoard: React.FunctionComponent<IProps> = ({
   pmt,
   price,
   interest,
+  fee,
   nper = 0,
   epoch = 0,
 }) => {
@@ -82,9 +84,16 @@ const PaymentHoverBoard: React.FunctionComponent<IProps> = ({
             <EthSvg style={{ width: 19 }} />
           </Group>
           <Group align="center" spacing={0}>
-            <Text>Platform</Text>
+            <Text>Interest</Text>
             <Text weight={'bold'} ml="auto">
               {formatAmount(interest.multipliedBy(nper))}
+            </Text>
+            <EthSvg style={{ width: 19 }} />
+          </Group>
+          <Group align="center" spacing={0}>
+            <Text>Platform fee</Text>
+            <Text weight={'bold'} ml="auto">
+              {formatAmount(fee.multipliedBy(nper))}
             </Text>
             <EthSvg style={{ width: 19 }} />
           </Group>
@@ -99,7 +108,7 @@ const PaymentHoverBoard: React.FunctionComponent<IProps> = ({
           <Group align="center" spacing={0}>
             <Text>Total Bill</Text>
             <Text weight="bold" ml="auto" type="gradient">
-              {formatAmount(pmt.multipliedBy(nper))}
+              {formatAmount(pmt.multipliedBy(nper), 7)}
             </Text>
             <EthSvg style={{ width: 19 }} />
           </Group>
@@ -111,7 +120,7 @@ const PaymentHoverBoard: React.FunctionComponent<IProps> = ({
                 type="gradient"
                 style={{ lineHeight: 1 }}
               >
-                {formatAmount(pmt)}
+                {formatAmount(pmt, 7)}
               </Text>
               <EthSvg style={{ width: 18 }} />
               <Text style={{ lineHeight: 1 }}>/ {epoch} days</Text>
