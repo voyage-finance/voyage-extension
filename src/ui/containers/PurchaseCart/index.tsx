@@ -1,5 +1,15 @@
+import BNPLSchedule from '@components/BNPLSchedule';
+import Button from '@components/Button';
+import BuyMethodSelect, { PaymentOption } from '@components/BuyMethodSelect';
 import Card from '@components/Card';
+import PaymentHoverBoard from '@components/PaymentHoverBoard';
+import ErrorBox from '@components/PreviewErrorBox';
 import Text from '@components/Text';
+import { useAppSelector } from '@hooks/useRedux';
+import { useTotalBalance } from '@hooks/useTotalBalance';
+import useVoyageController from '@hooks/useVoyageController';
+import { useWETHAllowance } from '@hooks/useWETHAllowance';
+import PepePlacholderImg from '@images/pepe-placeholder.png';
 import {
   Box,
   Divider,
@@ -9,28 +19,22 @@ import {
   LoadingOverlay,
   Stack,
 } from '@mantine/core';
-import { useEffect, useState } from 'react';
-import { ReactComponent as WalletSvg } from 'assets/img/wallet.svg';
-import { ReactComponent as EthSvg } from 'assets/img/eth-icon.svg';
-import PepePlacholderImg from '@images/pepe-placeholder.png';
-import Button from '@components/Button';
-import BuyMethodSelect, { PaymentOption } from '@components/BuyMethodSelect';
-import PaymentHoverBoard from '@components/PaymentHoverBoard';
-import BNPLSchedule from '@components/BNPLSchedule';
-import { useAppSelector } from '@hooks/useRedux';
-import SpeedSelect from './SpeedSelect';
 import { formatAmount, fromBigNumber, Zero } from '@utils/bn';
-import useVoyageController from '@hooks/useVoyageController';
-import { useNavigate, useParams } from 'react-router-dom';
 import { MAX_UINT256, PURCHASE_OVERVIEW_ROUTE } from '@utils/constants';
-import { TransactionStatus } from 'types/transaction';
-import ErrorBox from '@components/PreviewErrorBox';
-import { getContractByAddress, getTxExplorerLink } from '@utils/env';
-import { TxSpeed } from 'types';
-import { useWETHAllowance } from '@hooks/useWETHAllowance';
+import {
+  contractToAddress,
+  getContractByAddress,
+  getTxExplorerLink,
+} from '@utils/env';
+import { ReactComponent as EthSvg } from 'assets/img/eth-icon.svg';
+import { ReactComponent as WalletSvg } from 'assets/img/wallet.svg';
 import { ethers } from 'ethers';
+import { useEffect, useState } from 'react';
 import { useBeforeunload } from 'react-beforeunload';
-import { useTotalBalance } from '@hooks/useTotalBalance';
+import { useNavigate, useParams } from 'react-router-dom';
+import { TxSpeed } from 'types';
+import { TransactionStatus } from 'types/transaction';
+import SpeedSelect from './SpeedSelect';
 
 const PurchaseCart: React.FC = () => {
   const { txId } = useParams();
@@ -103,14 +107,18 @@ const PurchaseCart: React.FC = () => {
     fetchPreview();
   }, []);
 
+  const marketplaceAddress =
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    contractToAddress[orderPreview?.order?.marketplace] ??
+    ethers.constants.AddressZero;
   const [allowance, isLoadingAllowance] = useWETHAllowance(
     vaultAddress || ethers.constants.AddressZero,
-    orderPreview?.order?.marketplaceAddress
+    marketplaceAddress
   );
   console.log('order currency: ', orderPreview?.order?.currency);
-  console.log(
-    `allowance of ${orderPreview?.order?.marketplaceAddress} is ${allowance}`
-  );
+  console.log('order: ', orderPreview);
+  console.log(`allowance of ${marketplaceAddress} is ${allowance}`);
   const [approvalRequired, setApprovalRequired] = useState(true);
 
   console.log('approval required: ', approvalRequired);
@@ -137,10 +145,10 @@ const PurchaseCart: React.FC = () => {
   };
 
   useEffect(() => {
-    orderPreview?.order?.currency !== ethers.constants.AddressZero;
+    const isETH =
+      orderPreview?.order?.currency === ethers.constants.AddressZero;
     setApprovalRequired(
-      orderPreview?.order?.currency !== ethers.constants.AddressZero &&
-        ethers.BigNumber.from(allowance).lt(MAX_UINT256)
+      !isETH && ethers.BigNumber.from(allowance).lt(MAX_UINT256)
     );
   }, [allowance]);
 
