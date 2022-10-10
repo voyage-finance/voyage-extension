@@ -133,7 +133,7 @@ const Router: React.FC = () => {
       <LoadingOverlay visible={isVaultLoading} />
       {!isFullscreenMode && <MenuBar />}
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/home" element={<Home />} />
         <Route path="/settings" element={<Settings />} />
         <Route
           path="/settings/network"

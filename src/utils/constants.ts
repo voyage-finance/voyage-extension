@@ -1,4 +1,4 @@
-export const DEFAULT_ROUTE = '/';
+export const DEFAULT_ROUTE = '/home';
 
 export const ONBOARD_CHECK_EMAIL_ROUTE = '/onboard/checkemail';
 export const ONBOARD_INITIALIZING_ROUTE = '/onboard/boarding';
