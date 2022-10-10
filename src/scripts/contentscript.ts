@@ -1,3 +1,5 @@
+import * as Sentry from '@sentry/browser';
+import { BrowserTracing } from '@sentry/tracing';
 import { LOOKS_HOSTS, Marketplace, OPENSEA_HOSTS } from '@utils/constants';
 import { config } from '@utils/env';
 import { setupMultiplex } from '@utils/index';
@@ -8,6 +10,12 @@ import { debounce } from 'lodash';
 import controllerFactory from 'rpc/virtual/client';
 import { Duplex } from 'stream';
 import { Runtime } from 'webextension-polyfill';
+
+Sentry.init({
+  dsn: process.env.SENTRY_DSN,
+  integrations: [new BrowserTracing()],
+  tracesSampleRate: process.env.NODE_ENV === 'production' ? 0.2 : 1.0,
+});
 
 const bgPort = chrome.runtime.connect({ name: 'voyage-contentscript' });
 const bgStream = new PortStream(bgPort as Runtime.Port);
