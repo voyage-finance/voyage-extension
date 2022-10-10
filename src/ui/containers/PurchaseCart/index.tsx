@@ -203,7 +203,7 @@ const PurchaseCart: React.FC = () => {
         {orderPreview?.error && (
           <ErrorBox mt={20} mb={7} error={orderPreview.error} />
         )}
-        <Group mt={15}>
+        <Group mt={15} noWrap>
           {!isLoading ? (
             <Image
               width={50}
@@ -234,8 +234,8 @@ const PurchaseCart: React.FC = () => {
             </Text>
           </Stack>
           <Stack spacing={0} ml="auto" align="end">
-            <Group align="center" spacing={0}>
-              <Text weight={'bold'} size="lg" ml={36}>
+            <Group align="center" spacing={0} noWrap>
+              <Text weight={'bold'} size="lg">
                 {formatAmount(price) || '—'}
               </Text>
               <EthSvg style={{ width: 24 }} />
