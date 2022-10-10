@@ -24,7 +24,7 @@ function WalletConnectApproval() {
     try {
       setLoading(true);
       await voyageController.approveApprovalRequest(id);
-      navigate('/');
+      navigate('/home');
     } catch {
       console.error('failed to approve');
     } finally {

@@ -10,7 +10,7 @@ const VaultDeployed: React.FC = () => {
   const navigate = useNavigate();
 
   const goHome = () => {
-    navigate('/');
+    navigate('/home');
   };
 
   return (
