@@ -11,17 +11,23 @@ import * as React from 'react';
 import { config } from '@utils/env';
 import { ILoan } from 'types';
 
-const RepaymentsWrapped: React.FunctionComponent<{ loan: ILoan }> = ({
+const RepaymentsWrapped: React.FunctionComponent<{
+  loan: ILoan;
+  refetch: () => void;
+  isLoading?: boolean;
+}> = ({
   loan: {
     loanId,
     nper,
     epoch,
     pmtPmt: payment,
-    metadata,
     collection,
     paidTimes,
     borrowAt,
+    transaction,
   },
+  refetch,
+  isLoading,
 }) => {
   const vaultAddress = useAppSelector((state) => state.core.vaultAddress);
   const [txs, setTxs] = React.useState<string[]>([]);
@@ -29,12 +35,12 @@ const RepaymentsWrapped: React.FunctionComponent<{ loan: ILoan }> = ({
   const [isMining, setIsMining] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState('');
   const web3Provider = new ethers.providers.Web3Provider(provider);
-  const buyNowTx = metadata?.txHash;
+  const buyNowTx = transaction.txHash;
 
   const {
     data: loanWithRepayments,
     loading,
-    refetch,
+    refetch: refetchRepayments,
   } = useFetchLoanRepayments(vaultAddress!, loanId!);
 
   const handleRepayClick = async () => {
@@ -46,6 +52,7 @@ const RepaymentsWrapped: React.FunctionComponent<{ loan: ILoan }> = ({
       setIsMining(true);
       await web3Provider.waitForTransaction(txHash, config.numConfirmations);
       refetch();
+      refetchRepayments();
     } catch (e: any) {
       setErrorMessage(e.message);
       console.error(e.message);
@@ -90,14 +97,17 @@ const RepaymentsWrapped: React.FunctionComponent<{ loan: ILoan }> = ({
           {errorMessage}
         </Text>
       )}
-      {paidTimes != nper && (
+      {
         <Box my={24}>
           <Button
             fullWidth
             onClick={handleRepayClick}
-            loading={isSendingTx || isMining}
+            loading={isSendingTx || isMining || isLoading}
+            disabled={paidTimes == nper}
           >
-            {isMining ? (
+            {paidTimes == nper ? (
+              'Payment Complete'
+            ) : isMining ? (
               'Mining'
             ) : isSendingTx ? (
               'Repaying'
@@ -108,7 +118,7 @@ const RepaymentsWrapped: React.FunctionComponent<{ loan: ILoan }> = ({
             )}
           </Button>
         </Box>
-      )}
+      }
     </Box>
   );
 };

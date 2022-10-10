@@ -34,5 +34,5 @@ export const useFetchLoan = (
     fetchItem();
   }, []);
 
-  return [loan, isLoading] as const;
+  return { loan, isLoading, refetch: fetchItem } as const;
 };
