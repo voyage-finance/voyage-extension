@@ -19,11 +19,11 @@ const LoanItemPage: React.FunctionComponent = () => {
 
   const [vault, collection, loanId] = id!.split('_');
 
-  const {
-    loan,
-    isLoading: isLoanLoading,
-    refetch,
-  } = useFetchLoan(vault, collection, loanId);
+  const { loan, isLoading: isLoanLoading } = useFetchLoan(
+    vault,
+    collection,
+    loanId
+  );
 
   const getDaysLeft = (nextPaymentDue: number) =>
     moment(nextPaymentDue * 1000)
@@ -119,11 +119,7 @@ const LoanItemPage: React.FunctionComponent = () => {
               </Group>
             </Stack>
             {loan && (
-              <RepaymentsWrapped
-                loan={loan}
-                refetch={refetch}
-                isLoading={isLoanLoading}
-              />
+              <RepaymentsWrapped loan={loan} isLoading={isLoanLoading} />
             )}
           </Stack>
         )}

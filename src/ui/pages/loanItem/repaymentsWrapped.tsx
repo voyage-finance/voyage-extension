@@ -13,7 +13,6 @@ import { ILoan } from 'types';
 
 const RepaymentsWrapped: React.FunctionComponent<{
   loan: ILoan;
-  refetch: () => void;
   isLoading?: boolean;
 }> = ({
   loan: {
@@ -26,35 +25,38 @@ const RepaymentsWrapped: React.FunctionComponent<{
     borrowAt,
     transaction,
   },
-  refetch,
   isLoading,
 }) => {
   const vaultAddress = useAppSelector((state) => state.core.vaultAddress);
   const [txs, setTxs] = React.useState<string[]>([]);
   const [isSendingTx, setIsSendingTx] = React.useState(false);
   const [isMining, setIsMining] = React.useState(false);
+  const [isRepayFreezed, setIsRepayFreezed] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState('');
   const web3Provider = new ethers.providers.Web3Provider(provider);
   const buyNowTx = transaction.txHash;
 
-  const {
-    data: loanWithRepayments,
-    loading,
-    refetch: refetchRepayments,
-  } = useFetchLoanRepayments(vaultAddress!, loanId!);
+  const { data: loanWithRepayments, loading } = useFetchLoanRepayments(
+    vaultAddress!,
+    loanId!,
+    true
+  );
 
   const handleRepayClick = async () => {
     setIsSendingTx(true);
     setErrorMessage('');
+    setIsRepayFreezed(true);
     try {
       const txHash = await controller.repay(collection, loanId!);
       setIsSendingTx(false);
       setIsMining(true);
       await web3Provider.waitForTransaction(txHash, config.numConfirmations);
-      refetch();
-      refetchRepayments();
+      setTimeout(() => {
+        setIsRepayFreezed(false);
+      }, 30000);
     } catch (e: any) {
       setErrorMessage(e.message);
+      setIsRepayFreezed(false);
       console.error(e.message);
     } finally {
       setIsSendingTx(false);
@@ -103,7 +105,7 @@ const RepaymentsWrapped: React.FunctionComponent<{
             fullWidth
             onClick={handleRepayClick}
             loading={isSendingTx || isMining || isLoading}
-            disabled={paidTimes == nper}
+            disabled={paidTimes == nper || isRepayFreezed}
           >
             {paidTimes == nper ? (
               'Payment Complete'

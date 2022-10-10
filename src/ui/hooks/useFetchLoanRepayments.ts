@@ -1,11 +1,12 @@
-import { NetworkStatus, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import { GET_LOAN_REPAYMENTS } from 'graphql/queries/repayments';
 
 export const useFetchLoanRepayments = (
   vaultAddress: string,
-  loanId: number
+  loanId: number,
+  polling?: boolean
 ) => {
-  const { loading, data, error, networkStatus, refetch } = useQuery<{
+  const { loading, data, error, refetch } = useQuery<{
     loan?: {
       repayments?: {
         id: string;
@@ -17,13 +18,13 @@ export const useFetchLoanRepayments = (
     variables: {
       id: `${vaultAddress!.toLowerCase()}_${loanId}`,
     },
-    notifyOnNetworkStatusChange: true,
     fetchPolicy: 'no-cache',
+    pollInterval: polling ? 5000 : 0,
   });
 
   return {
     data,
-    loading: loading || networkStatus === NetworkStatus.refetch,
+    loading: loading,
     error,
     refetch,
   };

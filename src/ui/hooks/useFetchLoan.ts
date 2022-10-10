@@ -2,6 +2,7 @@ import { formatEthersBN } from '@utils/bn';
 import { fetchLoan } from 'api';
 import { useEffect, useState } from 'react';
 import { ILoan } from 'types';
+import { useInterval } from '@mantine/hooks';
 
 export const useFetchLoan = (
   vault: string,
@@ -12,7 +13,6 @@ export const useFetchLoan = (
   const [isLoading, setIsLoading] = useState(false);
 
   const fetchItem = async () => {
-    setIsLoading(true);
     try {
       const loanRes = await fetchLoan(vault, collection, loanId);
       setLoan({
@@ -27,12 +27,21 @@ export const useFetchLoan = (
     } catch (e) {
       console.error('[useFetchLoan]', e);
     }
+  };
+
+  const pollFn = useInterval(fetchItem, 5000);
+
+  const initialFetch = async () => {
+    setIsLoading(true);
+    await fetchItem();
     setIsLoading(false);
   };
 
   useEffect(() => {
-    fetchItem();
+    initialFetch();
+    pollFn.start();
+    return pollFn.stop;
   }, []);
 
-  return { loan, isLoading, refetch: fetchItem } as const;
+  return { loan, isLoading } as const;
 };
