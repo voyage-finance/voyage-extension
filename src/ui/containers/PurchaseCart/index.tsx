@@ -20,7 +20,11 @@ import {
   Stack,
 } from '@mantine/core';
 import { formatAmount, fromBigNumber, Zero } from '@utils/bn';
-import { MAX_UINT256, PURCHASE_OVERVIEW_ROUTE } from '@utils/constants';
+import {
+  MAX_UINT256,
+  PURCHASE_OVERVIEW_ROUTE,
+  VoyageContract,
+} from '@utils/constants';
 import {
   contractToAddress,
   getContractByAddress,
@@ -99,8 +103,9 @@ const PurchaseCart: React.FC = () => {
     } catch (e: any) {
       console.log('[updateOrderPreviewData]', e.message);
       setErrorMessage(e.message);
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -108,19 +113,16 @@ const PurchaseCart: React.FC = () => {
   }, []);
 
   const marketplaceAddress =
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    contractToAddress[orderPreview?.order?.marketplace] ??
+    contractToAddress[orderPreview?.order?.marketplace as VoyageContract] ??
     ethers.constants.AddressZero;
   const [allowance, isLoadingAllowance] = useWETHAllowance(
     vaultAddress || ethers.constants.AddressZero,
     marketplaceAddress
   );
+  const [approvalRequired, setApprovalRequired] = useState(false);
   console.log('order currency: ', orderPreview?.order?.currency);
   console.log('order: ', orderPreview);
   console.log(`allowance of ${marketplaceAddress} is ${allowance}`);
-  const [approvalRequired, setApprovalRequired] = useState(true);
-
   console.log('approval required: ', approvalRequired);
   const [approving, setApproving] = useState(false);
   const [approvalTx, setApprovalTx] = useState('');
@@ -145,12 +147,22 @@ const PurchaseCart: React.FC = () => {
   };
 
   useEffect(() => {
-    const isETH =
-      orderPreview?.order?.currency === ethers.constants.AddressZero;
-    setApprovalRequired(
-      !isETH && ethers.BigNumber.from(allowance).lt(MAX_UINT256)
-    );
-  }, [allowance]);
+    if (isLoading || isLoadingAllowance) {
+      return;
+    }
+
+    const currency = orderPreview?.order?.currency;
+    if (!isLoading && !currency) {
+      console.error('Order preview lacks currency: ', orderPreview);
+      return;
+    }
+
+    const isETH = currency === ethers.constants.AddressZero;
+    const isMaxApproved = ethers.BigNumber.from(allowance).gte(MAX_UINT256);
+    console.log('isEth: ', isETH);
+    console.log('isMaxApproved: ', isMaxApproved);
+    setApprovalRequired(!isETH && !isMaxApproved);
+  }, [isLoading, isLoadingAllowance, allowance]);
 
   return (
     <Card
