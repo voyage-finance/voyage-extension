@@ -1,8 +1,9 @@
 import Text from '@components/Text';
-import { BoxProps, Group } from '@mantine/core';
+import { Box, BoxProps, Group } from '@mantine/core';
 import { formatAmount, formatEthersBN } from '@utils/bn';
 import { ReactComponent as DangerSvg } from 'assets/img/danger-triangle.svg';
 import * as React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { PreviewError, PreviewErrorType } from 'types/transaction';
 
 type IProps = BoxProps<any> & {
@@ -13,6 +14,8 @@ const PreviewErrorBox: React.FunctionComponent<IProps> = ({
   error,
   ...props
 }) => {
+  const navigate = useNavigate();
+
   const errorText = () => {
     switch (error.type) {
       case PreviewErrorType.UNSUPPORTED_COLLECTION:
@@ -59,6 +62,22 @@ const PreviewErrorBox: React.FunctionComponent<IProps> = ({
         return (
           <div>
             <strong>This currency is currently not support by BNPL</strong>
+          </div>
+        );
+      case PreviewErrorType.INSUFFICIENT_BALANCE:
+        return (
+          <div>
+            <strong>Insufficient balance in wallet.</strong>
+            <br />
+            Please top up{' '}
+            <Box
+              sx={{ ':hover': { cursor: 'pointer' } }}
+              onClick={() => navigate('/vault/topup/method')}
+            >
+              <ins>
+                <strong>here</strong>
+              </ins>
+            </Box>
           </div>
         );
       default:

@@ -38,7 +38,7 @@ import { useEffect, useState } from 'react';
 import { useBeforeunload } from 'react-beforeunload';
 import { useNavigate, useParams } from 'react-router-dom';
 import { TxSpeed } from 'types';
-import { TransactionStatus } from 'types/transaction';
+import { PreviewErrorType, TransactionStatus } from 'types/transaction';
 import SpeedSelect from './SpeedSelect';
 
 const PurchaseCart: React.FC = () => {
@@ -204,6 +204,16 @@ const PurchaseCart: React.FC = () => {
         </Group>
         {orderPreview?.error && (
           <ErrorBox mt={20} mb={7} error={orderPreview.error} />
+        )}
+        {!orderPreview?.error && balance.isLessThan(bnplPayment || Zero) && (
+          <ErrorBox
+            mt={20}
+            mb={7}
+            error={{
+              type: PreviewErrorType.INSUFFICIENT_BALANCE,
+              message: 'INSUFFICIENT_BALANCE',
+            }}
+          />
         )}
         <Group mt={15} noWrap>
           {!isLoading ? (
