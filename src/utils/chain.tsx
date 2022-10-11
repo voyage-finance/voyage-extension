@@ -4,13 +4,6 @@ import { useEffect } from 'react';
 
 export const chains: Chain[] = [...defaultChains];
 
-export const switchAccounts = async () => {
-  await globalThis.provider.request({
-    method: 'wallet_requestPermissions',
-    params: [{ eth_accounts: {} }],
-  });
-};
-
 export const networks = chains.map((chain) => ({
   ...chain,
   icon: <Avax />,
