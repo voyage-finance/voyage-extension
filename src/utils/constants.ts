@@ -26,8 +26,8 @@ export enum Network {
 
 export enum VoyageContract {
   Voyage = 'voyage',
-  LooksRare = 'looksrare',
-  Seaport = 'opensea',
+  LooksRare = 'LooksRare',
+  Seaport = 'OpenSea',
   Paymaster = 'paymaster',
 }
 
