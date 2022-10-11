@@ -1,14 +1,12 @@
 import * as Sentry from '@sentry/browser';
-import { BrowserTracing } from '@sentry/tracing';
 import PortStream from 'extension-port-stream';
-import browser, { Runtime } from 'webextension-polyfill';
 import { Duplex } from 'stream';
+import browser, { Runtime } from 'webextension-polyfill';
 import { VoyageController } from '../controller';
 import { setupMultiplex } from '../utils';
 
 Sentry.init({
   dsn: process.env.SENTRY_DSN,
-  integrations: [new BrowserTracing()],
   tracesSampleRate: process.env.NODE_ENV === 'production' ? 0.2 : 1.0,
 });
 
