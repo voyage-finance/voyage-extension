@@ -8,14 +8,19 @@ import { PaymentOption } from '@components/BuyMethodSelect';
 import PaymentHoverBoard from '@components/PaymentHoverBoard';
 import { useAppSelector } from '@hooks/useRedux';
 import RepaymentSchedule from '../../components/moleculas/RepaymentSchedule';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { formatAmount, fromBigNumber, Zero } from '@utils/bn';
 import BigNumber from 'bignumber.js';
 import PepePlacholderImg from '@images/pepe-placeholder.png';
 import Link from '@components/Link';
-import { getShortenedAddress, getTxExplorerLink } from '@utils/env';
+import {
+  getContractByAddress,
+  getShortenedAddress,
+  getTxExplorerLink,
+} from '@utils/env';
 
 const PurchaseConfirmed: React.FC = () => {
+  const navigate = useNavigate();
   const { txId } = useParams();
   const [pmtOption] = React.useState(PaymentOption.BNPL);
   const transaction = useAppSelector((state) => {
@@ -154,25 +159,28 @@ const PurchaseConfirmed: React.FC = () => {
             transactions={transaction.hash ? [transaction.hash] : []}
           />
         )}
-        <Button fullWidth mt={24}>
+        <Button fullWidth mt={24} onClick={() => navigate('/collections')}>
           View My Collection
         </Button>
-        <Button fullWidth mt={12} kind="secondary">
-          Look for More Treasures!
-        </Button>
-        <Group position="center" mt={22} spacing={6}>
-          <Box
-            sx={{
-              width: 6,
-              height: 6,
-              borderRadius: '50%',
-              backgroundColor: 'rgba(12, 205, 170, 1)',
-            }}
-          />
-          <Text size="sm" sx={{ lineHeight: '12px' }}>
-            Connected to <strong>Looksrare</strong>
-          </Text>
-        </Group>
+        {transaction.options.to &&
+          getContractByAddress(transaction.options.to.toLowerCase()) && (
+            <Group position="center" mt={22} spacing={6}>
+              <Box
+                sx={{
+                  width: 6,
+                  height: 6,
+                  borderRadius: '50%',
+                  backgroundColor: 'rgba(12, 205, 170, 1)',
+                }}
+              />
+              <Text size="sm" sx={{ lineHeight: '12px' }}>
+                Connected to{' '}
+                <strong>
+                  {getContractByAddress(transaction.options.to.toLowerCase())}
+                </strong>
+              </Text>
+            </Group>
+          )}
       </Stack>
     </Card>
   );
