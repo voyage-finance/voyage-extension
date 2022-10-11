@@ -25,7 +25,7 @@ const Input: React.FC<IProps> = ({ width, liveValidation, ...props }) => {
       styles={(theme) => ({
         input: {
           padding: 12.5,
-          color: theme.fn.rgba('#fff', 0.35),
+          color: '#fff',
           '&::placeholder': {
             color: theme.fn.rgba('#fff', 0.35),
             textAlign: 'center',
