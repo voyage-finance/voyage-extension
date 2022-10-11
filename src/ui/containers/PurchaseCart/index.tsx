@@ -28,7 +28,7 @@ import {
 } from '@utils/constants';
 import {
   contractToAddress,
-  getContractByAddress,
+  getMarketplaceNameByAddress,
   getTxExplorerLink,
 } from '@utils/env';
 import { ReactComponent as EthSvg } from 'assets/img/eth-icon.svg';
@@ -38,7 +38,7 @@ import { useEffect, useState } from 'react';
 import { useBeforeunload } from 'react-beforeunload';
 import { useNavigate, useParams } from 'react-router-dom';
 import { TxSpeed } from 'types';
-import { TransactionStatus } from 'types/transaction';
+import { PreviewErrorType, TransactionStatus } from 'types/transaction';
 import SpeedSelect from './SpeedSelect';
 
 const PurchaseCart: React.FC = () => {
@@ -63,6 +63,7 @@ const PurchaseCart: React.FC = () => {
   const price = orderPreview?.price
     ? fromBigNumber(orderPreview.price)
     : undefined;
+  const [priceUsdValue] = useUsdValueOfEth(price || Zero);
   const interest = orderPreview?.loanParameters
     ? fromBigNumber(orderPreview.loanParameters.payment.interest)
     : undefined;
@@ -72,7 +73,6 @@ const PurchaseCart: React.FC = () => {
   const bnplPayment = orderPreview?.loanParameters
     ? fromBigNumber(orderPreview.loanParameters.payment.pmt)
     : undefined;
-  const [pmtUsdValue] = useUsdValueOfEth(bnplPayment || Zero);
   const nper = orderPreview?.loanParameters
     ? Number(orderPreview.loanParameters.nper)
     : 3;
@@ -205,6 +205,16 @@ const PurchaseCart: React.FC = () => {
         {orderPreview?.error && (
           <ErrorBox mt={20} mb={7} error={orderPreview.error} />
         )}
+        {!orderPreview?.error && balance.isLessThan(bnplPayment || Zero) && (
+          <ErrorBox
+            mt={20}
+            mb={7}
+            error={{
+              type: PreviewErrorType.INSUFFICIENT_BALANCE,
+              message: 'INSUFFICIENT_BALANCE',
+            }}
+          />
+        )}
         <Group mt={15} noWrap>
           {!isLoading ? (
             <Image
@@ -243,7 +253,7 @@ const PurchaseCart: React.FC = () => {
               <EthSvg style={{ width: 24 }} />
             </Group>
             <Text type="secondary" mr={8}>
-              $ {pmtUsdValue}
+              $ {priceUsdValue}
             </Text>
           </Stack>
         </Group>
@@ -384,25 +394,26 @@ const PurchaseCart: React.FC = () => {
           // unreachable state
           <Text align="center">Mined</Text>
         )}
-        {transaction.options.to &&
-          getContractByAddress(transaction.options.to.toLowerCase()) && (
-            <Group position="center" mt={22} spacing={6}>
-              <Box
-                sx={{
-                  width: 6,
-                  height: 6,
-                  borderRadius: '50%',
-                  backgroundColor: 'rgba(12, 205, 170, 1)',
-                }}
-              />
-              <Text size="sm" sx={{ lineHeight: '12px' }}>
-                Connected to{' '}
-                <strong>
-                  {getContractByAddress(transaction.options.to.toLowerCase())}
-                </strong>
-              </Text>
-            </Group>
-          )}
+        {transaction.options.to && (
+          <Group position="center" mt={22} spacing={6}>
+            <Box
+              sx={{
+                width: 6,
+                height: 6,
+                borderRadius: '50%',
+                backgroundColor: 'rgba(12, 205, 170, 1)',
+              }}
+            />
+            <Text size="sm" sx={{ lineHeight: '12px' }}>
+              Connected to{' '}
+              <strong>
+                {getMarketplaceNameByAddress(
+                  transaction.options.to.toLowerCase()
+                )}
+              </strong>
+            </Text>
+          </Group>
+        )}
       </Stack>
     </Card>
   );

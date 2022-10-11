@@ -43,6 +43,7 @@ import NavigationBar from '@components/NavigationBar';
 import { LoadingOverlay } from '@mantine/core';
 import LoanListPage from 'ui/pages/loans';
 import LoanItemPage from 'ui/pages/loanItem';
+import CollectionsPage from 'ui/pages/collections';
 
 const Router: React.FC = () => {
   const location = useLocation();
@@ -135,6 +136,7 @@ const Router: React.FC = () => {
       <Routes>
         <Route path="/home" element={<Home />} />
         <Route path="/settings" element={<Settings />} />
+        <Route path="/collections" element={<CollectionsPage />} />
         <Route
           path="/settings/network"
           element={<SwitchNetwork networks={networks} />}
