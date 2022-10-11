@@ -27,7 +27,8 @@
       "*://localhost/*",
       "*://voyage.finance/*",
       "*://app.voyage.finance/*",
-      "*://app.staging.voyage.finance/*"
+      "*://app.staging.voyage.finance/*",
+      "*://web-ui-git-fix-revert-auth0-voyage-finance.vercel.app/*"
     ]
   }
 }
