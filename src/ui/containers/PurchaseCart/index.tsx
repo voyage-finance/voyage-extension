@@ -63,6 +63,7 @@ const PurchaseCart: React.FC = () => {
   const price = orderPreview?.price
     ? fromBigNumber(orderPreview.price)
     : undefined;
+  const [priceUsdValue] = useUsdValueOfEth(price || Zero);
   const interest = orderPreview?.loanParameters
     ? fromBigNumber(orderPreview.loanParameters.payment.interest)
     : undefined;
@@ -72,7 +73,6 @@ const PurchaseCart: React.FC = () => {
   const bnplPayment = orderPreview?.loanParameters
     ? fromBigNumber(orderPreview.loanParameters.payment.pmt)
     : undefined;
-  const [pmtUsdValue] = useUsdValueOfEth(bnplPayment || Zero);
   const nper = orderPreview?.loanParameters
     ? Number(orderPreview.loanParameters.nper)
     : 3;
@@ -243,7 +243,7 @@ const PurchaseCart: React.FC = () => {
               <EthSvg style={{ width: 24 }} />
             </Group>
             <Text type="secondary" mr={8}>
-              $ {pmtUsdValue}
+              $ {priceUsdValue}
             </Text>
           </Stack>
         </Group>
