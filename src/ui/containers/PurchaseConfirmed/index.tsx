@@ -14,7 +14,7 @@ import BigNumber from 'bignumber.js';
 import PepePlacholderImg from '@images/pepe-placeholder.png';
 import Link from '@components/Link';
 import {
-  getContractByAddress,
+  getMarketplaceNameByAddress,
   getShortenedAddress,
   getTxExplorerLink,
 } from '@utils/env';
@@ -162,25 +162,26 @@ const PurchaseConfirmed: React.FC = () => {
         <Button fullWidth mt={24} onClick={() => navigate('/collections')}>
           View My Collection
         </Button>
-        {transaction.options.to &&
-          getContractByAddress(transaction.options.to.toLowerCase()) && (
-            <Group position="center" mt={22} spacing={6}>
-              <Box
-                sx={{
-                  width: 6,
-                  height: 6,
-                  borderRadius: '50%',
-                  backgroundColor: 'rgba(12, 205, 170, 1)',
-                }}
-              />
-              <Text size="sm" sx={{ lineHeight: '12px' }}>
-                Connected to{' '}
-                <strong>
-                  {getContractByAddress(transaction.options.to.toLowerCase())}
-                </strong>
-              </Text>
-            </Group>
-          )}
+        {transaction.options.to && (
+          <Group position="center" mt={22} spacing={6}>
+            <Box
+              sx={{
+                width: 6,
+                height: 6,
+                borderRadius: '50%',
+                backgroundColor: 'rgba(12, 205, 170, 1)',
+              }}
+            />
+            <Text size="sm" sx={{ lineHeight: '12px' }}>
+              Connected to{' '}
+              <strong>
+                {getMarketplaceNameByAddress(
+                  transaction.options.to.toLowerCase()
+                )}
+              </strong>
+            </Text>
+          </Group>
+        )}
       </Stack>
     </Card>
   );

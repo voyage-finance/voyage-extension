@@ -82,6 +82,18 @@ export const config = resolveConfiguration();
 export const getContractByAddress = (address: string): VoyageContract =>
   addressToContract[address];
 
+export const getMarketplaceNameByAddress = (address?: string): string => {
+  if (!address) return '';
+  switch (getContractByAddress(address)) {
+    case VoyageContract.LooksRare:
+      return 'LooksRare';
+    case VoyageContract.Seaport:
+      return 'OpenSea';
+    default:
+      return '';
+  }
+};
+
 export const getShortenedAddress = (address = '') => {
   return `${address.substring(0, 6)}...${address.slice(-4)}`;
 };

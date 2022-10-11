@@ -21,12 +21,23 @@ const PreviewErrorBox: React.FunctionComponent<IProps> = ({
       case PreviewErrorType.UNSUPPORTED_COLLECTION:
         return (
           <div>
-            BNPL is not supported for this collection.
+            <strong>3x Leverage</strong> is not supported for this collection.
             <br />
             Click{' '}
-            <Text inherit variant="link" component="a" href="voyage.finance">
-              here
-            </Text>{' '}
+            <Box
+              component="span"
+              sx={{ ':hover': { cursor: 'pointer' } }}
+              onClick={() =>
+                window.open(
+                  'https://docs.voyage.finance/voyage/others/supported-collections',
+                  '_blank'
+                )
+              }
+            >
+              <ins>
+                <strong>here</strong>
+              </ins>
+            </Box>{' '}
             to learn more.
           </div>
         );
@@ -71,6 +82,7 @@ const PreviewErrorBox: React.FunctionComponent<IProps> = ({
             <br />
             Please top up{' '}
             <Box
+              component="span"
               sx={{ ':hover': { cursor: 'pointer' } }}
               onClick={() => navigate('/vault/topup/method')}
             >
@@ -96,7 +108,8 @@ const PreviewErrorBox: React.FunctionComponent<IProps> = ({
         minWidth: 98,
         border: '1px solid #FFA620',
       }}
-      px={23}
+      pl={23}
+      pr={13}
       py={15}
       spacing={20}
       noWrap
