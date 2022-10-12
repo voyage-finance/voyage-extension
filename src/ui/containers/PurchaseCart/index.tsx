@@ -169,6 +169,9 @@ const PurchaseCart: React.FC = () => {
     setApprovalRequired(!isETH && !isMaxApproved);
   }, [isLoading, isLoadingAllowance, allowance]);
 
+  const canPurchase =
+    !orderPreview?.error && !errorMessage && !approvalRequired;
+
   return (
     <Card
       style={{
@@ -350,7 +353,7 @@ const PurchaseCart: React.FC = () => {
               mt={24}
               onClick={handleBuyClick}
               loading={isPurchasing}
-              disabled={!!orderPreview?.error || approvalRequired}
+              disabled={!canPurchase}
             >
               {!isPurchasing ? (
                 <>
