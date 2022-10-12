@@ -1,9 +1,30 @@
 .wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex: 1;
-  overflow-y: scroll;
   position: relative;
   .root {
+    align-items: center;
     padding: 15px 27px;
-    height: 100%;
+  }
+}
+
+.buttonRoot {
+  color: #ffffff;
+  background-color: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 8px 8px 8px 14px;
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    .buttonInner {
+      background: linear-gradient(90deg, #ffa620 0%, #ef5b25 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+  }
+  .rightIcon {
+    margin-left: 4px;
   }
 }
