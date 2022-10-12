@@ -72,7 +72,7 @@ const PreviewErrorBox: React.FunctionComponent<IProps> = ({
       case PreviewErrorType.UNSUPPORTED_CURRENCY:
         return (
           <div>
-            <strong>This currency is currently not support by BNPL</strong>
+            <strong>This currency is currently not supported</strong>
           </div>
         );
       case PreviewErrorType.INSUFFICIENT_BALANCE:

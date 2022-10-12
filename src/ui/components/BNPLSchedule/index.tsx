@@ -52,7 +52,7 @@ const BNPLSchedule: React.FunctionComponent<IBNPLScheduleProps> = ({
               size="sm"
               type={payment === undefined ? 'secondary' : 'primary'}
             >
-              Show BNPL Repayment Schedule
+              Show Payment Schedule
             </Text>
             <ChevronDown
               className={cn(

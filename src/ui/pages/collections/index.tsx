@@ -10,7 +10,6 @@ import styles from './index.module.scss';
 const CollectionsPage: React.FunctionComponent = () => {
   const [hover, setHover] = useState(false);
   const address = useAppSelector((state) => state.core.vaultAddress);
-  console.log('hover: ', hover);
   return (
     <div className={styles.wrapper}>
       <Stack className={styles.root} spacing={6}>
