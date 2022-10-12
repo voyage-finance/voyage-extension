@@ -139,7 +139,7 @@ const PurchaseCart: React.FC = () => {
       }
       setApproving(true);
       const txHash = await controller.approveMarketplaceAddress(
-        orderPreview?.order?.marketplaceAddress
+        marketplaceAddress
       );
       setApprovalTx(txHash);
       setApprovalRequired(false);
