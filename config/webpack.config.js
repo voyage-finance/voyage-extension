@@ -561,6 +561,12 @@ module.exports = function (webpackEnv) {
         chunks: ['ui'],
         cache: false,
       }),
+      new HtmlWebpackPlugin({
+        template: paths.appHomeHtml,
+        filename: 'reset.html',
+        chunks: ['ui'],
+        cache: false,
+      }),
       new CopyWebpackPlugin({
         patterns: [
           { from: path.resolve(paths.appSrc, 'assets/img/icon.png') },

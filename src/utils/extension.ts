@@ -5,6 +5,7 @@ export enum ExtensionEnvType {
   Popup, // the extension panel opened by the icon in the top right corner.
   Fullscreen, // currently not in use
   Notification, // the popup that appears for actions taken out of the extension (e.g. signing, approving)
+  Reset,
   Background,
 }
 
@@ -56,6 +57,8 @@ const getEnvironmentTypeMemo = memoize((url: string) => {
     return ExtensionEnvType.Fullscreen;
   } else if (parsedUrl.pathname === '/notification.html') {
     return ExtensionEnvType.Notification;
+  } else if (parsedUrl.pathname === '/reset.html') {
+    return ExtensionEnvType.Reset;
   }
   return ExtensionEnvType.Background;
 });
