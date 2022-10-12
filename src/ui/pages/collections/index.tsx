@@ -1,5 +1,6 @@
 import Button from '@components/Button';
 import Text from '@components/Text';
+import { useAppSelector } from '@hooks/useRedux';
 import { ReactComponent as ArrowUpRightGradient } from '@images/arrow-top-right-gradient.svg';
 import { ReactComponent as ArrowUpRightSvg } from '@images/arrow-up-right-icon.svg';
 import { Stack } from '@mantine/core';
@@ -8,6 +9,7 @@ import styles from './index.module.scss';
 
 const CollectionsPage: React.FunctionComponent = () => {
   const [hover, setHover] = useState(false);
+  const address = useAppSelector((state) => state.core.vaultAddress);
   console.log('hover: ', hover);
   return (
     <div className={styles.wrapper}>
@@ -16,9 +18,15 @@ const CollectionsPage: React.FunctionComponent = () => {
           Collections Coming Soon.
         </Text>
         <Text size="md" align="center" sx={{ marginBottom: '18px' }}>
-          You may view your NFT collection on Etherscan.
+          You may view your NFT collection on Zapper.
         </Text>
         <Button
+          onClick={() =>
+            window.open(
+              `https://zapper.fi/account/${address}?tab=nft`,
+              '_blank'
+            )
+          }
           onMouseEnter={() => setHover(true)}
           onMouseLeave={() => setHover(false)}
           rightIcon={hover ? <ArrowUpRightGradient /> : <ArrowUpRightSvg />}
