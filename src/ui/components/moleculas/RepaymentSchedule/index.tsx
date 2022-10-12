@@ -47,7 +47,7 @@ const RepaymentSchedule: React.FunctionComponent<IRepaymentScheduleProps> = ({
               </div>
               <Stack spacing={0} ml={14} align="start">
                 <Text weight="bold" size="lg">
-                  {borrowAt ? pmtDate.format('D MMM YYYY') : 'Today'}
+                  {pmtDate.format('D MMM YYYY')}
                 </Text>
                 <Text
                   size="sm"
