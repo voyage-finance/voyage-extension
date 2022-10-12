@@ -169,8 +169,12 @@ const PurchaseCart: React.FC = () => {
     setApprovalRequired(!isETH && !isMaxApproved);
   }, [isLoading, isLoadingAllowance, allowance]);
 
+  const sufficientBalance = balance.gte(bnplPayment || Zero);
   const canPurchase =
-    !orderPreview?.error && !errorMessage && !approvalRequired;
+    !orderPreview?.error &&
+    !errorMessage &&
+    !approvalRequired &&
+    sufficientBalance;
 
   return (
     <Card
@@ -208,7 +212,7 @@ const PurchaseCart: React.FC = () => {
         {orderPreview?.error && (
           <ErrorBox mt={20} mb={7} error={orderPreview.error} />
         )}
-        {!orderPreview?.error && balance.isLessThan(bnplPayment || Zero) && (
+        {!orderPreview?.error && !sufficientBalance && (
           <ErrorBox
             mt={20}
             mb={7}
