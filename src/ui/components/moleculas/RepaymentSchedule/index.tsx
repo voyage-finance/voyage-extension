@@ -32,7 +32,7 @@ const RepaymentSchedule: React.FunctionComponent<IRepaymentScheduleProps> = ({
     <Group direction="column" align="stretch" spacing={0} {...props}>
       <Group direction="column" align="stretch" spacing={0} noWrap>
         <Text size="lg" weight="bold" mt={16} mb={6}>
-          Repayment Schedule
+          Payment Schedule
         </Text>
         {[...Array(Number(nper)).keys()].map((i) => {
           const n = i + 1;

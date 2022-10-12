@@ -16,7 +16,7 @@ const LoanListPage: React.FunctionComponent = () => {
     <div className={styles.wrapper}>
       <Stack className={styles.root}>
         <LoadingOverlay visible={isLoansLoading} />
-        <TitleWithLine>Bills</TitleWithLine>
+        <TitleWithLine>Positions</TitleWithLine>
         {loans.length == 0 && (
           <Text size="sm" my="auto" align="center">
             You have no active loans.
