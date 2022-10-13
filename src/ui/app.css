@@ -42,3 +42,8 @@ html, body {
   align-items: center;
   justify-content: center;
 }
+
+*::-webkit-scrollbar {
+  background: transparent; /* Chrome/Safari/Webkit */
+  width: 0px;
+}
