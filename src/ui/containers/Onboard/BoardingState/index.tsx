@@ -49,7 +49,7 @@ const BoardingState: React.FC = () => {
         ) : errorMsg ? (
           <>
             <Text sx={{ fontSize: 24 }} mt={36} weight={'bold'}>
-              Oops, we got error..
+              Oops, we've got an error...
             </Text>
             <Text mt={16} align="center" type="danger">
               {errorMsg}
