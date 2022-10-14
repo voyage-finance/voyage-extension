@@ -170,11 +170,9 @@ const PurchaseCart: React.FC = () => {
   }, [isLoading, isLoadingAllowance, allowance]);
 
   const sufficientBalance = balance.gte(bnplPayment || Zero);
-  const canPurchase =
-    !orderPreview?.error &&
-    !errorMessage &&
-    !approvalRequired &&
-    sufficientBalance;
+
+  const canApprove = !orderPreview?.error && !errorMessage && sufficientBalance;
+  const canPurchase = canApprove && !approvalRequired;
 
   return (
     <Card
@@ -343,7 +341,7 @@ const PurchaseCart: React.FC = () => {
                 mt={24}
                 onClick={handleApproveClick}
                 loading={approving}
-                disabled={approving}
+                disabled={approving || canApprove}
               >
                 {approving
                   ? 'Approving...'
