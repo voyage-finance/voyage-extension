@@ -14,10 +14,25 @@ export const useFetchMyLoans = () => {
     setIsLoading(true);
     try {
       setLoans(
-        (await fetchLoanList(vaultAddress)).map((loanRes) => ({
-          ...loanRes,
-          principal: formatEthersBN(loanRes.principal),
-        }))
+        (await fetchLoanList(vaultAddress))
+          .map((loanRes) => ({
+            ...loanRes,
+            principal: formatEthersBN(loanRes.principal),
+          }))
+          .sort((a, b) => {
+            if (a.liquidated) return 2;
+            if (b.liquidated) return -2;
+            if (!a.closed && !b.closed) {
+              return a.nextPaymentDue - b.nextPaymentDue;
+            }
+            if (a.closed) {
+              return 1;
+            }
+            if (b.closed) {
+              return -1;
+            }
+            return 0;
+          })
       );
     } catch (e) {
       console.error('[useFetchMyLoans]', e);
