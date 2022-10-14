@@ -44,7 +44,7 @@ const LoanItemPage: React.FunctionComponent = () => {
               mt={12}
               fit="contain"
               radius={10}
-              src={PepePlacholderImg}
+              src={loan.metadata?.image || PepePlacholderImg}
               alt="image"
             />
             <Text size="xl" weight="bold" align="center" mt={12}>
