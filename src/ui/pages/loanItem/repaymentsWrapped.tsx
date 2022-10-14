@@ -24,6 +24,7 @@ const RepaymentsWrapped: React.FunctionComponent<{
     paidTimes,
     borrowAt,
     transaction,
+    liquidated,
   },
   isLoading,
 }) => {
@@ -69,9 +70,9 @@ const RepaymentsWrapped: React.FunctionComponent<{
       loanWithRepayments?.loan?.repayments &&
       loanWithRepayments.loan.repayments.length > 0
     ) {
-      let txHashes = loanWithRepayments.loan.repayments.map(
-        (repay) => repay.txHash
-      );
+      let txHashes = loanWithRepayments.loan.repayments
+        .filter((repay) => !repay.liquidation)
+        .map((repay) => repay.txHash);
       if (buyNowTx && txHashes[0] == constants.AddressZero)
         txHashes[0] = buyNowTx;
       else if (buyNowTx) {
@@ -93,6 +94,7 @@ const RepaymentsWrapped: React.FunctionComponent<{
         payment={payment || Zero}
         transactions={txs}
         borrowAt={borrowAt}
+        liquidated={liquidated}
       />
       {errorMessage && (
         <Text type="danger" align="center" lineClamp={4}>
@@ -105,9 +107,11 @@ const RepaymentsWrapped: React.FunctionComponent<{
             fullWidth
             onClick={handleRepayClick}
             loading={isSendingTx || isMining || isLoading}
-            disabled={paidTimes == nper || isRepayFreezed}
+            disabled={paidTimes == nper || isRepayFreezed || liquidated}
           >
-            {paidTimes == nper ? (
+            {liquidated ? (
+              'Defaulted'
+            ) : paidTimes == nper ? (
               'Payment Complete'
             ) : isMining ? (
               'Mining'

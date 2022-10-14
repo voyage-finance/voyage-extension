@@ -1,12 +1,13 @@
 import { Box, Group } from '@mantine/core';
 import { getTxExplorerLink } from '@utils/env';
 import * as React from 'react';
-import { ArrowUpRight, Check } from 'tabler-icons-react';
+import { ArrowUpRight, Check, X } from 'tabler-icons-react';
 
-const StatusIcon: React.FC<{ tx?: string; isNext?: boolean }> = ({
-  tx,
-  isNext,
-}) => {
+const StatusIcon: React.FC<{
+  tx?: string;
+  isNext?: boolean;
+  isLiquidated?: boolean;
+}> = ({ tx, isNext, isLiquidated }) => {
   const onClick = () => {
     if (tx) window.open(getTxExplorerLink(tx), '_blank');
   };
@@ -28,6 +29,20 @@ const StatusIcon: React.FC<{ tx?: string; isNext?: boolean }> = ({
       onClick={onClick}
     >
       <ArrowUpRight size={20} />
+    </Group>
+  ) : isLiquidated ? (
+    <Group
+      sx={{
+        border: '3px solid rgba(255, 255, 255, 0.1)',
+        borderRadius: '50%',
+        width: 43,
+        height: 43,
+        color: 'rgba(255, 255, 255, 0.35)',
+      }}
+      align="center"
+      position="center"
+    >
+      <X size={20} />
     </Group>
   ) : isNext ? (
     <Group
