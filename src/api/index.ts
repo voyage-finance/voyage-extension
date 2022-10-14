@@ -1,4 +1,4 @@
-import { ILoan } from 'types';
+import { CollectionAssets, ILoan } from 'types';
 
 export const fetchGasFees = async () => {
   const estimateGasResponse = await fetch(
@@ -56,4 +56,13 @@ export const fetchLoan = async (
   const loan = await loanListResponse.json();
 
   return loan as ILoan;
+};
+
+export const fetchAssets = async (vault: string) => {
+  const loanListResponse = await fetch(
+    `${process.env.VOYAGE_API_URL}/v1/vault/${vault}/assets`
+  );
+  const assets = await loanListResponse.json();
+
+  return assets as CollectionAssets;
 };
