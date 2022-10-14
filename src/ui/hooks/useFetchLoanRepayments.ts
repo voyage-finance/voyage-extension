@@ -12,6 +12,7 @@ export const useFetchLoanRepayments = (
         id: string;
         txHash: string;
         paidAt: string;
+        liquidation: any;
       }[];
     };
   }>(GET_LOAN_REPAYMENTS, {

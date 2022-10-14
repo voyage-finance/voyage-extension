@@ -8,6 +8,7 @@ export const GET_LOAN_REPAYMENTS = gql`
         id
         paidAt
         txHash
+        liquidation
       }
     }
   }

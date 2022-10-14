@@ -15,6 +15,7 @@ interface IRepaymentScheduleProps extends GroupProps {
   payment: BigNumber;
   transactions: string[];
   borrowAt?: number;
+  liquidated?: boolean;
 }
 
 const RepaymentSchedule: React.FunctionComponent<IRepaymentScheduleProps> = ({
@@ -23,6 +24,7 @@ const RepaymentSchedule: React.FunctionComponent<IRepaymentScheduleProps> = ({
   payment,
   transactions,
   borrowAt,
+  liquidated,
   ...props
 }) => {
   const paidTimes = transactions.length;
@@ -42,7 +44,11 @@ const RepaymentSchedule: React.FunctionComponent<IRepaymentScheduleProps> = ({
           return (
             <Group mt={10} align="center" spacing={0} key={i} noWrap>
               <div style={{ position: 'relative' }}>
-                <StatusIcon tx={transactions[i]} isNext={i == paidTimes} />
+                <StatusIcon
+                  tx={transactions[i]}
+                  isNext={i == paidTimes}
+                  isLiquidated={liquidated && i >= paidTimes}
+                />
                 {n < nper && <div className={styles.schedulConnectLine} />}
               </div>
               <Stack spacing={0} ml={14} align="start">
@@ -54,6 +60,8 @@ const RepaymentSchedule: React.FunctionComponent<IRepaymentScheduleProps> = ({
                   type={
                     i < paidTimes
                       ? 'success'
+                      : liquidated
+                      ? 'secondary'
                       : daysLeft <= 3
                       ? 'danger'
                       : daysLeft <= epoch
@@ -63,6 +71,8 @@ const RepaymentSchedule: React.FunctionComponent<IRepaymentScheduleProps> = ({
                 >
                   {i < paidTimes
                     ? `Paid • ${getShortenedAddress(transactions[i])}`
+                    : liquidated
+                    ? 'Payment Missed'
                     : daysLeft > 0
                     ? `Due in ${daysLeft} days`
                     : 'Overdue'}
