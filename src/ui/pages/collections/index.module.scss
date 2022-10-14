@@ -1,12 +1,32 @@
 .wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   flex: 1;
-  position: relative;
+  overflow-y: scroll;
   .root {
-    align-items: center;
+    position: relative;
     padding: 15px 27px;
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      grid-auto-rows: minmax(min-content, max-content);
+      .card {
+        .title {
+          font-size: 14px;
+          line-height: 16px;
+        }
+        .imageContainer {
+          position: relative;
+          .lock {
+            position: absolute;
+            right: 4px;
+            bottom: 6px;
+          }
+        }
+      }
+    }
   }
 }
 

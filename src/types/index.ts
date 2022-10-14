@@ -103,3 +103,18 @@ export interface ILoan {
     platform: string;
   };
 }
+
+export interface CollectionAssets {
+  [address: string]: CollectionAsset[];
+}
+
+export interface CollectionAsset {
+  tokenId: string;
+  name?: string;
+  image?: string;
+  collection: {
+    id: string;
+    name: string;
+  };
+  closed: boolean;
+}

@@ -1,44 +1,45 @@
-import Button from '@components/Button';
-import Text from '@components/Text';
-import { useAppSelector } from '@hooks/useRedux';
-import { ReactComponent as ArrowUpRightGradient } from '@images/arrow-top-right-gradient.svg';
-import { ReactComponent as ArrowUpRightSvg } from '@images/arrow-up-right-icon.svg';
-import { Stack } from '@mantine/core';
-import { useState } from 'react';
 import styles from './index.module.scss';
+import PepePlacholderImg from '@images/pepe-placeholder.png';
+import { ReactComponent as LockSvg } from '@images/lock.svg';
+import { Image, LoadingOverlay, Stack } from '@mantine/core';
+import Text from '@components/Text';
+import { useFetchMyAssets } from '@hooks/useFetchMyAssets';
 
 const CollectionsPage: React.FunctionComponent = () => {
-  const [hover, setHover] = useState(false);
-  const address = useAppSelector((state) => state.core.vaultAddress);
+  const [assets, isLoading] = useFetchMyAssets();
+
   return (
     <div className={styles.wrapper}>
-      <Stack className={styles.root} spacing={6}>
-        <Text size="lg" my="auto" align="center" weight={700}>
-          Collections Coming Soon.
-        </Text>
-        <Text size="md" align="center" sx={{ marginBottom: '18px' }}>
-          You may view your NFT collection on Zapper.
-        </Text>
-        <Button
-          onClick={() =>
-            window.open(
-              `https://zapper.fi/account/${address}?tab=nft`,
-              '_blank'
-            )
-          }
-          onMouseEnter={() => setHover(true)}
-          onMouseLeave={() => setHover(false)}
-          rightIcon={hover ? <ArrowUpRightGradient /> : <ArrowUpRightSvg />}
-          kind="secondary"
-          classNames={{
-            root: styles.buttonRoot,
-            inner: styles.buttonInner,
-            rightIcon: styles.rightIcon,
-          }}
-        >
-          <div>View My Collection</div>
-        </Button>
-      </Stack>
+      <div className={styles.root}>
+        <LoadingOverlay visible={isLoading} />
+        {assets.length == 0 && (
+          <Text size="sm" my="auto" align="center">
+            You have no active loans.
+          </Text>
+        )}
+        <div className={styles.grid}>
+          {assets.map((asset) => (
+            <Stack className={styles.card} key={asset.tokenId} spacing={5}>
+              <div className={styles.imageContainer}>
+                <Image
+                  width={145}
+                  height={145}
+                  mx="auto"
+                  fit="contain"
+                  radius={10}
+                  src={asset.image || PepePlacholderImg}
+                  alt="image"
+                  sx={{ position: 'relative' }}
+                />
+                {!asset.closed && <LockSvg className={styles.lock} />}
+              </div>
+              <Text weight="bold" className={styles.title}>
+                {asset.name || `#${asset.tokenId}`}
+              </Text>
+            </Stack>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };
