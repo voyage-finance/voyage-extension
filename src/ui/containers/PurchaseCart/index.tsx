@@ -341,7 +341,7 @@ const PurchaseCart: React.FC = () => {
                 mt={24}
                 onClick={handleApproveClick}
                 loading={approving}
-                disabled={approving || canApprove}
+                disabled={approving || !canApprove}
               >
                 {approving
                   ? 'Approving...'
