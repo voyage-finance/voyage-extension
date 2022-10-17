@@ -52,7 +52,22 @@
   }
 
   .connectButton {
+    background: #006fff;
     height: 24px !important;
     border-radius: 4px !important;
+    font-size: 11px;
+    padding-left: 12px;
+    padding-right: 12px;
+    .btnContent {
+      font-weight: bold;
+      .via {
+        font-weight: 400;
+      }
+    }
+    &:disabled {
+      background: #006fff !important;
+      color: white !important;
+      opacity: 0.7;
+    }
   }
 }
