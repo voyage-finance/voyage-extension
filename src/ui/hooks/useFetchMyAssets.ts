@@ -12,10 +12,13 @@ export const useFetchMyAssets = () => {
     if (!vaultAddress) return;
     setIsLoading(true);
     try {
+      let _assets: CollectionAsset[] = [];
       const collectionAssetsMap = await fetchAssets(vaultAddress);
-      Object.keys(collectionAssetsMap).map((collection) =>
-        setAssets([...assets, ...collectionAssetsMap[collection]])
+      Object.keys(collectionAssetsMap).map(
+        (collection) =>
+          (_assets = [..._assets, ...collectionAssetsMap[collection]])
       );
+      setAssets(_assets);
     } catch (e) {
       console.error('[useFetchMyAssets]', e);
     }

@@ -14,7 +14,7 @@ const CollectionsPage: React.FunctionComponent = () => {
         <LoadingOverlay visible={isLoading} />
         {assets.length == 0 && (
           <Text size="sm" my="auto" align="center">
-            You have no active loans.
+            You do not hold any NFTs.
           </Text>
         )}
         <div className={styles.grid}>
