@@ -63,6 +63,7 @@ class VoyageStore {
       fetchVault: this.fetchVault.bind(this),
       approveMarketplaceAddress: this.approveMarketplaceAddress.bind(this),
       repay: this.repay.bind(this),
+      isCollectionSupported: this.isCollectionSupported.bind(this),
     };
   }
 
@@ -91,6 +92,16 @@ class VoyageStore {
     // if we have vault, we always should show popup extension
     browser.action.setPopup({ popup: 'popup.html' });
     return vaultAddress;
+  }
+
+  async isCollectionSupported(colleciton: string) {
+    const supprotedCollections = await this.voyage.getCollections();
+    console.log('supproted collections', supprotedCollections);
+    return (
+      supprotedCollections.findIndex(
+        (value) => value.toLowerCase() == colleciton.toLowerCase()
+      ) > -1
+    );
   }
 
   async computeCounterfactualAddress() {

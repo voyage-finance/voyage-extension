@@ -199,10 +199,11 @@ function insertButton(order: OrderData, marketplace: Marketplace) {
 
 async function init() {
   await documentFullyLoaded();
+
   // Options for the observer (which mutations to observe)
   const config = { attributes: false, childList: true, subtree: false };
 
-  function observerCallback() {
+  async function observerCallback() {
     const marketplace = getMarketplace();
     if (!marketplace || marketplace === Marketplace.Unsupported) {
       return;
@@ -210,7 +211,12 @@ async function init() {
     const order =
       pathnameCache[document.location.pathname] ??
       extractOrderData(window.location.pathname, marketplace);
-    if (order && order.collection && order.tokenId) {
+    const isCollectionSupported =
+      order &&
+      order.collection &&
+      (await controller.isCollectionSupported(order.collection));
+
+    if (isCollectionSupported && order.tokenId) {
       insertButton(order, marketplace);
     }
   }
