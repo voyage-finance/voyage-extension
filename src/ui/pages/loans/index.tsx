@@ -22,7 +22,7 @@ const LoanListPage: React.FunctionComponent = () => {
             You have no active loans.
           </Text>
         )}
-        <Stack spacing={8}>
+        <Stack spacing={8} pb={60}>
           {loans.map((loan, index) => {
             return <LoanCard loan={loan} key={index} />;
           })}

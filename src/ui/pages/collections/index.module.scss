@@ -12,6 +12,7 @@
       grid-template-columns: 1fr 1fr;
       gap: 20px;
       grid-auto-rows: minmax(min-content, max-content);
+      padding-bottom: 60px;
       .card {
         .title {
           font-size: 14px;
