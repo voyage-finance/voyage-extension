@@ -8,6 +8,7 @@ import { IWalletConnectSession } from '@walletconnect/types';
 import { App } from '@utils/dapps';
 import useVoyageController from '@hooks/useVoyageController';
 import PepePlacholderImg from '@images/pepe-placeholder.png';
+import { ReactComponent as WCLogo } from '@images/wc.svg';
 
 interface Props {
   app?: App;
@@ -66,7 +67,11 @@ const AppConnector = (props: Props) => {
               onClick={() => navigate('/connect')}
               disabled={!!session}
             >
-              Connect
+              <div className={styles.btnContent}>
+                {session ? `Connected` : `Connect`}
+                <span className={styles.via}> via </span>WC
+                {!session && <WCLogo style={{ marginLeft: 4 }} />}
+              </div>
             </Button>
           )}
         </div>
