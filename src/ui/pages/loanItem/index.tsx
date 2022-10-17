@@ -35,7 +35,7 @@ const LoanItemPage: React.FunctionComponent = () => {
       <div className={styles.root}>
         <LoadingOverlay visible={isLoanLoading} />
         {loan && (
-          <Stack spacing={0}>
+          <Stack spacing={0} mb={60}>
             <TitleWithLine>Summary</TitleWithLine>
             <Image
               width={123}

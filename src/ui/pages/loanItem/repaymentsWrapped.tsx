@@ -102,7 +102,7 @@ const RepaymentsWrapped: React.FunctionComponent<{
         </Text>
       )}
       {
-        <Box my={24}>
+        <Box mt={24}>
           <Button
             fullWidth
             onClick={handleRepayClick}

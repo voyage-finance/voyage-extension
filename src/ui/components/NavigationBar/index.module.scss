@@ -1,25 +1,30 @@
 .navigation {
-    background: rgba(27, 29, 44, 0.8);
-    .navigationItem {
-        position: relative;
-        flex: 1;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 12px;
-        .border {
-            position: absolute;
-            top: 0;
-            width: 0;
-            height: 3px;
-            background: linear-gradient(90deg, #FFA620 0%, #EF5B25 100%);
-            transition: width 0.1s linear;
-        }
-        &:hover, &.active {
-            cursor: pointer;
-            .border {
-                width: 100%;
-            }
-        }
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background: rgba(27, 29, 44, 0.8);
+  .navigationItem {
+    position: relative;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px;
+    .border {
+      position: absolute;
+      top: 0;
+      width: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #ffa620 0%, #ef5b25 100%);
+      transition: width 0.1s linear;
     }
+    &:hover,
+    &.active {
+      cursor: pointer;
+      .border {
+        width: 100%;
+      }
+    }
+  }
 }
