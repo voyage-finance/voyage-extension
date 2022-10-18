@@ -56,6 +56,7 @@ function SignMessage() {
       className={styles.root}
       spacing={0}
       noWrap
+      pb={60}
     >
       <TitleWithLine>Signature Request</TitleWithLine>
       <Group direction="column" spacing={10} mt={15}>
@@ -72,7 +73,7 @@ function SignMessage() {
           </Group>
         </VoyagePaper>
       </Group>
-      <Group direction="column" sx={{ flexGrow: 1 }} spacing={10} mt={10}>
+      <Group direction="column" spacing={10} mt={10}>
         <Text type="secondary">Message</Text>
         <VoyagePaper
           px={22}
