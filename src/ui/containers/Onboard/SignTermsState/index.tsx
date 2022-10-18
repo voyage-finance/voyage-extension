@@ -28,7 +28,19 @@ const SignTermsStep: React.FC = () => {
         </Text>
         <Text mt={16} align="center">
           You’re almost there! Before you step foot on Voyage, read through our{' '}
-          <Text component="span" type="accent" weight="bold" underline>
+          <Text
+            component="span"
+            type="accent"
+            weight="bold"
+            underline
+            sx={{ ':hover': { cursor: 'pointer' } }}
+            onClick={() =>
+              window.open(
+                'https://www.voyage.finance/terms-and-conditions',
+                '_blank'
+              )
+            }
+          >
             Terms and Conditions
           </Text>{' '}
           and click <strong>“I Agree”</strong>.
