@@ -1,6 +1,6 @@
 {
   "name": "Voyage Extension",
-  "description": "Enables playing/buy through your Voyage vault!",
+  "description": "Super app for NFT Traders, backed by Delphi and Tangent",
   "version": "0.1.6",
   "manifest_version": 3,
   "action": {
