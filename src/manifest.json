@@ -1,7 +1,7 @@
 {
   "name": "Voyage Extension",
   "description": "Enables playing/buy through your Voyage vault!",
-  "version": "0.1.4",
+  "version": "0.1.6",
   "manifest_version": 3,
   "action": {
     "default_icon": "icon.png"
@@ -17,7 +17,10 @@
   "icons": { "128": "icon.png" },
   "permissions": ["activeTab", "storage", "tabs", "notifications"],
   "web_accessible_resources": [
-    { "resources": ["injector.bundle.js", "reset.html",  "home.html"], "matches": ["<all_urls>"] }
+    {
+      "resources": ["injector.bundle.js", "reset.html", "home.html"],
+      "matches": ["<all_urls>"]
+    }
   ],
   "externally_connectable": {
     "matches": [
