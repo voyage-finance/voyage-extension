@@ -89,6 +89,7 @@ function App({ store }: any) {
                     '#005FD5',
                   ],
                   gray: ['#6F7073', '#A4A5A8'],
+                  white: ['#fff'],
                 },
                 primaryColor: 'brand',
                 fontFamily: 'Titillium Web, sans-serif',

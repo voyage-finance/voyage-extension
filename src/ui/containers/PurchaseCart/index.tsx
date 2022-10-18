@@ -379,13 +379,15 @@ const PurchaseCart: React.FC = () => {
               Cancel
             </Button>
 
-            <SpeedSelect
-              value={speed}
-              onChange={setSpeed}
-              mt={12}
-              vault={vaultAddress}
-              user={userAddress}
-            />
+            {!orderPreview?.error && sufficientBalance && !errorMessage && (
+              <SpeedSelect
+                value={speed}
+                onChange={setSpeed}
+                mt={12}
+                vault={vaultAddress}
+                user={userAddress}
+              />
+            )}
           </>
         ) : transaction.status === TransactionStatus.Rejected ? (
           <Button fullWidth disabled mt={24} kind="secondary">
