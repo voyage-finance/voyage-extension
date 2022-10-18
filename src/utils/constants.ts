@@ -53,8 +53,8 @@ export const LOOKS_ADDRESS: Record<ChainID, string> = {
 
 export const PAYMASTER_ADDRESS: Record<ChainID, string> = {
   [ChainID.Mainnet]: '0x966cCFBe95288dF6DCd9261E221545418e9b944c',
-  [ChainID.Goerli]: '0x6d2B863bD3a1DeD44Daa63F4400238799D86F5e4',
-  [ChainID.Localhost]: '0x6d2B863bD3a1DeD44Daa63F4400238799D86F5e4',
+  [ChainID.Goerli]: '0x529641c374c110646207b4408Cb04f49A3382932',
+  [ChainID.Localhost]: '0x529641c374c110646207b4408Cb04f49A3382932',
 };
 
 export const VOYAGE_ADDRESS: Record<ChainID, string> = {
