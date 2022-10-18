@@ -1,5 +1,5 @@
 import Text from '@components/Text';
-import { Box, BoxProps, Group, Menu, Stack } from '@mantine/core';
+import { Box, BoxProps, Group, Loader, Menu, Stack } from '@mantine/core';
 import * as React from 'react';
 import { ChevronDown } from 'tabler-icons-react';
 import { ReactComponent as CheckOrangeSvg } from 'assets/img/check-orange.svg';
@@ -31,6 +31,7 @@ const SpeedSelect: React.FunctionComponent<ISpeedSelectProps> = ({
   const [isGasLoading, setGasLoading] = React.useState(false);
   const [speeds, isSpeedsLoading] = useGasSpeeds();
   const [gas, setGas] = React.useState(0);
+  const [error, setError] = React.useState('');
   const controller = useVoyageController();
   const transaction = useAppSelector((state) => {
     return state.core.transactions[txId!];
@@ -39,14 +40,6 @@ const SpeedSelect: React.FunctionComponent<ISpeedSelectProps> = ({
   const updateGasData = async () => {
     const { marketplace, tokenId, collection, data } =
       decodeMarketplaceCalldata(transaction.options);
-    console.log('---- [updateGasData] values ----', {
-      collection,
-      tokenId: tokenId.toString(),
-      vault,
-      marketplace,
-      user,
-      data,
-    });
     setGasLoading(true);
     try {
       const voyageRawTx = await controller.populateBuyNow(
@@ -56,7 +49,6 @@ const SpeedSelect: React.FunctionComponent<ISpeedSelectProps> = ({
         marketplace,
         data
       );
-      console.log('---- voyageRawTx ----', voyageRawTx);
       if (voyageRawTx.data) {
         const estimateGasResponse = await fetch(
           `${process.env.VOYAGE_API_URL}/estimateGas`,
@@ -75,11 +67,11 @@ const SpeedSelect: React.FunctionComponent<ISpeedSelectProps> = ({
           }
         );
         const body = await estimateGasResponse.json();
-        console.log('------------ estimateGasResponse -------------', body);
         setGas(body.gas);
       }
-    } catch (e) {
+    } catch (e: any) {
       console.log('[FAILED] at estimate gas', e);
+      setError(e.message);
     }
     setGasLoading(false);
   };
@@ -88,32 +80,41 @@ const SpeedSelect: React.FunctionComponent<ISpeedSelectProps> = ({
     updateGasData();
   }, []);
 
-  return (
+  return !error ? (
     <Group position="apart" align="center" {...props}>
-      <Stack spacing={0} className={cn(isSpeedsLoading && styles.animatePulse)}>
+      <Stack spacing={0}>
         <Group spacing={0}>
           <EthSvg style={{ width: 11 }} />
-          <Text size="sm" sx={{ lineHeight: '12px' }} ml={1} weight={'bold'}>
-            {!isGasLoading && speeds[value].values
-              ? (
+          {!isGasLoading && speeds[value].values ? (
+            <>
+              <Text
+                size="sm"
+                sx={{ lineHeight: '12px' }}
+                ml={1}
+                weight={'bold'}
+                className={cn(isSpeedsLoading && styles.animatePulse)}
+              >
+                {(
                   (gas * speeds[value].values!.maxFeePerGas) /
                   Math.pow(10, 9)
-                ).toFixed(5)
-              : '...'}
-          </Text>
-          <Text
-            size="sm"
-            sx={{ lineHeight: '12px' }}
-            ml={4}
-            type="secondary"
-            weight={'bold'}
-          >
-            ~
-            {!isGasLoading && speeds[value].values
-              ? speeds[value].values!.maxWaitTime
-              : '...'}{' '}
-            sec
-          </Text>
+                ).toFixed(5)}
+              </Text>
+              <Text
+                size="sm"
+                sx={{ lineHeight: '12px' }}
+                ml={4}
+                type="secondary"
+                weight={'bold'}
+              >
+                {`~${speeds[value].values!.maxWaitTime} sec`}
+              </Text>
+            </>
+          ) : (
+            <>
+              <Text size="sm">Fetching</Text>
+              <Loader ml={4} size={12} color="#fff" />
+            </>
+          )}
         </Group>
         <Text size="sm" ml={3} sx={{ lineHeight: '12px' }} type="secondary">
           Estimated Gas Fee
@@ -209,6 +210,8 @@ const SpeedSelect: React.FunctionComponent<ISpeedSelectProps> = ({
         </Group>
       </Menu>
     </Group>
+  ) : (
+    <></>
   );
 };
 
