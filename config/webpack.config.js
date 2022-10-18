@@ -18,12 +18,14 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const ExtensionReloaderPlugin = require('@voyage-finance/webpack-ext-reloader');
 const TsConfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
+const SentryPlugin = require('@sentry/webpack-plugin');
 
 const getCSSModuleLocalIdent = require('react-dev-utils/getCSSModuleLocalIdent');
 const paths = require('./paths');
 const modules = require('./modules');
 const getClientEnvironment = require('./env');
 const createEnvironmentHash = require('./webpack/persistentCache/createEnvironmentHash');
+const { appPath } = require('./paths');
 
 // Source maps are resource heavy and can cause out of memory issue for large source files.
 const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
@@ -77,11 +79,6 @@ module.exports = function (webpackEnv) {
   const isEnvDevelopment = webpackEnv === 'development';
   const isEnvProduction = webpackEnv === 'production';
   const injectReactDevTools = process.env.REACT_DEV_TOOLS === 'true';
-
-  // Variable used for enabling profiling in Production
-  // passed into alias object. Uses a flag if passed into the build command
-  const isEnvProductionProfile =
-    isEnvProduction && process.argv.includes('--profile');
 
   // We will provide `paths.publicUrlOrPath` to our app
   // as %PUBLIC_URL% in `index.html` and `process.env.PUBLIC_URL` in JavaScript.
@@ -176,7 +173,7 @@ module.exports = function (webpackEnv) {
     mode: isEnvProduction ? 'production' : isEnvDevelopment && 'development',
     // Stop compilation early in production
     bail: isEnvProduction,
-    devtool: isEnvDevelopment && 'cheap-module-source-map',
+    devtool: 'cheap-module-source-map',
     entry: {
       ui: [
         require.resolve('globalthis/auto'),
@@ -615,6 +612,14 @@ module.exports = function (webpackEnv) {
         Buffer: [require.resolve('buffer/'), 'Buffer'],
         process: require.resolve('process/browser'),
       }),
+      isEnvProduction &&
+        new SentryPlugin({
+          authToken: process.env.SENTRY_AUTH_TOKEN,
+          org: 'voyage-finance-49',
+          project: process.env.SENTRY_PROJECT,
+          include: path.resolve(appPath, 'dist'),
+          release: process.env.SENTRY_RELEASE,
+        }),
     ].filter(Boolean),
     // Turn off performance processing because we utilize
     // our own hints via the FileSizeReporter

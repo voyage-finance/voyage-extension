@@ -15,6 +15,7 @@ Sentry.init({
   dsn: process.env.SENTRY_DSN,
   integrations: [new BrowserTracing()],
   tracesSampleRate: process.env.NODE_ENV === 'production' ? 0.2 : 1.0,
+  release: process.env.SENTRY_RELEASE,
 });
 
 const bgPort = chrome.runtime.connect({ name: 'voyage-contentscript' });

@@ -21,15 +21,22 @@ jobs:
         run: yarn install
       - name: Generate types
         run: yarn gentypes
-      - name: Build
-        run: yarn build:${{matrix.configuration}}
+      - name: Setup env context
+        run: |
+          export SHORT_SHA=$(git rev-parse --short HEAD)
+          echo "SHORT_SHA=${SHORT_SHA}" >> $GITHUB_ENV
+          echo "SENTRY_RELEASE=${{matrix.configuration}}_${SHORT_SHA}" >> $GITHUB_ENV
+          echo "SENTRY_PROJECT=voyage-extension-${{matrix.configuration}}" >> $GITHUB_ENV
       - name: Set zip name
         id: filename
         run: |
-          export SHORT_SHA=$(git rev-parse --short HEAD)
-          echo "::set-output name=filename::voyage-extension-${{matrix.configuration}}_${SHORT_SHA}.zip"
+          echo "::set-output name=filename::voyage-extension-${{matrix.configuration}}_${{env.SHORT_SHA}}.zip"
+      - name: Build
+        env:
+          SENTRY_AUTH_TOKEN: ${{secrets.SENTRY_AUTH_TOKEN}}
+        run: yarn build:${{matrix.configuration}}
       - name: Zip
-        run: zip -r ${{steps.filename.outputs.filename}} dist
+        run: zip -r ${{steps.filename.outputs.filename}} dist -x *.map*
       - name: Upload
         uses: adityak74/google-drive-upload-git-action@main
         with:

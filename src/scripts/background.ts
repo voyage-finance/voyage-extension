@@ -8,6 +8,7 @@ import { setupMultiplex } from '../utils';
 Sentry.init({
   dsn: process.env.SENTRY_DSN,
   tracesSampleRate: process.env.NODE_ENV === 'production' ? 0.2 : 1.0,
+  release: process.env.SENTRY_RELEASE,
 });
 
 async function bootstrapSW() {
