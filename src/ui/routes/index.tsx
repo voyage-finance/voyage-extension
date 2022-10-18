@@ -11,7 +11,6 @@ import SignTermsStep from '@containers/Onboard/SignTermsState';
 import PurchaseCart from '@containers/PurchaseCart';
 import PurchaseConfirmed from '@containers/PurchaseConfirmed';
 import Settings from '@containers/Settings';
-import SwitchNetwork from '@containers/SwitchNetwork';
 import DirectTopUp from '@containers/TopUp/DirectTopUp';
 import SelectTopUpMethod from '@containers/TopUp/SelectTopUpMethod';
 import AwaitDeposit from '@containers/VaultDeploy/AwaitDeposit';
@@ -19,7 +18,6 @@ import VaultDeployed from '@containers/VaultDeploy/Deployed';
 import SelectDepositMethod from '@containers/VaultDeploy/SelectDepositMethod';
 import { useAppSelector } from '@hooks/useRedux';
 import useVoyageController from '@hooks/useVoyageController';
-import { networks } from '@utils/chain';
 import {
   APPROVAL_ROUTE,
   DEFAULT_ROUTE,
@@ -137,10 +135,6 @@ const Router: React.FC = () => {
         <Route path="/home" element={<Home />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/collections" element={<CollectionsPage />} />
-        <Route
-          path="/settings/network"
-          element={<SwitchNetwork networks={networks} />}
-        />
         <Route path="/loans" element={<LoanListPage />} />
         <Route path="/loans/:id" element={<LoanItemPage />} />
         <Route path="/connect" element={<Connect />} />
