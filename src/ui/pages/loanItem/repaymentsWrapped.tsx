@@ -10,6 +10,7 @@ import { constants, ethers } from 'ethers';
 import * as React from 'react';
 import { config } from '@utils/env';
 import { ILoan } from 'types';
+import { useTotalBalance } from '@hooks/useTotalBalance';
 
 const RepaymentsWrapped: React.FunctionComponent<{
   loan: ILoan;
@@ -29,6 +30,8 @@ const RepaymentsWrapped: React.FunctionComponent<{
   isLoading,
 }) => {
   const vaultAddress = useAppSelector((state) => state.core.vaultAddress);
+  const [balance, balanceLoading] = useTotalBalance(vaultAddress);
+  const sufficientBalance = payment ? balance.gte(payment) : false;
   const [txs, setTxs] = React.useState<string[]>([]);
   const [isSendingTx, setIsSendingTx] = React.useState(false);
   const [isMining, setIsMining] = React.useState(false);
@@ -106,8 +109,13 @@ const RepaymentsWrapped: React.FunctionComponent<{
           <Button
             fullWidth
             onClick={handleRepayClick}
-            loading={isSendingTx || isMining || isLoading}
-            disabled={paidTimes == nper || isRepayFreezed || liquidated}
+            loading={isSendingTx || isMining || isLoading || balanceLoading}
+            disabled={
+              paidTimes == nper ||
+              isRepayFreezed ||
+              liquidated ||
+              !sufficientBalance
+            }
           >
             {liquidated ? (
               'Defaulted'
