@@ -40,6 +40,14 @@ const Input: React.FC<IProps> = ({ width, liveValidation, ...props }) => {
         rightSection: {
           right: 12.5,
         },
+        error: {
+          textAlign: 'center',
+          color: '#F4501B',
+        },
+        invalid: {
+          color: '#F4501B',
+          borderColor: '#F4501B',
+        },
         ...props.styles,
       })}
     />

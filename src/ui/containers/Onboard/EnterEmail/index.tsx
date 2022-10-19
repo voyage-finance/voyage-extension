@@ -25,7 +25,9 @@ const EnterEmailStep: React.FC = () => {
     },
     validate: yupResolver(
       Yup.object().shape({
-        email: Yup.string().email('Invalid email').required('Email required'),
+        email: Yup.string()
+          .email('Enter a valid email address.')
+          .required('Email required'),
       })
     ),
   });
