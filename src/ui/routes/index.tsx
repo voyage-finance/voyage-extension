@@ -42,6 +42,7 @@ import { LoadingOverlay } from '@mantine/core';
 import LoanListPage from 'ui/pages/loans';
 import LoanItemPage from 'ui/pages/loanItem';
 import CollectionsPage from 'ui/pages/collections';
+import SendPage from 'ui/pages/send';
 
 const Router: React.FC = () => {
   const location = useLocation();
@@ -139,6 +140,7 @@ const Router: React.FC = () => {
         <Route path="/loans/:id" element={<LoanItemPage />} />
         <Route path="/connect" element={<Connect />} />
         <Route path="/connections" element={<Connections />} />
+        <Route path="/send" element={<SendPage />} />
         <Route path="/approval/:approvalId" element={<Approval />} />
         <Route path={PURCHASE_OVERVIEW_ROUTE} element={<Onboard />}>
           <Route path=":txId" element={<PurchaseCart />} />
