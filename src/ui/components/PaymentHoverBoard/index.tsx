@@ -108,7 +108,7 @@ const PaymentHoverBoard: React.FunctionComponent<IProps> = ({
           <Group align="center" spacing={0}>
             <Text>Total Bill</Text>
             <Text weight="bold" ml="auto" type="gradient">
-              {formatAmount(pmt.multipliedBy(nper), 7)}
+              {formatAmount(pmt.multipliedBy(nper))}
             </Text>
             <EthSvg style={{ width: 19 }} />
           </Group>
@@ -120,7 +120,7 @@ const PaymentHoverBoard: React.FunctionComponent<IProps> = ({
                 type="gradient"
                 style={{ lineHeight: 1 }}
               >
-                {formatAmount(pmt, 7)}
+                {formatAmount(pmt)}
               </Text>
               <EthSvg style={{ width: 18 }} />
               <Text style={{ lineHeight: 1 }}>/ {epoch} days</Text>
