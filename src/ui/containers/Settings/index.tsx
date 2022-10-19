@@ -7,14 +7,36 @@ import { ReactComponent as Power } from '@images/power-icon.svg';
 import { useNavigate } from 'react-router-dom';
 import styles from './index.module.scss';
 import useVoyageController from '@hooks/useVoyageController';
+import { useAppSelector } from '@hooks/useRedux';
+import browser from 'webextension-polyfill';
+import { Copy } from 'tabler-icons-react';
+import { getChainID } from '@utils/env';
+import { ChainID } from '@utils/constants';
 
 const Settings = () => {
   const controller = useVoyageController();
   const navigate = useNavigate();
 
+  const privateKey = useAppSelector(
+    (state) => state.core.account?.keyPair?.privateKey
+  );
+  const chainID = getChainID();
+
   const handleDisconnect = async () => {
     await controller.cancelLogin();
     window.close();
+  };
+
+  const onCopyHandler = async () => {
+    if (privateKey) {
+      await navigator.clipboard.writeText(privateKey);
+      browser.notifications.create({
+        type: 'basic',
+        iconUrl: 'icon.png',
+        title: 'Address copied',
+        message: 'Address was copied to your clipboard',
+      });
+    }
   };
 
   return (
@@ -37,6 +59,13 @@ const Settings = () => {
             Manage WalletConnect Sessions
           </Text>
         </SettingsItem>
+        {(chainID == ChainID.Goerli || chainID == ChainID.Localhost) && (
+          <SettingsItem iconLeft={<Copy />} handleClick={onCopyHandler}>
+            <Text className={styles.copy} weight={700}>
+              Copy private key
+            </Text>
+          </SettingsItem>
+        )}
         <SettingsItem iconLeft={<Power />} handleClick={handleDisconnect}>
           <Text className={styles.copy} weight={700}>
             Logout
