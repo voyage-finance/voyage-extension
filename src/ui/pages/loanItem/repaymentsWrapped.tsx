@@ -11,6 +11,7 @@ import * as React from 'react';
 import { config } from '@utils/env';
 import { ILoan } from 'types';
 import { useTotalBalance } from '@hooks/useTotalBalance';
+import { useNavigate } from 'react-router-dom';
 
 const RepaymentsWrapped: React.FunctionComponent<{
   loan: ILoan;
@@ -30,6 +31,7 @@ const RepaymentsWrapped: React.FunctionComponent<{
   isLoading,
 }) => {
   const vaultAddress = useAppSelector((state) => state.core.vaultAddress);
+  const navigate = useNavigate();
   const [balance, balanceLoading] = useTotalBalance(vaultAddress);
   const sufficientBalance = payment ? balance.gte(payment) : false;
   const [txs, setTxs] = React.useState<string[]>([]);
@@ -99,13 +101,29 @@ const RepaymentsWrapped: React.FunctionComponent<{
         borrowAt={borrowAt}
         liquidated={liquidated}
       />
-      {errorMessage && (
-        <Text type="danger" align="center" lineClamp={4}>
-          {errorMessage}
-        </Text>
-      )}
       {
-        <Box mt={24}>
+        <Box mt={12}>
+          {errorMessage && (
+            <Text type="danger" align="center" lineClamp={4}>
+              {errorMessage}
+            </Text>
+          )}
+          {!sufficientBalance && (
+            <Text type="danger" align="center">
+              <strong>Insufficient balance.</strong>
+              <br />
+              Please top up{' '}
+              <Box
+                component="span"
+                sx={{ ':hover': { cursor: 'pointer' } }}
+                onClick={() => navigate('/vault/topup/method')}
+              >
+                <ins>
+                  <strong>here</strong>
+                </ins>
+              </Box>
+            </Text>
+          )}
           <Button
             fullWidth
             onClick={handleRepayClick}
@@ -116,6 +134,7 @@ const RepaymentsWrapped: React.FunctionComponent<{
               liquidated ||
               !sufficientBalance
             }
+            mt={12}
           >
             {liquidated ? (
               'Defaulted'
