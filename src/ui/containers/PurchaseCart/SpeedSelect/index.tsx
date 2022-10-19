@@ -2,7 +2,7 @@ import Text from '@components/Text';
 import { Box, BoxProps, Group, Loader, Menu, Stack } from '@mantine/core';
 import * as React from 'react';
 import { ChevronDown } from 'tabler-icons-react';
-import { ReactComponent as CheckOrangeSvg } from 'assets/img/check-orange.svg';
+import { ReactComponent as CheckOrangeSvg } from 'assets/img/check-circle-orange.svg';
 import { ReactComponent as EthSvg } from 'assets/img/eth-icon.svg';
 import useVoyageController from '@hooks/useVoyageController';
 import { useAppSelector } from '@hooks/useRedux';
