@@ -1,10 +1,9 @@
 import NftSelector from '@components/moleculas/NftSelector';
 import { Stack, TextInput } from '@mantine/core';
-import { useForm, yupResolver } from '@mantine/form';
+import { useForm } from '@mantine/form';
 import * as React from 'react';
 import { CollectionAsset } from 'types';
 import styles from './index.module.scss';
-import * as Yup from 'yup';
 import Button from '@components/Button';
 import { ethers } from 'ethers';
 import { useAppSelector } from '@hooks/useRedux';
@@ -12,6 +11,7 @@ import { config } from '@utils/env';
 import Text from '@components/Text';
 import { GsnTxState } from 'types/transaction';
 import TxStatusText from '@components/atoms/TxStatusText';
+import { checkAddressChecksum } from 'ethereum-checksum-address';
 
 const NFTForm: React.FunctionComponent = () => {
   const vaultAddress = useAppSelector((state) => state.core.vaultAddress);
@@ -25,11 +25,17 @@ const NFTForm: React.FunctionComponent = () => {
     initialValues: {
       address: '',
     },
-    validate: yupResolver(
-      Yup.object().shape({
-        address: Yup.string().required('Recipiant address required'),
-      })
-    ),
+    validate: {
+      address: (value) => {
+        if (value) {
+          if (checkAddressChecksum(value)) {
+            return null;
+          }
+          return 'Invalid address checksum';
+        }
+        return 'Recipiant address required';
+      },
+    },
   });
 
   const resetForm = () => {

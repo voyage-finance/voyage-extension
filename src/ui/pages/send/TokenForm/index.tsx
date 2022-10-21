@@ -1,8 +1,7 @@
 import { Group, Stack, TextInput } from '@mantine/core';
-import { useForm, yupResolver } from '@mantine/form';
+import { useForm } from '@mantine/form';
 import * as React from 'react';
 import styles from './index.module.scss';
-import * as Yup from 'yup';
 import Button from '@components/Button';
 import CurrencySelector, {
   TOKEN,
@@ -18,6 +17,7 @@ import { config, getChainID } from '@utils/env';
 import { ethers } from 'ethers';
 import { GsnTxState } from 'types/transaction';
 import TxStatusText from '@components/atoms/TxStatusText';
+import { checkAddressChecksum } from 'ethereum-checksum-address';
 
 const TokenForm: React.FunctionComponent = () => {
   const vaultAddress = useAppSelector((state) => state.core.vaultAddress);
@@ -59,11 +59,15 @@ const TokenForm: React.FunctionComponent = () => {
 
         return null;
       },
-      ...yupResolver(
-        Yup.object().shape({
-          address: Yup.string().required('Recipiant address required'),
-        })
-      ),
+      address: (value) => {
+        if (value) {
+          if (checkAddressChecksum(value)) {
+            return null;
+          }
+          return 'Invalid address checksum';
+        }
+        return 'Recipiant address required';
+      },
     },
   });
 
