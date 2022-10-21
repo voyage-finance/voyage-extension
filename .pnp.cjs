@@ -71,6 +71,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@typechain/ethers-v5", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:10.1.0"],\
             ["@types/auth0-js", "npm:9.14.6"],\
             ["@types/chrome", "npm:0.0.180"],\
+            ["@types/ethereum-checksum-address", "npm:0.0.0"],\
             ["@types/jest", "npm:27.4.1"],\
             ["@types/lodash", "npm:4.14.182"],\
             ["@types/node", "npm:16.11.27"],\
@@ -123,6 +124,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["eslint-config-react-app", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:7.0.1"],\
             ["eslint-webpack-plugin", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:3.1.1"],\
             ["eth-rpc-errors", "npm:4.0.3"],\
+            ["ethereum-checksum-address", "npm:0.0.8"],\
             ["ethers", "npm:5.6.9"],\
             ["events", "npm:3.3.0"],\
             ["extension-port-stream", "npm:2.0.1"],\
@@ -8371,6 +8373,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["@types/ethereum-checksum-address", [\
+        ["npm:0.0.0", {\
+          "packageLocation": "./.yarn/cache/@types-ethereum-checksum-address-npm-0.0.0-f927b2b944-1fd0fce580.zip/node_modules/@types/ethereum-checksum-address/",\
+          "packageDependencies": [\
+            ["@types/ethereum-checksum-address", "npm:0.0.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["@types/express", [\
         ["npm:4.17.13", {\
           "packageLocation": "./.yarn/cache/@types-express-npm-4.17.13-0e12fe9c24-12a2a0e6c4.zip/node_modules/@types/express/",\
@@ -12262,6 +12273,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["quick-lru", "npm:4.0.1"]\
           ],\
           "linkType": "HARD"\
+        }],\
+        ["npm:7.0.2", {\
+          "packageLocation": "./.yarn/cache/camelcase-keys-npm-7.0.2-36fbc5a8f7-b5821cc48d.zip/node_modules/camelcase-keys/",\
+          "packageDependencies": [\
+            ["camelcase-keys", "npm:7.0.2"],\
+            ["camelcase", "npm:6.3.0"],\
+            ["map-obj", "npm:4.3.0"],\
+            ["quick-lru", "npm:5.1.1"],\
+            ["type-fest", "npm:1.4.0"]\
+          ],\
+          "linkType": "HARD"\
         }]\
       ]],\
       ["caniuse-api", [\
@@ -14014,6 +14036,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["decamelize", "npm:1.2.0"]\
           ],\
           "linkType": "HARD"\
+        }],\
+        ["npm:5.0.1", {\
+          "packageLocation": "./.yarn/cache/decamelize-npm-5.0.1-2fde8c926c-7c3b1ed4b3.zip/node_modules/decamelize/",\
+          "packageDependencies": [\
+            ["decamelize", "npm:5.0.1"]\
+          ],\
+          "linkType": "HARD"\
         }]\
       ]],\
       ["decamelize-keys", [\
@@ -15758,6 +15787,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["ethereum-bloom-filters", "npm:1.0.10"],\
             ["js-sha3", "npm:0.8.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["ethereum-checksum-address", [\
+        ["npm:0.0.8", {\
+          "packageLocation": "./.yarn/cache/ethereum-checksum-address-npm-0.0.8-479b638427-209585cac2.zip/node_modules/ethereum-checksum-address/",\
+          "packageDependencies": [\
+            ["ethereum-checksum-address", "npm:0.0.8"],\
+            ["keccak", "npm:3.0.2"],\
+            ["meow", "npm:10.1.5"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -18178,6 +18218,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/indent-string-npm-4.0.0-7b717435b2-824cfb9929.zip/node_modules/indent-string/",\
           "packageDependencies": [\
             ["indent-string", "npm:4.0.0"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:5.0.0", {\
+          "packageLocation": "./.yarn/cache/indent-string-npm-5.0.0-35eaa3b052-e466c27b63.zip/node_modules/indent-string/",\
+          "packageDependencies": [\
+            ["indent-string", "npm:5.0.0"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -20688,6 +20735,25 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["meow", [\
+        ["npm:10.1.5", {\
+          "packageLocation": "./.yarn/cache/meow-npm-10.1.5-a1bab640d1-dd5f0caa4a.zip/node_modules/meow/",\
+          "packageDependencies": [\
+            ["meow", "npm:10.1.5"],\
+            ["@types/minimist", "npm:1.2.2"],\
+            ["camelcase-keys", "npm:7.0.2"],\
+            ["decamelize", "npm:5.0.1"],\
+            ["decamelize-keys", "npm:1.1.0"],\
+            ["hard-rejection", "npm:2.1.0"],\
+            ["minimist-options", "npm:4.1.0"],\
+            ["normalize-package-data", "npm:3.0.3"],\
+            ["read-pkg-up", "npm:8.0.0"],\
+            ["redent", "npm:4.0.0"],\
+            ["trim-newlines", "npm:4.0.2"],\
+            ["type-fest", "npm:1.4.0"],\
+            ["yargs-parser", "npm:20.2.9"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
         ["npm:8.1.2", {\
           "packageLocation": "./.yarn/cache/meow-npm-8.1.2-bcfe48d4f3-bc23bf1b44.zip/node_modules/meow/",\
           "packageDependencies": [\
@@ -25015,6 +25081,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["type-fest", "npm:0.6.0"]\
           ],\
           "linkType": "HARD"\
+        }],\
+        ["npm:6.0.0", {\
+          "packageLocation": "./.yarn/cache/read-pkg-npm-6.0.0-d89ce14684-0cebdff381.zip/node_modules/read-pkg/",\
+          "packageDependencies": [\
+            ["read-pkg", "npm:6.0.0"],\
+            ["@types/normalize-package-data", "npm:2.4.1"],\
+            ["normalize-package-data", "npm:3.0.3"],\
+            ["parse-json", "npm:5.2.0"],\
+            ["type-fest", "npm:1.4.0"]\
+          ],\
+          "linkType": "HARD"\
         }]\
       ]],\
       ["read-pkg-up", [\
@@ -25025,6 +25102,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["find-up", "npm:4.1.0"],\
             ["read-pkg", "npm:5.2.0"],\
             ["type-fest", "npm:0.8.1"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:8.0.0", {\
+          "packageLocation": "./.yarn/cache/read-pkg-up-npm-8.0.0-6f39941cc9-fe4c804016.zip/node_modules/read-pkg-up/",\
+          "packageDependencies": [\
+            ["read-pkg-up", "npm:8.0.0"],\
+            ["find-up", "npm:5.0.0"],\
+            ["read-pkg", "npm:6.0.0"],\
+            ["type-fest", "npm:1.4.0"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -25126,6 +25213,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["redent", "npm:3.0.0"],\
             ["indent-string", "npm:4.0.0"],\
             ["strip-indent", "npm:3.0.0"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:4.0.0", {\
+          "packageLocation": "./.yarn/cache/redent-npm-4.0.0-67da39f156-6944e7b1d8.zip/node_modules/redent/",\
+          "packageDependencies": [\
+            ["redent", "npm:4.0.0"],\
+            ["indent-string", "npm:5.0.0"],\
+            ["strip-indent", "npm:4.0.0"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -27082,6 +27178,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["min-indent", "npm:1.0.1"]\
           ],\
           "linkType": "HARD"\
+        }],\
+        ["npm:4.0.0", {\
+          "packageLocation": "./.yarn/cache/strip-indent-npm-4.0.0-12c489be86-06cbcd93da.zip/node_modules/strip-indent/",\
+          "packageDependencies": [\
+            ["strip-indent", "npm:4.0.0"],\
+            ["min-indent", "npm:1.0.1"]\
+          ],\
+          "linkType": "HARD"\
         }]\
       ]],\
       ["strip-json-comments", [\
@@ -27769,6 +27873,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["trim-newlines", "npm:3.0.1"]\
           ],\
           "linkType": "HARD"\
+        }],\
+        ["npm:4.0.2", {\
+          "packageLocation": "./.yarn/cache/trim-newlines-npm-4.0.2-e01f9adaf9-1eef206eb7.zip/node_modules/trim-newlines/",\
+          "packageDependencies": [\
+            ["trim-newlines", "npm:4.0.2"]\
+          ],\
+          "linkType": "HARD"\
         }]\
       ]],\
       ["triple-beam", [\
@@ -28114,6 +28225,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/type-fest-npm-0.8.1-351ad028fe-d61c4b2eba.zip/node_modules/type-fest/",\
           "packageDependencies": [\
             ["type-fest", "npm:0.8.1"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:1.4.0", {\
+          "packageLocation": "./.yarn/cache/type-fest-npm-1.4.0-7dd848962a-b011c33886.zip/node_modules/type-fest/",\
+          "packageDependencies": [\
+            ["type-fest", "npm:1.4.0"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -28838,6 +28956,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@typechain/ethers-v5", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:10.1.0"],\
             ["@types/auth0-js", "npm:9.14.6"],\
             ["@types/chrome", "npm:0.0.180"],\
+            ["@types/ethereum-checksum-address", "npm:0.0.0"],\
             ["@types/jest", "npm:27.4.1"],\
             ["@types/lodash", "npm:4.14.182"],\
             ["@types/node", "npm:16.11.27"],\
@@ -28890,6 +29009,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["eslint-config-react-app", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:7.0.1"],\
             ["eslint-webpack-plugin", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:3.1.1"],\
             ["eth-rpc-errors", "npm:4.0.3"],\
+            ["ethereum-checksum-address", "npm:0.0.8"],\
             ["ethers", "npm:5.6.9"],\
             ["events", "npm:3.3.0"],\
             ["extension-port-stream", "npm:2.0.1"],\
