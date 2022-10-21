@@ -395,7 +395,7 @@ const PurchaseCart: React.FC = () => {
           </Button>
         ) : transaction.status === TransactionStatus.Pending ? (
           <Button fullWidth disabled mt={24} kind="secondary" loading>
-            Mining
+            Processing
           </Button>
         ) : (
           // unreachable state

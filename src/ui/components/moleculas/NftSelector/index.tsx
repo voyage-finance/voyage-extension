@@ -62,7 +62,7 @@ const NftSelector: React.FunctionComponent<{
           />
           <Stack spacing={0} ml={8}>
             <Text weight="bold">
-              {value ? value.name || `#${value.tokenId}` : 'Select Your NFT'}
+              {value ? value.name || `#${value.tokenId}` : 'Select NFT'}
             </Text>
             <Text type="secondary" size="sm">
               {value ? value.collection.name : '–'}

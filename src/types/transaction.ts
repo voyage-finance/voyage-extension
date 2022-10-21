@@ -11,6 +11,13 @@ export enum TransactionStatus {
   Rejected, // rejected by user
 }
 
+export enum GsnTxState {
+  Started,
+  Initialized,
+  Mined,
+  Error,
+}
+
 export interface Transaction {
   id: string; // randomly generated id
   hash?: string;
