@@ -10,13 +10,16 @@ import { ethers } from 'ethers';
 import { useAppSelector } from '@hooks/useRedux';
 import { config } from '@utils/env';
 import Text from '@components/Text';
+import { GsnTxState } from 'types/transaction';
+import TxStatusText from '@components/atoms/TxStatusText';
 
 const NFTForm: React.FunctionComponent = () => {
   const vaultAddress = useAppSelector((state) => state.core.vaultAddress);
-  const [isSendingTx, setIsSendingTx] = React.useState(false);
-  const [isMining, setIsMining] = React.useState(false);
+  const [txState, setTxState] = React.useState<GsnTxState>();
+  const [txHash, setTxHash] = React.useState('');
   const [errorMessage, setErrorMessage] = React.useState('');
   const web3Provider = new ethers.providers.Web3Provider(provider);
+  const [selectedNft, setSelectedNft] = React.useState<CollectionAsset>();
 
   const form = useForm({
     initialValues: {
@@ -29,10 +32,15 @@ const NFTForm: React.FunctionComponent = () => {
     ),
   });
 
-  const [selectedNft, setSelectedNft] = React.useState<CollectionAsset>();
+  const resetForm = () => {
+    form.setFieldValue('address', '');
+    setSelectedNft(undefined);
+  };
+
   const handleFormSubmit = async () => {
-    setIsSendingTx(true);
-    if (selectedNft != undefined)
+    if (selectedNft != undefined) {
+      setTxState(GsnTxState.Started);
+      setTxHash('');
       try {
         const txHash = await controller.withdrawNFT(
           vaultAddress!,
@@ -42,21 +50,26 @@ const NFTForm: React.FunctionComponent = () => {
         );
         console.log('txHash', txHash);
 
-        setIsSendingTx(false);
-        setIsMining(true);
+        setTxState(GsnTxState.Initialized);
+        setTxHash(txHash);
         await web3Provider.waitForTransaction(txHash, config.numConfirmations);
+        setTxState(GsnTxState.Mined);
+        resetForm();
       } catch (e: any) {
+        setTxState(GsnTxState.Error);
         setErrorMessage(e.message);
         console.error(e.message);
-      } finally {
-        setIsSendingTx(false);
-        setIsMining(false);
       }
+    }
   };
+
+  React.useEffect(() => {
+    setErrorMessage('');
+  }, [form.values, selectedNft]);
 
   return (
     <form onSubmit={form.onSubmit(handleFormSubmit)}>
-      <Stack>
+      <Stack pb={60}>
         <NftSelector value={selectedNft} onChange={setSelectedNft} />
         <TextInput
           placeholder="Enter recipient address"
@@ -69,13 +82,22 @@ const NFTForm: React.FunctionComponent = () => {
             {errorMessage}
           </Text>
         )}
+        {txState && txHash ? (
+          <TxStatusText txHash={txHash} txState={txState} />
+        ) : undefined}
         <Button
           fullWidth
           mt={12}
-          loading={isSendingTx || isMining}
+          loading={
+            txState == GsnTxState.Started || txState == GsnTxState.Initialized
+          }
           type="submit"
         >
-          {isMining ? 'Processing' : isSendingTx ? 'Sending' : 'Send'}
+          {txState == GsnTxState.Initialized
+            ? 'Processing'
+            : txState == GsnTxState.Started
+            ? 'Sending'
+            : 'Send'}
         </Button>
       </Stack>
     </form>
