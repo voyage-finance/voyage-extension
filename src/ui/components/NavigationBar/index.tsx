@@ -25,7 +25,7 @@ const items: NavigationItem[] = [
     iconActive: DiscoverActiveIconSrc,
   },
   {
-    path: '/send',
+    path: '/collections',
     icon: SwordIconSrc,
     iconActive: SwordActiveIconSrc,
   },
