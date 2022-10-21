@@ -1,17 +1,24 @@
 .title {
-    font-size: 32px;
-    line-height: 38px;
-    font-weight: 700;
-    color: white;
+  font-size: 32px;
+  line-height: 38px;
+  font-weight: 700;
+  color: white;
 }
 
 .md {
-    font-size: 24px;
-    line-height: 28px;
+  font-size: 24px;
+  line-height: 28px;
 }
 
 .line {
-    flex-grow: 1;
-    height: 1.5px;
-    background: rgba(255, 255, 255, 0.35);
+  flex-grow: 1;
+  height: 1.5px;
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.closeBtn {
+  display: flex;
+  &:hover {
+    cursor: pointer;
+  }
 }

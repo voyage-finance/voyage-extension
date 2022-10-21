@@ -124,13 +124,24 @@ const TopUpCard: React.FunctionComponent = () => {
           </Text>
         </Stack>
         <Stack spacing={10}>
-          <Button
-            className={styles.topUpButton}
-            component="button"
-            onClick={() => navigate('/vault/topup/method')}
-          >
-            Top-Up
-          </Button>
+          <Group spacing={6}>
+            <Button
+              className={styles.topUpButton}
+              component="button"
+              onClick={() => navigate('/vault/topup/method')}
+              px={8}
+            >
+              Deposit
+            </Button>
+            <Button
+              className={styles.topUpButton}
+              component="button"
+              onClick={() => navigate('/send')}
+              px={8}
+            >
+              Send
+            </Button>
+          </Group>
           {(!ethBalance.isZero() || lastWrappedHash) && (
             <Button
               className={styles.wrapButton}
