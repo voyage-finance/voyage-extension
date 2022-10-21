@@ -245,6 +245,150 @@
       {
         "indexed": false,
         "internalType": "address",
+        "name": "src",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "dst",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes4",
+        "name": "sig",
+        "type": "bytes4"
+      }
+    ],
+    "name": "PermissionGranted",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "src",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "dst",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes4",
+        "name": "sig",
+        "type": "bytes4"
+      }
+    ],
+    "name": "PermissionRevoked",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint8",
+        "name": "role",
+        "type": "uint8"
+      },
+      {
+        "indexed": false,
+        "internalType": "bool",
+        "name": "enabled",
+        "type": "bool"
+      }
+    ],
+    "name": "RoleGranted",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint8",
+        "name": "role",
+        "type": "uint8"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "target",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes4",
+        "name": "sig",
+        "type": "bytes4"
+      }
+    ],
+    "name": "RolePermissionGranted",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint8",
+        "name": "role",
+        "type": "uint8"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "target",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes4",
+        "name": "sig",
+        "type": "bytes4"
+      }
+    ],
+    "name": "RolePermissionRevoked",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint8",
+        "name": "role",
+        "type": "uint8"
+      }
+    ],
+    "name": "RoleRevoked",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
         "name": "account",
         "type": "address"
       }
@@ -914,30 +1058,6 @@
         "type": "address"
       },
       {
-        "internalType": "address",
-        "name": "_currency",
-        "type": "address"
-      }
-    ],
-    "name": "utilizationRate",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_collection",
-        "type": "address"
-      },
-      {
         "internalType": "enum Tranche",
         "name": "_tranche",
         "type": "uint8"
@@ -970,11 +1090,6 @@
   },
   {
     "inputs": [],
-    "name": "InsufficientCreditLimit",
-    "type": "error"
-  },
-  {
-    "inputs": [],
     "name": "InsufficientJuniorLiquidity",
     "type": "error"
   },
@@ -985,12 +1100,7 @@
   },
   {
     "inputs": [],
-    "name": "InsufficientMaxCreditLimit",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "InsufficientVaultBalance",
+    "name": "InsufficientVaultETHBalance",
     "type": "error"
   },
   {
@@ -1031,17 +1141,6 @@
   {
     "inputs": [],
     "name": "LiquidateStaleTwap",
-    "type": "error"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "name": "PRBMathUD60x18__LogInputTooSmall",
     "type": "error"
   },
   {
@@ -1269,7 +1368,7 @@
     ],
     "name": "buyNow",
     "outputs": [],
-    "stateMutability": "nonpayable",
+    "stateMutability": "payable",
     "type": "function"
   },
   {
@@ -1462,7 +1561,7 @@
             "type": "tuple"
           }
         ],
-        "internalType": "struct LoanFacet.PreviewBuyNowParams",
+        "internalType": "struct PreviewBuyNowParams",
         "name": "",
         "type": "tuple"
       }
@@ -1865,6 +1964,29 @@
         "type": "address"
       },
       {
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "transferETH",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_vault",
+        "type": "address"
+      },
+      {
         "internalType": "uint256",
         "name": "_vaule",
         "type": "uint256"
@@ -1901,6 +2023,11 @@
         "type": "address"
       },
       {
+        "internalType": "address",
+        "name": "_to",
+        "type": "address"
+      },
+      {
         "internalType": "uint256",
         "name": "_tokenId",
         "type": "uint256"
@@ -1926,7 +2053,7 @@
     ],
     "name": "wrapVaultETH",
     "outputs": [],
-    "stateMutability": "nonpayable",
+    "stateMutability": "payable",
     "type": "function"
   },
   {
@@ -1972,6 +2099,11 @@
   {
     "inputs": [],
     "name": "InvalidOptimalRatio",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "ReserveNotInitialized",
     "type": "error"
   },
   {
@@ -2202,6 +2334,24 @@
       }
     ],
     "name": "setIncomeRatio",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_reserve",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_interestRateStrategyAddress",
+        "type": "address"
+      }
+    ],
+    "name": "setInterestRateStrategyAddress",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
