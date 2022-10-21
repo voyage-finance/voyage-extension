@@ -141,7 +141,7 @@ const RepaymentsWrapped: React.FunctionComponent<{
             ) : paidTimes == nper ? (
               'Payment Complete'
             ) : isMining ? (
-              'Mining'
+              'Processing'
             ) : isSendingTx ? (
               'Repaying'
             ) : (

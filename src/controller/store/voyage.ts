@@ -15,6 +15,7 @@ import { storage } from 'webextension-polyfill';
 import BigNumber from 'bignumber.js';
 import browser from 'webextension-polyfill';
 import { config } from '@utils/env';
+import { ETHERS_DECIMALS } from '@utils/bn';
 
 class VoyageStore {
   root: ControllerStore;
@@ -64,6 +65,9 @@ class VoyageStore {
       approveMarketplaceAddress: this.approveMarketplaceAddress.bind(this),
       repay: this.repay.bind(this),
       isCollectionSupported: this.isCollectionSupported.bind(this),
+      transferCurrency: this.transferCurrency.bind(this),
+      transferETH: this.transferETH.bind(this),
+      withdrawNFT: this.withdrawNFT.bind(this),
     };
   }
 
@@ -180,6 +184,86 @@ class VoyageStore {
       data
     );
     return this.root.gsnStore.relayTransaction(txRequest);
+  }
+
+  async transferCurrency(
+    vault: string,
+    currency: string,
+    to: string,
+    amount: string
+  ) {
+    try {
+      console.log('transferCurrency params', {
+        vault,
+        currency,
+        to,
+        amount: new BigNumber(amount).shiftedBy(ETHERS_DECIMALS).toString(),
+      });
+
+      const txRequest = await this.voyage.populateTransaction.transferCurrency(
+        vault,
+        currency,
+        to,
+        new BigNumber(amount).shiftedBy(ETHERS_DECIMALS).toString()
+      );
+
+      const tx = await this.root.gsnStore.relayTransaction(txRequest);
+      return tx.hash;
+    } catch (e: any) {
+      console.error('[transferCurrency]', e);
+      throw new Error(e.message);
+    }
+  }
+
+  async transferETH(vault: string, to: string, amount: string) {
+    try {
+      console.log('transferETH params', {
+        vault,
+        to,
+        amount: new BigNumber(amount).shiftedBy(ETHERS_DECIMALS).toString(),
+      });
+
+      const txRequest = await this.voyage.populateTransaction.transferETH(
+        vault,
+        to,
+        new BigNumber(amount).shiftedBy(ETHERS_DECIMALS).toString()
+      );
+
+      const tx = await this.root.gsnStore.relayTransaction(txRequest);
+      return tx.hash;
+    } catch (e: any) {
+      console.error('[transferETH]', e);
+      throw new Error(e.message);
+    }
+  }
+
+  async withdrawNFT(
+    vault: string,
+    collection: string,
+    tokenId: string,
+    to: string
+  ) {
+    try {
+      console.log('withdrawNFT params', {
+        vault,
+        collection,
+        to,
+        tokenId,
+      });
+
+      const txRequest = await this.voyage.populateTransaction.withdrawNFT(
+        vault,
+        collection,
+        to,
+        tokenId
+      );
+
+      const tx = await this.root.gsnStore.relayTransaction(txRequest);
+      return tx.hash;
+    } catch (e: any) {
+      console.error('[withdrawNFT]', e);
+      throw new Error(e.message);
+    }
   }
 
   async approveMarketplaceAddress(address: string) {
