@@ -50,6 +50,7 @@ class WalletConnectStore {
     return {
       approveApprovalRequest: this.approveApprovalRequest.bind(this),
       rejectApprovalRequest: this.rejectApprovalRequest.bind(this),
+      getConnectionByUri: this.getConnectionByUri.bind(this),
     };
   }
 
@@ -74,6 +75,12 @@ class WalletConnectStore {
 
   getConnection = (id: string) => {
     return this.connections[id];
+  };
+
+  getConnectionByUri = (uri: string) => {
+    return Object.keys(this.connections).find(
+      (key) => this.connections[key].uri === uri
+    );
   };
 
   private handleDisconnect = (connection: WalletConnect) => {

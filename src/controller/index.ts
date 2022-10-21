@@ -118,6 +118,14 @@ export class VoyageController extends SafeEventEmitter {
   };
 
   connectWithWC = async (uri: string) => {
+    // check for existing connection
+    const existingSessionId =
+      this.store.walletConnectStore.getConnectionByUri(uri);
+
+    if (existingSessionId) {
+      await this.disconnectWC(existingSessionId);
+    }
+
     const connector = new WalletConnect({
       uri,
       clientMeta: {
