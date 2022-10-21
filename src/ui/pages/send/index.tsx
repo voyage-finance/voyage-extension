@@ -15,7 +15,7 @@ const SendPage: React.FunctionComponent = () => {
   return (
     <div className={styles.wrapper}>
       <Stack className={styles.root}>
-        <TitleWithLine>Send</TitleWithLine>
+        <TitleWithLine showClose>Send</TitleWithLine>
         <SegmentedControl
           data={[
             { label: TransferType.TOKEN, value: TransferType.TOKEN },
