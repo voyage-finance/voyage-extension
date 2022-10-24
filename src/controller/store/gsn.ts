@@ -16,25 +16,27 @@ import ControllerStore from './root';
 
 export class GsnStore {
   root: ControllerStore;
-  gsnProvider: RelayProvider;
+  gsnProvider?: RelayProvider;
   ethersProvider!: ethers.providers.Web3Provider;
   initialized: Promise<void>;
 
   constructor(root: ControllerStore) {
     this.root = root;
-    console.log('HttpProvider', HttpProvider);
+    this.initialized = this.init();
+  }
+
+  init = async () => {
     const logger = createClientLogger({ logLevel: 'info' });
     const httpClient = new HttpClient(
       new HttpWrapper({ adapter: fetchAdapter }),
       logger
     );
     const config: Partial<GSNConfig> = {
-      paymasterAddress: conf.paymaster, // do not remove toLowerCase, as this breaks `RelayClient`
+      paymasterAddress: await this.root.voyageStore.getPaymasterAddr(), // do not remove toLowerCase, as this breaks `RelayClient`
       auditorsCount: 0,
       preferredRelays: [conf.voyageApiUrl],
     };
 
-    console.log('---- [GsnStore] endpoint----', process.env.ALCHEMY_RPC_URL);
     // bug in http provider typings. just cast it and forget about this.
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
@@ -47,19 +49,20 @@ export class GsnStore {
         httpClient,
       },
     });
-    this.initialized = this.init();
-  }
-
-  init = async () => {
     await this.gsnProvider.init();
     console.log('------- gsnProvider.init()-----');
     this.ethersProvider = new ethers.providers.Web3Provider(this.gsnProvider);
   };
 
   async addAccount(privKey: string) {
-    await this.gsnProvider.relayClient.initializingPromise;
-    this.gsnProvider.addAccount(privKey);
-    console.log('[gsn] added account');
+    await this.initialized;
+    if (this.gsnProvider) {
+      await this.gsnProvider.relayClient.initializingPromise;
+      this.gsnProvider.addAccount(privKey);
+      console.log('[gsn] added account');
+    } else {
+      console.error('gsnProvider not initialized to addAccount');
+    }
   }
 
   relayTransaction = (transaction: TransactionRequest) => {
@@ -72,6 +75,10 @@ export class GsnStore {
     data: string,
     userAddress: string
   ): Promise<RelayTransactionRequest> {
+    await this.initialized;
+    if (!this.gsnProvider) {
+      throw new Error('gsnProvider not initialized to createRelayHttpRequest');
+    }
     console.log('------ createRelayHttpRequest --------');
     const pingRequest = await fetch(`${process.env.VOYAGE_API_URL}/getAddr`);
     const pingResponseBody = await pingRequest.json();
