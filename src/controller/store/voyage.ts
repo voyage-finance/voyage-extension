@@ -64,6 +64,7 @@ class VoyageStore {
       approveMarketplaceAddress: this.approveMarketplaceAddress.bind(this),
       repay: this.repay.bind(this),
       isCollectionSupported: this.isCollectionSupported.bind(this),
+      getPaymasterAddr: this.getPaymasterAddr.bind(this),
     };
   }
 
@@ -102,6 +103,12 @@ class VoyageStore {
         (value) => value.toLowerCase() == colleciton.toLowerCase()
       ) > -1
     );
+  }
+
+  async getPaymasterAddr() {
+    const paymasterAddress = await this.voyage.getPaymasterAddr();
+    console.log('paymasterAddress', paymasterAddress);
+    return paymasterAddress.toLowerCase();
   }
 
   async computeCounterfactualAddress() {
