@@ -69,6 +69,9 @@ class VoyageStore {
       transferCurrency: this.transferCurrency.bind(this),
       transferETH: this.transferETH.bind(this),
       withdrawNFT: this.withdrawNFT.bind(this),
+      populateTransferCurrency: this.populateTransferCurrency.bind(this),
+      populateTransferETH: this.populateTransferETH.bind(this),
+      populateWithdrawNft: this.populateWithdrawNft.bind(this),
     };
   }
 
@@ -317,6 +320,44 @@ class VoyageStore {
     );
   }
 
+  async populateWithdrawNft(
+    _vault: string,
+    _collection: string,
+    _tokenId: string,
+    _to: string
+  ) {
+    console.log('populateWithdrawNft params', {
+      _vault,
+      _collection,
+      _tokenId,
+      _to,
+    });
+
+    return this.voyage.populateTransaction.withdrawNFT(
+      _vault,
+      _collection,
+      _to,
+      _tokenId
+    );
+  }
+
+  async populateTransferETH(_vault: string, _to: string, _amount: string) {
+    return this.voyage.populateTransaction.transferETH(_vault, _to, _amount);
+  }
+
+  async populateTransferCurrency(
+    _vault: string,
+    _currency: string,
+    _to: string,
+    _amount: string
+  ) {
+    return this.voyage.populateTransaction.transferCurrency(
+      _vault,
+      _currency,
+      _to,
+      _amount
+    );
+  }
   getBalance(address: string) {
     return this.root.provider.getBalance(address);
   }

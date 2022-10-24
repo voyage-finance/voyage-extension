@@ -19,7 +19,7 @@ import { GsnTxState } from 'types/transaction';
 import TxStatusText from '@components/atoms/TxStatusText';
 import { checkAddressChecksum } from 'ethereum-checksum-address';
 
-const TokenForm: React.FunctionComponent<{
+const WithdrawNftSpeedSelector: React.FunctionComponent<{
   onSent: (
     token: TOKEN,
     recipient: string,
@@ -197,4 +197,4 @@ const TokenForm: React.FunctionComponent<{
   );
 };
 
-export default TokenForm;
+export default WithdrawNftSpeedSelector;

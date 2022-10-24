@@ -10,7 +10,6 @@ import SpeedSelect from '@components/moleculas/SpeedSelect';
 interface ISpeedSelectProps extends Omit<BoxProps<'div'>, 'onChange'> {
   value: TxSpeed;
   vault?: string;
-  user?: string;
   onChange: (opt: TxSpeed) => void;
 }
 

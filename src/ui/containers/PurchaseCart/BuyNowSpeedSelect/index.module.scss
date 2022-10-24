@@ -1,9 +1,0 @@
-@keyframes pulseAnimation {
-    0%   { opacity:1; }
-    50%  { opacity:0.5; }
-    100% { opacity:1; }
-}
-
-.animatePulse {
-    animation: pulseAnimation 1.5s infinite;
-}
