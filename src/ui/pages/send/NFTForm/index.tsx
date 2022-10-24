@@ -2,7 +2,7 @@ import NftSelector from '@components/moleculas/NftSelector';
 import { Stack, TextInput } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import * as React from 'react';
-import { CollectionAsset } from 'types';
+import { CollectionAsset, TxSpeed } from 'types';
 import styles from './index.module.scss';
 import Button from '@components/Button';
 import { ethers } from 'ethers';
@@ -12,6 +12,7 @@ import Text from '@components/Text';
 import { GsnTxState } from 'types/transaction';
 import TxStatusText from '@components/atoms/TxStatusText';
 import { checkAddressChecksum } from 'ethereum-checksum-address';
+import WithdrawNftSpeedSelector from './WithdrawNftSpeedSelector';
 
 const NFTForm: React.FunctionComponent<{
   onSent: (value: CollectionAsset, recipient: string, txHash: string) => void;
@@ -22,6 +23,8 @@ const NFTForm: React.FunctionComponent<{
   const [errorMessage, setErrorMessage] = React.useState('');
   const web3Provider = new ethers.providers.Web3Provider(provider);
   const [selectedNft, setSelectedNft] = React.useState<CollectionAsset>();
+  const [speed, setSpeed] = React.useState(TxSpeed.FAST);
+  const [firstNft, setFirstNft] = React.useState<CollectionAsset>();
 
   const form = useForm({
     initialValues: {
@@ -79,13 +82,27 @@ const NFTForm: React.FunctionComponent<{
   return (
     <form onSubmit={form.onSubmit(handleFormSubmit)}>
       <Stack pb={60}>
-        <NftSelector value={selectedNft} onChange={setSelectedNft} />
+        <NftSelector
+          value={selectedNft}
+          onChange={setSelectedNft}
+          onListFetched={(values) => {
+            if (values.length > 0) setFirstNft(values[0]);
+          }}
+        />
         <TextInput
           placeholder="Enter recipient address"
           className={styles.addressInput}
           size="md"
           {...form.getInputProps('address')}
         />
+        {firstNft && (
+          <WithdrawNftSpeedSelector
+            value={speed}
+            onChange={setSpeed}
+            defaultNft={firstNft}
+            vault={vaultAddress}
+          />
+        )}
         <Button
           fullWidth
           mt={12}

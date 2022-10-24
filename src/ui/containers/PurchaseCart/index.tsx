@@ -53,7 +53,6 @@ const PurchaseCart: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState('');
 
   const vaultAddress = useAppSelector((state) => state.core.vaultAddress);
-  const userAddress = useAppSelector((state) => state.core.account?.address);
   const [balance, balanceLoading] = useTotalBalance(vaultAddress);
 
   const controller = useVoyageController();
@@ -385,7 +384,6 @@ const PurchaseCart: React.FC = () => {
                 onChange={setSpeed}
                 mt={12}
                 vault={vaultAddress}
-                user={userAddress}
               />
             )}
           </>

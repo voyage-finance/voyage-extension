@@ -18,7 +18,8 @@ import { CollectionAsset } from 'types';
 const NftSelector: React.FunctionComponent<{
   value?: CollectionAsset;
   onChange: (value: CollectionAsset) => void;
-}> = ({ value, onChange }) => {
+  onListFetched: (assets: CollectionAsset[]) => void;
+}> = ({ value, onChange, onListFetched }) => {
   const [assets, isLoading] = useFetchMyAssets();
   const [searchText, setSearchText] = React.useState('');
 
@@ -37,6 +38,10 @@ const NftSelector: React.FunctionComponent<{
       )
     );
   }, [assets, searchText]);
+
+  React.useEffect(() => {
+    onListFetched(assets.filter((asset) => asset.closed));
+  }, [assets]);
 
   return (
     <Menu
