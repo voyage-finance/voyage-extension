@@ -8,11 +8,13 @@ import { useNavigate } from 'react-router-dom';
 interface IProps extends GroupProps {
   size?: 'lg' | 'md';
   showClose?: boolean;
+  onClose?: () => void;
 }
 
 const TitleWithLine: React.FunctionComponent<IProps> = ({
   size = 'lg',
   showClose,
+  onClose,
   ...props
 }) => {
   const navigate = useNavigate();
@@ -23,7 +25,12 @@ const TitleWithLine: React.FunctionComponent<IProps> = ({
       </Title>
       <span className={styles.line} />
       {showClose && (
-        <div onClick={() => navigate(-1)} className={styles.closeBtn}>
+        <div
+          onClick={() => {
+            onClose ? onClose() : navigate(-1);
+          }}
+          className={styles.closeBtn}
+        >
           <X />
         </div>
       )}

@@ -13,7 +13,9 @@ import { GsnTxState } from 'types/transaction';
 import TxStatusText from '@components/atoms/TxStatusText';
 import { checkAddressChecksum } from 'ethereum-checksum-address';
 
-const NFTForm: React.FunctionComponent = () => {
+const NFTForm: React.FunctionComponent<{
+  onSent: (value: CollectionAsset, recipient: string, txHash: string) => void;
+}> = ({ onSent }) => {
   const vaultAddress = useAppSelector((state) => state.core.vaultAddress);
   const [txState, setTxState] = React.useState<GsnTxState>();
   const [txHash, setTxHash] = React.useState('');
@@ -61,6 +63,7 @@ const NFTForm: React.FunctionComponent = () => {
         await web3Provider.waitForTransaction(txHash, config.numConfirmations);
         setTxState(GsnTxState.Mined);
         resetForm();
+        onSent(selectedNft, form.values.address, txHash);
       } catch (e: any) {
         setTxState(GsnTxState.Error);
         setErrorMessage(e.message);
@@ -83,14 +86,6 @@ const NFTForm: React.FunctionComponent = () => {
           size="md"
           {...form.getInputProps('address')}
         />
-        {errorMessage && (
-          <Text type="danger" mt={12} align="center" lineClamp={4}>
-            {errorMessage}
-          </Text>
-        )}
-        {txState && txHash ? (
-          <TxStatusText txHash={txHash} txState={txState} />
-        ) : undefined}
         <Button
           fullWidth
           mt={12}
@@ -105,6 +100,14 @@ const NFTForm: React.FunctionComponent = () => {
             ? 'Sending'
             : 'Send'}
         </Button>
+        {errorMessage && (
+          <Text type="danger" mt={12} align="center" lineClamp={4}>
+            {errorMessage}
+          </Text>
+        )}
+        {txState && txHash ? (
+          <TxStatusText txHash={txHash} txState={txState} />
+        ) : undefined}
       </Stack>
     </form>
   );
