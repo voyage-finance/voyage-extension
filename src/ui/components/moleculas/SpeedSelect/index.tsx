@@ -5,72 +5,50 @@ import { ChevronDown } from 'tabler-icons-react';
 import { ReactComponent as CheckOrangeSvg } from 'assets/img/check-circle-orange.svg';
 import { ReactComponent as EthSvg } from 'assets/img/eth-icon.svg';
 import useVoyageController from '@hooks/useVoyageController';
-import { useAppSelector } from '@hooks/useRedux';
-import { decodeMarketplaceCalldata } from '@utils/decoder';
-import { useParams } from 'react-router-dom';
 import cn from 'classnames';
 import styles from './index.module.scss';
 import { TxSpeed } from 'types';
 import { useGasSpeeds } from '@hooks/useGasSpeeds';
+import { PopulatedTransaction } from 'ethers';
+import { useAppSelector } from '@hooks/useRedux';
+import { fetchEstimatedGas } from 'api';
 
 interface ISpeedSelectProps extends Omit<BoxProps<'div'>, 'onChange'> {
   value: TxSpeed;
-  vault?: string;
-  user?: string;
+  rawTx: Promise<PopulatedTransaction>;
   onChange: (opt: TxSpeed) => void;
 }
 
 const SpeedSelect: React.FunctionComponent<ISpeedSelectProps> = ({
   value,
   onChange,
-  vault,
-  user,
+  rawTx,
   ...props
 }) => {
-  const { txId } = useParams();
   const [isGasLoading, setGasLoading] = React.useState(false);
   const [speeds, isSpeedsLoading] = useGasSpeeds();
   const [gas, setGas] = React.useState(0);
   const [error, setError] = React.useState('');
   const controller = useVoyageController();
-  const transaction = useAppSelector((state) => {
-    return state.core.transactions[txId!];
-  });
+  const userAddress = useAppSelector((state) => state.core.account?.address);
 
   const updateGasData = async () => {
-    const { marketplace, tokenId, collection, data } =
-      decodeMarketplaceCalldata(transaction.options);
     setGasLoading(true);
     try {
-      const voyageRawTx = await controller.populateBuyNow(
-        collection,
-        tokenId.toString(),
-        vault!,
-        marketplace,
-        data
-      );
+      const voyageRawTx = await rawTx;
       if (voyageRawTx.data) {
-        const estimateGasResponse = await fetch(
-          `${process.env.VOYAGE_API_URL}/estimateGas`,
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              speed: 'fast', // will be removed for next version of api
-              request: await controller.createRelayHttpRequest(
-                voyageRawTx.data,
-                user!
-              ),
-            }),
-          }
+        const estimatedGas = await fetchEstimatedGas(
+          await controller.createRelayHttpRequest(
+            voyageRawTx.data,
+            userAddress!
+          )
         );
-        const body = await estimateGasResponse.json();
-        setGas(body.gas);
+        setGas(estimatedGas);
+      } else {
+        throw new Error('missing raw tx');
       }
     } catch (e: any) {
-      console.log('[FAILED] at estimate gas', e);
+      console.error('[FAILED] at estimate gas', e);
       setError(e.message);
     }
     setGasLoading(false);

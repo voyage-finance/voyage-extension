@@ -1,3 +1,4 @@
+import { RelayTransactionRequest } from '@opengsn/common/dist/types/RelayTransactionRequest';
 import { CollectionAssets, ILoan } from 'types';
 
 export const fetchGasFees = async () => {
@@ -65,4 +66,22 @@ export const fetchAssets = async (vault: string) => {
   const assets = await loanListResponse.json();
 
   return assets as CollectionAssets;
+};
+
+export const fetchEstimatedGas = async (relayedTx: RelayTransactionRequest) => {
+  const estimateGasResponse = await fetch(
+    `${process.env.VOYAGE_API_URL}/estimateGas`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        speed: 'fast', // will be removed for next version of api
+        request: relayedTx,
+      }),
+    }
+  );
+  const body = await estimateGasResponse.json();
+  return body.gas;
 };
