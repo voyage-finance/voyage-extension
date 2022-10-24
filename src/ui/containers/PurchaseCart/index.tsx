@@ -39,7 +39,7 @@ import { useBeforeunload } from 'react-beforeunload';
 import { useNavigate, useParams } from 'react-router-dom';
 import { TxSpeed } from 'types';
 import { PreviewErrorType, TransactionStatus } from 'types/transaction';
-import SpeedSelect from './SpeedSelect';
+import SpeedSelect from './BuyNowSpeedSelect';
 
 const PurchaseCart: React.FC = () => {
   const { txId } = useParams();
