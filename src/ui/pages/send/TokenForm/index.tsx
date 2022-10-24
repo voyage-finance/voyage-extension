@@ -19,7 +19,14 @@ import { GsnTxState } from 'types/transaction';
 import TxStatusText from '@components/atoms/TxStatusText';
 import { checkAddressChecksum } from 'ethereum-checksum-address';
 
-const TokenForm: React.FunctionComponent = () => {
+const TokenForm: React.FunctionComponent<{
+  onSent: (
+    token: TOKEN,
+    recipient: string,
+    amount: string,
+    txHash: string
+  ) => void;
+}> = ({ onSent }) => {
   const vaultAddress = useAppSelector((state) => state.core.vaultAddress);
   const [ethBalance] = useEthBalance(vaultAddress, true);
   const [wethBalance] = useWEthBalance(vaultAddress!, true);
@@ -99,6 +106,7 @@ const TokenForm: React.FunctionComponent = () => {
         setTxHash(txHash);
         await web3Provider.waitForTransaction(txHash, config.numConfirmations);
         setTxState(GsnTxState.Mined);
+        onSent(selectedToken, form.values.address, form.values.amount, txHash);
         resetForm();
       } catch (e: any) {
         setTxState(GsnTxState.Error);
@@ -164,14 +172,6 @@ const TokenForm: React.FunctionComponent = () => {
           }}
           {...form.getInputProps('amount')}
         />
-        {errorMessage && (
-          <Text type="danger" mt={12} align="center" lineClamp={4}>
-            {errorMessage}
-          </Text>
-        )}
-        {txState && txHash ? (
-          <TxStatusText txHash={txHash} txState={txState} />
-        ) : undefined}
         <Button
           fullWidth
           mt={12}
@@ -180,12 +180,18 @@ const TokenForm: React.FunctionComponent = () => {
           }
           type="submit"
         >
-          {txState == GsnTxState.Initialized
-            ? 'Processing'
-            : txState == GsnTxState.Started
+          {txState == GsnTxState.Initialized || txState == GsnTxState.Started
             ? 'Sending'
             : 'Send'}
         </Button>
+        {errorMessage && (
+          <Text type="danger" mt={12} align="center" lineClamp={4}>
+            {errorMessage}
+          </Text>
+        )}
+        {txState && txHash ? (
+          <TxStatusText txHash={txHash} txState={txState} />
+        ) : undefined}
       </Stack>
     </form>
   );
