@@ -17,7 +17,7 @@ const NftSuccessForm: React.FC<{
   recipient: string;
 }> = ({ nft, recipient }) => {
   return (
-    <Stack pb={60}>
+    <Stack>
       <Group
         py={6}
         px={8}
@@ -60,7 +60,7 @@ const TokenSuccessForm: React.FC<{
   amount: string;
 }> = ({ token, recipient, amount }) => {
   return (
-    <Stack pb={60}>
+    <Stack>
       <Group
         py={6}
         px={8}
@@ -126,7 +126,7 @@ const SuccessForm: React.FunctionComponent<{
       >
         View Send Txn <ArrowUpRight size={16} />
       </Button>
-      <Button fullWidth mt={12} onClick={onClose}>
+      <Button fullWidth kind="secondary" mt={12} onClick={onClose}>
         Close
       </Button>
     </Stack>

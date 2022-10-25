@@ -111,7 +111,7 @@ const NftSelector: React.FunctionComponent<{
       />
       <Group direction="column" spacing={6} pt={45}>
         <LoadingOverlay visible={isLoading} />
-        {assets.length == 0 && !isLoading && (
+        {filteredAssets.length == 0 && !isLoading && (
           <Text my="auto" align="center" mt={12}>
             You do not hold any NFTs.
           </Text>
