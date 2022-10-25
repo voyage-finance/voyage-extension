@@ -18,6 +18,8 @@ import { ethers } from 'ethers';
 import { GsnTxState } from 'types/transaction';
 import TxStatusText from '@components/atoms/TxStatusText';
 import { checkAddressChecksum } from 'ethereum-checksum-address';
+import TransferSpeedSelector from './TransferSpeedSelector';
+import { TxSpeed } from 'types';
 
 const WithdrawNftSpeedSelector: React.FunctionComponent<{
   onSent: (
@@ -31,6 +33,7 @@ const WithdrawNftSpeedSelector: React.FunctionComponent<{
   const [ethBalance] = useEthBalance(vaultAddress, true);
   const [wethBalance] = useWEthBalance(vaultAddress!, true);
   const [selectedToken, setSelectedToken] = React.useState<TOKEN>();
+  const [speed, setSpeed] = React.useState(TxSpeed.FAST);
 
   const [txState, setTxState] = React.useState<GsnTxState>();
   const [txHash, setTxHash] = React.useState('');
@@ -172,6 +175,15 @@ const WithdrawNftSpeedSelector: React.FunctionComponent<{
           }}
           {...form.getInputProps('amount')}
         />
+        {selectedToken != undefined && (
+          <TransferSpeedSelector
+            value={speed}
+            onChange={setSpeed}
+            vault={vaultAddress}
+            type={selectedToken}
+            key={selectedToken}
+          />
+        )}
         <Button
           fullWidth
           mt={12}

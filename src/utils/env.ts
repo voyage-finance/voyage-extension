@@ -54,7 +54,7 @@ export const resolveConfiguration = (): VoyageExtensionConfig => {
   const chainId = parseInt(process.env.CHAIN_ID ?? '5', 10);
   return {
     chainId,
-    debug: process.env.VOYAGE_ENV === 'true',
+    debug: process.env.VOYAGE_DEBUG === 'true',
     alchemyRpcUrl:
       process.env.ALCHEMY_RPC_URL ??
       'https://eth-goerli.g.alchemy.com/v2/IG5Is2xWE1WkB-h0cN1NX58xw_74WEZj',
