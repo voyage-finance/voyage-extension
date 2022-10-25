@@ -15,7 +15,6 @@ import { storage } from 'webextension-polyfill';
 import BigNumber from 'bignumber.js';
 import browser from 'webextension-polyfill';
 import { config } from '@utils/env';
-import { ETHERS_DECIMALS } from '@utils/bn';
 
 class VoyageStore {
   root: ControllerStore;
@@ -203,18 +202,11 @@ class VoyageStore {
     amount: string
   ) {
     try {
-      console.log('transferCurrency params', {
-        vault,
-        currency,
-        to,
-        amount: new BigNumber(amount).shiftedBy(ETHERS_DECIMALS).toString(),
-      });
-
       const txRequest = await this.voyage.populateTransaction.transferCurrency(
         vault,
         currency,
         to,
-        new BigNumber(amount).shiftedBy(ETHERS_DECIMALS).toString()
+        ethers.utils.parseEther(amount)
       );
 
       const tx = await this.root.gsnStore.relayTransaction(txRequest);
@@ -227,16 +219,10 @@ class VoyageStore {
 
   async transferETH(vault: string, to: string, amount: string) {
     try {
-      console.log('transferETH params', {
-        vault,
-        to,
-        amount: new BigNumber(amount).shiftedBy(ETHERS_DECIMALS).toString(),
-      });
-
       const txRequest = await this.voyage.populateTransaction.transferETH(
         vault,
         to,
-        new BigNumber(amount).shiftedBy(ETHERS_DECIMALS).toString()
+        ethers.utils.parseEther(amount)
       );
 
       const tx = await this.root.gsnStore.relayTransaction(txRequest);
