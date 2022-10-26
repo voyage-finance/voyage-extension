@@ -27,6 +27,7 @@
     "@ramp-network/ramp-instant-sdk": "^3.2.3",
     "@reduxjs/toolkit": "^1.8.1",
     "@sentry/browser": "^7.14.2",
+    "@sentry/integrations": "^7.16.0",
     "@sentry/react": "^7.14.2",
     "@sentry/tracing": "^7.14.2",
     "@svgr/webpack": "^5.5.0",

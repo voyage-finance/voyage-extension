@@ -59,6 +59,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@ramp-network/ramp-instant-sdk", "npm:3.2.3"],\
             ["@reduxjs/toolkit", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:1.8.1"],\
             ["@sentry/browser", "npm:7.14.2"],\
+            ["@sentry/integrations", "npm:7.16.0"],\
             ["@sentry/react", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:7.14.2"],\
             ["@sentry/tracing", "npm:7.14.2"],\
             ["@sentry/webpack-plugin", "npm:1.19.1"],\
@@ -7338,6 +7339,19 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["@sentry/integrations", [\
+        ["npm:7.16.0", {\
+          "packageLocation": "./.yarn/cache/@sentry-integrations-npm-7.16.0-ad3af1332a-968b6a8f46.zip/node_modules/@sentry/integrations/",\
+          "packageDependencies": [\
+            ["@sentry/integrations", "npm:7.16.0"],\
+            ["@sentry/types", "npm:7.16.0"],\
+            ["@sentry/utils", "npm:7.16.0"],\
+            ["localforage", "npm:1.10.0"],\
+            ["tslib", "npm:1.14.1"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["@sentry/react", [\
         ["npm:7.14.2", {\
           "packageLocation": "./.yarn/cache/@sentry-react-npm-7.14.2-4a87612983-a787830cce.zip/node_modules/@sentry/react/",\
@@ -7385,6 +7399,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@sentry/types", "npm:7.14.2"]\
           ],\
           "linkType": "HARD"\
+        }],\
+        ["npm:7.16.0", {\
+          "packageLocation": "./.yarn/cache/@sentry-types-npm-7.16.0-93e3ea1850-5474085db1.zip/node_modules/@sentry/types/",\
+          "packageDependencies": [\
+            ["@sentry/types", "npm:7.16.0"]\
+          ],\
+          "linkType": "HARD"\
         }]\
       ]],\
       ["@sentry/utils", [\
@@ -7393,6 +7414,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@sentry/utils", "npm:7.14.2"],\
             ["@sentry/types", "npm:7.14.2"],\
+            ["tslib", "npm:1.14.1"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:7.16.0", {\
+          "packageLocation": "./.yarn/cache/@sentry-utils-npm-7.16.0-c349cf44fe-decff9f82e.zip/node_modules/@sentry/utils/",\
+          "packageDependencies": [\
+            ["@sentry/utils", "npm:7.16.0"],\
+            ["@sentry/types", "npm:7.16.0"],\
             ["tslib", "npm:1.14.1"]\
           ],\
           "linkType": "HARD"\
@@ -20226,6 +20256,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["lie", [\
+        ["npm:3.1.1", {\
+          "packageLocation": "./.yarn/cache/lie-npm-3.1.1-91350720d9-6da9f2121d.zip/node_modules/lie/",\
+          "packageDependencies": [\
+            ["lie", "npm:3.1.1"],\
+            ["immediate", "npm:3.0.6"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
         ["npm:3.3.0", {\
           "packageLocation": "./.yarn/cache/lie-npm-3.3.0-35ddd11a4d-33102302cf.zip/node_modules/lie/",\
           "packageDependencies": [\
@@ -20329,6 +20367,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/loader-utils-npm-3.2.0-02250d00d7-c7b9a8dc4b.zip/node_modules/loader-utils/",\
           "packageDependencies": [\
             ["loader-utils", "npm:3.2.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["localforage", [\
+        ["npm:1.10.0", {\
+          "packageLocation": "./.yarn/cache/localforage-npm-1.10.0-cf9ea9a436-f2978b434d.zip/node_modules/localforage/",\
+          "packageDependencies": [\
+            ["localforage", "npm:1.10.0"],\
+            ["lie", "npm:3.1.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -28944,6 +28992,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@ramp-network/ramp-instant-sdk", "npm:3.2.3"],\
             ["@reduxjs/toolkit", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:1.8.1"],\
             ["@sentry/browser", "npm:7.14.2"],\
+            ["@sentry/integrations", "npm:7.16.0"],\
             ["@sentry/react", "virtual:57a3f475e73f31bd82031a77f035cf516746b55649e1ac205acaa2be32878005b562ce8c9b3b2bd1125f1e9b58ccd104c297c499963ce223e4d0334fd24836bc#npm:7.14.2"],\
             ["@sentry/tracing", "npm:7.14.2"],\
             ["@sentry/webpack-plugin", "npm:1.19.1"],\

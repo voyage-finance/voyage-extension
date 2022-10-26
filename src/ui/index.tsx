@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import * as Sentry from '@sentry/react';
 import { BrowserTracing } from '@sentry/tracing';
+import { CaptureConsole } from '@sentry/integrations';
 import { initWeb3 } from '@web3/init';
 import { initStore } from '@state/store';
 import App from './App';
@@ -9,7 +10,12 @@ import { ExtensionEnvType, getEnvironmentType } from '@utils/extension';
 
 Sentry.init({
   dsn: process.env.SENTRY_DSN,
-  integrations: [new BrowserTracing()],
+  integrations: [
+    new BrowserTracing(),
+    new CaptureConsole({
+      levels: ['error'],
+    }),
+  ],
   tracesSampleRate: process.env.NODE_ENV === 'production' ? 0.2 : 1.0,
   release: process.env.SENTRY_RELEASE,
 });
