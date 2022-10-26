@@ -1,25 +1,29 @@
+import CopyTooltip from '@components/atoms/CopyTooltip';
 import { Box, BoxProps } from '@mantine/core';
 import { ReactComponent as CopySvg } from 'assets/img/copy-icon.svg';
-import browser from 'webextension-polyfill';
+import { useState } from 'react';
 
 type IProps = BoxProps<'div'> & {
   text: string;
 };
 
 const CopyButton: React.FC<IProps> = ({ text, sx, ...props }) => {
+  const [copied, setCopied] = useState(false);
   const onClickHandler = async () => {
     await navigator.clipboard.writeText(text);
-    browser.notifications.create({
-      type: 'basic',
-      iconUrl: 'icon.png',
-      title: 'Address copied',
-      message: 'Address was copied to your clipboard',
-    });
+    setCopied(true);
   };
   return (
-    <Box sx={{ cursor: 'pointer', ...sx }} onClick={onClickHandler} {...props}>
-      <CopySvg />
-    </Box>
+    <CopyTooltip copied={copied} position="top">
+      <Box
+        sx={{ cursor: 'pointer', ...sx }}
+        onClick={onClickHandler}
+        onMouseLeave={() => setCopied(false)}
+        {...props}
+      >
+        <CopySvg />
+      </Box>
+    </CopyTooltip>
   );
 };
 
