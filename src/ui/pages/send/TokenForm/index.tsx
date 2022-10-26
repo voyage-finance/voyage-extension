@@ -32,7 +32,7 @@ const WithdrawNftSpeedSelector: React.FunctionComponent<{
   const vaultAddress = useAppSelector((state) => state.core.vaultAddress);
   const [ethBalance] = useEthBalance(vaultAddress, true);
   const [wethBalance] = useWEthBalance(vaultAddress!, true);
-  const [selectedToken, setSelectedToken] = React.useState<TOKEN>();
+  const [selectedToken, setSelectedToken] = React.useState<TOKEN>(TOKEN.WETH);
   const [speed, setSpeed] = React.useState(TxSpeed.FAST);
 
   const [txState, setTxState] = React.useState<GsnTxState>();
@@ -84,38 +84,36 @@ const WithdrawNftSpeedSelector: React.FunctionComponent<{
   const resetForm = () => {
     form.setFieldValue('address', '');
     form.setFieldValue('amount', '');
-    setSelectedToken(undefined);
+    setSelectedToken(TOKEN.WETH);
   };
 
   const handleFormSubmit = async () => {
-    if (selectedToken != undefined) {
-      setTxState(GsnTxState.Started);
-      setTxHash('');
-      try {
-        const txHash =
-          selectedToken == TOKEN.ETH
-            ? await controller.transferETH(
-                vaultAddress!,
-                form.values.address,
-                form.values.amount
-              )
-            : await controller.transferCurrency(
-                vaultAddress!,
-                WETH_ADDRESS[getChainID()],
-                form.values.address,
-                form.values.amount
-              );
-        setTxState(GsnTxState.Initialized);
-        setTxHash(txHash);
-        await web3Provider.waitForTransaction(txHash, config.numConfirmations);
-        setTxState(GsnTxState.Mined);
-        onSent(selectedToken, form.values.address, form.values.amount, txHash);
-        resetForm();
-      } catch (e: any) {
-        setTxState(GsnTxState.Error);
-        setErrorMessage(e.message);
-        console.error(e.message);
-      }
+    setTxState(GsnTxState.Started);
+    setTxHash('');
+    try {
+      const txHash =
+        selectedToken == TOKEN.ETH
+          ? await controller.transferETH(
+              vaultAddress!,
+              form.values.address,
+              form.values.amount
+            )
+          : await controller.transferCurrency(
+              vaultAddress!,
+              WETH_ADDRESS[getChainID()],
+              form.values.address,
+              form.values.amount
+            );
+      setTxState(GsnTxState.Initialized);
+      setTxHash(txHash);
+      await web3Provider.waitForTransaction(txHash, config.numConfirmations);
+      setTxState(GsnTxState.Mined);
+      onSent(selectedToken, form.values.address, form.values.amount, txHash);
+      resetForm();
+    } catch (e: any) {
+      setTxState(GsnTxState.Error);
+      setErrorMessage(e.message);
+      console.error(e.message);
     }
   };
 
@@ -127,12 +125,6 @@ const WithdrawNftSpeedSelector: React.FunctionComponent<{
     <form onSubmit={form.onSubmit(handleFormSubmit)}>
       <Stack pb={60}>
         <CurrencySelector value={selectedToken} onChange={setSelectedToken} />
-        <TextInput
-          placeholder="Enter recipient address"
-          className={styles.addressInput}
-          size="md"
-          {...form.getInputProps('address')}
-        />
         <TextInput
           placeholder="Enter amount"
           className={styles.addressInput}
@@ -174,6 +166,12 @@ const WithdrawNftSpeedSelector: React.FunctionComponent<{
             },
           }}
           {...form.getInputProps('amount')}
+        />
+        <TextInput
+          placeholder="Enter recipient address"
+          className={styles.addressInput}
+          size="md"
+          {...form.getInputProps('address')}
         />
         {selectedToken != undefined && (
           <TransferSpeedSelector
