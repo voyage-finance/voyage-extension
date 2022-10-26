@@ -12,7 +12,7 @@ import { useUsdValueOfEth } from '@hooks/useCoinPrice';
 import { formatAmount } from '@utils/bn';
 import { useFetchVaultWatcherParams } from '@hooks/useFetchVaultWatcherParams';
 import { useInterval } from '@mantine/hooks';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import RampView from './rampView';
 
 const AwaitDeposit: React.FC = () => {
@@ -30,14 +30,20 @@ const AwaitDeposit: React.FC = () => {
   const [isLoading, setIsLoading] = React.useState(false);
   const [depositedEnough, setDepositedEnough] = React.useState(false);
   const [address, setAddress] = React.useState('');
+  const navigate = useNavigate();
 
   const fetchVaultAddress = async () => {
     setIsLoading(true);
-    const address = await controller.registerVaultWatcher(
-      maxFeePerGas.toString(),
-      maxPriorityFeePerGas.toString()
-    );
-    setAddress(address || '');
+    try {
+      const address = await controller.registerVaultWatcher(
+        maxFeePerGas.toString(),
+        maxPriorityFeePerGas.toString()
+      );
+      if (!address) throw new Error("Coudn't get counterfactual vault address");
+      setAddress(address);
+    } catch (e: any) {
+      navigate('/vault/deposit/error');
+    }
     setIsLoading(false);
   };
 
