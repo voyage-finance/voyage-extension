@@ -209,7 +209,7 @@ const PurchaseCart: React.FC = () => {
         {orderPreview?.error && (
           <ErrorBox mt={20} mb={7} error={orderPreview.error} />
         )}
-        {
+        {!orderPreview?.error && !sufficientBalance && (
           <ErrorBox
             mt={20}
             mb={7}
@@ -218,7 +218,7 @@ const PurchaseCart: React.FC = () => {
               message: 'INSUFFICIENT_BALANCE',
             }}
           />
-        }
+        )}
         <Group mt={15} noWrap>
           {!isLoading ? (
             <Image
