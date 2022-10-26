@@ -7,6 +7,9 @@ import { useNavigate } from 'react-router-dom';
 import { RampInstantSDK } from '@ramp-network/ramp-instant-sdk';
 import { useAppSelector } from '@hooks/useRedux';
 import { initRamp } from '@utils/ramp';
+import { ChevronLeft } from 'tabler-icons-react';
+import SettingsItem from '@components/SettingsItem';
+import styles from './index.module.scss';
 
 const SelectTopUpMethod: React.FC = () => {
   const navigate = useNavigate();
@@ -28,13 +31,11 @@ const SelectTopUpMethod: React.FC = () => {
   }, [vaultAddress]);
 
   return (
-    <Box p={24}>
-      <Card
-        style={{
-          margin: 'auto',
-          padding: '28px',
-        }}
-      >
+    <Box p={24} className={styles.wrapper}>
+      <SettingsItem iconLeft={<ChevronLeft />} handleClick={() => navigate(-1)}>
+        <Text weight={700}>Back</Text>
+      </SettingsItem>
+      <Card px={28} py={14} mt={8}>
         <Group direction="column" align={'center'} spacing={0}>
           <Text sx={{ fontSize: 24 }} weight={'bold'} type="gradient">
             Select TopUp Method
