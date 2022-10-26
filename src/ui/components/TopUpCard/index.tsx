@@ -116,11 +116,13 @@ const TopUpCard: React.FunctionComponent = () => {
             wETH Balance
           </Text>
           <Group spacing={1}>
-            <Text className={styles.balance}>{formatAmount(wethBalance)}</Text>
+            <Text className={styles.balance}>
+              {formatAmount(wethBalance, 3)}
+            </Text>
             <WethSvg />
           </Group>
           <Text size="sm" type="secondary">
-            ETH Balance <strong>{formatAmount(ethBalance)} ETH</strong>
+            ETH Balance <strong>{formatAmount(ethBalance, 3)} ETH</strong>
           </Text>
         </Stack>
         <Stack spacing={10}>

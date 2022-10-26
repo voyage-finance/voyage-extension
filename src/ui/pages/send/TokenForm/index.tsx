@@ -10,7 +10,7 @@ import Text from '@components/Text';
 import BigNumber from 'bignumber.js';
 import { useEthBalance } from '@hooks/useEthBalance';
 import { useWEthBalance } from '@hooks/useWEthBalance';
-import { Zero } from '@utils/bn';
+import { formatAmount, Zero } from '@utils/bn';
 import { useAppSelector } from '@hooks/useRedux';
 import { WETH_ADDRESS } from '@utils/constants';
 import { config, getChainID } from '@utils/env';
@@ -135,9 +135,9 @@ const WithdrawNftSpeedSelector: React.FunctionComponent<{
                 onClick={() =>
                   form.setFieldValue(
                     'amount',
-                    (selectedToken == TOKEN.WETH
-                      ? wethBalance
-                      : ethBalance
+                    formatAmount(
+                      selectedToken == TOKEN.WETH ? wethBalance : ethBalance,
+                      9
                     ).toString()
                   )
                 }
