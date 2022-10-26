@@ -43,6 +43,7 @@ import LoanListPage from 'ui/pages/loans';
 import LoanItemPage from 'ui/pages/loanItem';
 import CollectionsPage from 'ui/pages/collections';
 import SendPage from 'ui/pages/send';
+import VaultDeployError from '@containers/VaultDeploy/DeployError';
 
 const Router: React.FC = () => {
   const location = useLocation();
@@ -93,7 +94,7 @@ const Router: React.FC = () => {
 
   useEffect(() => {
     console.log('🚀 ~ file: index.tsx ~ line 82 ~ useEffect ~ stage', stage);
-    // navigate(`${PURCHASE_OVERVIEW_ROUTE}/1`);
+    // navigate(`/vault/deposit/await/direct`);
     // return;
     switch (stage) {
       case KeyStoreStage.WaitingConfirm:
@@ -156,6 +157,7 @@ const Router: React.FC = () => {
           <Route path="deposit/method" element={<SelectDepositMethod />} />
           <Route path="deposit/await/:method" element={<AwaitDeposit />} />
           <Route path="deposit/deployed" element={<VaultDeployed />} />
+          <Route path="deposit/error" element={<VaultDeployError />} />
         </Route>
         <Route path="/vault/">
           <Route path="topup/method" element={<SelectTopUpMethod />} />
