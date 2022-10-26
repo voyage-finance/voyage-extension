@@ -50,7 +50,8 @@ const CurrencySelector: React.FunctionComponent<{
             <Text type="secondary" size="sm">
               {value != undefined
                 ? `Balance: ${formatAmount(
-                    value == TOKEN.ETH ? ethBalance : wethBalance
+                    value == TOKEN.ETH ? ethBalance : wethBalance,
+                    3
                   )}`
                 : '–'}
             </Text>
