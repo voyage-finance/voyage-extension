@@ -24,7 +24,7 @@ const AwaitDeposit: React.FC = () => {
     maxFeePerGas,
     maxPriorityFeePerGas,
     isVaultWatcherParamsLoading,
-  ] = useFetchVaultWatcherParams();
+  ] = useFetchVaultWatcherParams(true);
 
   const [usdValue] = useUsdValueOfEth(minDeposit);
   const [isLoading, setIsLoading] = React.useState(false);

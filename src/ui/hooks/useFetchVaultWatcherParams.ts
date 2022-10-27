@@ -3,8 +3,11 @@ import { fetchGasFees, fetchVaultGas } from 'api';
 import { BigNumber, ethers } from 'ethers';
 import { useEffect, useState } from 'react';
 import { TxSpeed } from 'types';
+import { useInterval } from '@mantine/hooks';
 
-export const useFetchVaultWatcherParams = () => {
+const INTERVAL_IN_MS = 2 * 60 * 1000;
+
+export const useFetchVaultWatcherParams = (poll?: boolean) => {
   const [minAmount, setMinAmount] = useState(ethers.constants.Zero);
   const [maxFeePerGas, setMaxFeePerGas] = useState(ethers.constants.Zero);
   const [maxPriorityFeePerGas, setMaxPriorityFeePerGas] = useState(
@@ -37,8 +40,15 @@ export const useFetchVaultWatcherParams = () => {
     setLoading(false);
   };
 
+  const calculateMinInterval = useInterval(calculateMin, INTERVAL_IN_MS);
+
   useEffect(() => {
     calculateMin();
+    if (poll) calculateMinInterval.start();
+    return () => {
+      calculateMinInterval.stop();
+      calculateMin;
+    };
   }, []);
 
   return [
