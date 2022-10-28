@@ -108,7 +108,7 @@ const RepaymentsWrapped: React.FunctionComponent<{
               {errorMessage}
             </Text>
           )}
-          {!sufficientBalance && (
+          {!sufficientBalance && paidTimes != nper && !liquidated && (
             <Text type="danger" align="center">
               <strong>Insufficient balance.</strong>
               <br />
