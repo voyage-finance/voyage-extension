@@ -34,7 +34,7 @@ export const SupportedApps: { [key: number]: { [origin: string]: App } } = {
     },
     'https://looksrare.org': {
       uri: 'https://looksrare.org',
-      name: 'Looksrare testnet',
+      name: 'Looksrare',
       icon: 'https://looksrare.org/favicon-32x32.png',
     },
   },

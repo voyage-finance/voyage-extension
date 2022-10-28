@@ -38,7 +38,7 @@ const SelectTopUpMethod: React.FC = () => {
       <Card px={28} py={14} mt={8}>
         <Group direction="column" align={'center'} spacing={0}>
           <Text sx={{ fontSize: 24 }} weight={'bold'} type="gradient">
-            Select TopUp Method
+            Select Deposit Method
           </Text>
           <Text mt={31} sx={{ fontSize: 20, whiteSpace: 'nowrap' }}>
             1 / <strong>Directly Deposit ETH</strong>
