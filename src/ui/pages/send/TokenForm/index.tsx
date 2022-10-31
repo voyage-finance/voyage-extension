@@ -71,7 +71,7 @@ const WithdrawNftSpeedSelector: React.FunctionComponent<{
       },
       address: (value) => {
         if (value) {
-          if (checkAddressChecksum(value)) {
+          if (value.length > 2 && checkAddressChecksum(value)) {
             return null;
           }
           return 'Enter a valid Ethereum address.';
