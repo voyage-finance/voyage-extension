@@ -4,7 +4,8 @@ import Input from '@components/Input';
 import Text from '@components/Text';
 import useVoyageController from '@hooks/useVoyageController';
 import { ReactComponent as Voyage } from '@images/logo-menu.svg';
-import { Group } from '@mantine/core';
+import VoyageTestnet from '@images/logo-menu-testnet.png';
+import { Group, Image } from '@mantine/core';
 import { useForm, yupResolver } from '@mantine/form';
 import { encodeRedirectUri, webAuth } from '@utils/auth';
 import { config } from '@utils/env';
@@ -13,6 +14,7 @@ import * as React from 'react';
 import { useState } from 'react';
 import browser from 'webextension-polyfill';
 import * as Yup from 'yup';
+import { ChainID } from '@utils/constants';
 
 const EnterEmailStep: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -75,8 +77,14 @@ const EnterEmailStep: React.FC = () => {
     >
       <form onSubmit={form.onSubmit(onFormSubmit)}>
         <Group direction="column" align={'center'} spacing={0}>
-          <Voyage />
-          <Text mt={12}>Supercharge your collection.</Text>
+          {config.chainId == ChainID.Goerli ? (
+            <Image src={VoyageTestnet} />
+          ) : (
+            <Voyage />
+          )}
+          {config.chainId == ChainID.Mainnet && (
+            <Text mt={12}>Supercharge your collection.</Text>
+          )}
           <Input
             placeholder="Enter Yar Email"
             {...form.getInputProps('email')}
