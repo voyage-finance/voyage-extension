@@ -113,7 +113,7 @@ const NftSelector: React.FunctionComponent<{
         <LoadingOverlay visible={isLoading} />
         {filteredAssets.length == 0 && !isLoading && (
           <Text my="auto" align="center" mt={12}>
-            You do not hold any NFTs.
+            {searchText ? 'No results found.' : 'You do not hold any NFTs.'}
           </Text>
         )}
         {filteredAssets.map((asset, i) => (

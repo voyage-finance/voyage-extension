@@ -48,13 +48,13 @@ const WithdrawNftSpeedSelector: React.FunctionComponent<{
     validate: {
       amount: (value) => {
         if (!value) {
-          return 'Please input a number.';
+          return 'Enter a valid transfer amount.';
         }
 
         const num = new BigNumber(value);
 
         if (num.lte(0)) {
-          return 'Amount should be a positive number';
+          return 'Enter an amount greater than 0.';
         }
 
         const balance =
@@ -64,7 +64,7 @@ const WithdrawNftSpeedSelector: React.FunctionComponent<{
               : wethBalance
             : Zero;
         if (num.gt(balance)) {
-          return 'Insufficient balance!';
+          return 'You have insufficient balance';
         }
 
         return null;
@@ -74,9 +74,9 @@ const WithdrawNftSpeedSelector: React.FunctionComponent<{
           if (checkAddressChecksum(value)) {
             return null;
           }
-          return 'Invalid address checksum';
+          return 'Enter a valid Ethereum address.';
         }
-        return 'Recipiant address required';
+        return 'Enter recipient address.';
       },
     },
   });
