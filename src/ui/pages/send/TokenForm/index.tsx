@@ -119,6 +119,7 @@ const WithdrawNftSpeedSelector: React.FunctionComponent<{
 
   React.useEffect(() => {
     setErrorMessage('');
+    form.setErrors({});
   }, [form.values, selectedToken]);
 
   return (
