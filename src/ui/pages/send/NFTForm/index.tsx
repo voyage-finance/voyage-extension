@@ -77,6 +77,7 @@ const NFTForm: React.FunctionComponent<{
 
   React.useEffect(() => {
     setErrorMessage('');
+    form.setErrors({});
   }, [form.values]);
 
   return (
