@@ -68,9 +68,7 @@ const Home: React.FC = () => {
   return (
     <div className={styles.root}>
       <TopUpCard />
-      <TitleWithLine size="md" mt={14}>
-        Discover
-      </TitleWithLine>
+      <TitleWithLine mt={14}>Discover</TitleWithLine>
       <div className={styles.appConnector}>
         <AppConnector app={app} session={session} />
       </div>
