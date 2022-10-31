@@ -22,11 +22,10 @@ const NFTForm: React.FunctionComponent<{
   const [txHash, setTxHash] = React.useState('');
   const [errorMessage, setErrorMessage] = React.useState('');
   const web3Provider = new ethers.providers.Web3Provider(provider);
-  const [selectedNft, setSelectedNft] = React.useState<CollectionAsset>();
   const [speed, setSpeed] = React.useState(TxSpeed.FAST);
   const [firstNft, setFirstNft] = React.useState<CollectionAsset>();
 
-  const form = useForm({
+  const form = useForm<{ address: string; nft?: CollectionAsset }>({
     initialValues: {
       address: '',
     },
@@ -36,59 +35,65 @@ const NFTForm: React.FunctionComponent<{
           if (checkAddressChecksum(value)) {
             return null;
           }
-          return 'Invalid address checksum';
+          return 'Enter a valid Ethereum address.';
         }
-        return 'Recipiant address required';
+        return 'Enter recipient address.';
+      },
+      nft: (value) => {
+        if (!value) return 'Select NFT you wish to send.';
       },
     },
   });
 
   const resetForm = () => {
     form.setFieldValue('address', '');
-    setSelectedNft(undefined);
+    form.setFieldValue('nft', undefined);
   };
 
   const handleFormSubmit = async () => {
-    if (selectedNft != undefined) {
-      setTxState(GsnTxState.Started);
-      setTxHash('');
-      try {
-        const txHash = await controller.withdrawNFT(
-          vaultAddress!,
-          selectedNft.collection.id,
-          selectedNft.tokenId,
-          form.values.address
-        );
-        console.log('txHash', txHash);
+    setTxState(GsnTxState.Started);
+    setTxHash('');
+    try {
+      const txHash = await controller.withdrawNFT(
+        vaultAddress!,
+        form.values.nft!.collection.id,
+        form.values.nft!.tokenId,
+        form.values.address
+      );
+      console.log('txHash', txHash);
 
-        setTxState(GsnTxState.Initialized);
-        setTxHash(txHash);
-        await web3Provider.waitForTransaction(txHash, config.numConfirmations);
-        setTxState(GsnTxState.Mined);
-        resetForm();
-        onSent(selectedNft, form.values.address, txHash);
-      } catch (e: any) {
-        setTxState(GsnTxState.Error);
-        setErrorMessage(e.message);
-        console.error(e.message);
-      }
+      setTxState(GsnTxState.Initialized);
+      setTxHash(txHash);
+      await web3Provider.waitForTransaction(txHash, config.numConfirmations);
+      setTxState(GsnTxState.Mined);
+      resetForm();
+      onSent(form.values.nft!, form.values.address, txHash);
+    } catch (e: any) {
+      setTxState(GsnTxState.Error);
+      setErrorMessage(e.message);
+      console.error(e.message);
     }
   };
 
   React.useEffect(() => {
     setErrorMessage('');
-  }, [form.values, selectedNft]);
+  }, [form.values]);
 
   return (
     <form onSubmit={form.onSubmit(handleFormSubmit)}>
       <Stack pb={60}>
-        <NftSelector
-          value={selectedNft}
-          onChange={setSelectedNft}
-          onListFetched={(values) => {
-            if (values.length > 0) setFirstNft(values[0]);
-          }}
-        />
+        <Stack spacing={5}>
+          <NftSelector
+            value={form.values.nft}
+            onChange={(nft) => form.setFieldValue('nft', nft)}
+            onListFetched={(values) => {
+              if (values.length > 0) setFirstNft(values[0]);
+            }}
+          />
+          {form.errors.nft && (
+            <Text sx={{ color: '#fa5252' }}>{form.errors.nft}</Text>
+          )}
+        </Stack>
         <TextInput
           placeholder="Enter recipient address"
           className={styles.addressInput}
