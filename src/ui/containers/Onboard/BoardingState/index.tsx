@@ -26,6 +26,10 @@ const BoardingState: React.FC = () => {
     finishLogin();
   }, []);
 
+  const retry = () => {
+    controller.cancelLogin();
+  };
+
   return (
     <Card
       style={{
@@ -54,7 +58,7 @@ const BoardingState: React.FC = () => {
             <Text mt={16} align="center" type="danger">
               {errorMsg}
             </Text>
-            <Button mt={16} onClick={finishLogin}>
+            <Button mt={16} onClick={retry}>
               Retry
             </Button>
           </>
