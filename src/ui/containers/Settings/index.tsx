@@ -12,6 +12,7 @@ import browser from 'webextension-polyfill';
 import { Copy } from 'tabler-icons-react';
 import { getChainID } from '@utils/env';
 import { ChainID } from '@utils/constants';
+import TitleWithLine from '@components/atoms/TitleWithLine';
 
 const Settings = () => {
   const controller = useVoyageController();
@@ -42,6 +43,7 @@ const Settings = () => {
   return (
     <div className={styles.root}>
       <div className={styles.items}>
+        <TitleWithLine>Settings</TitleWithLine>
         <SettingsItem
           iconLeft={<ChevronLeft />}
           handleClick={() => navigate(-1)}

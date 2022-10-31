@@ -4,6 +4,7 @@ import { ReactComponent as LockSvg } from '@images/lock.svg';
 import { Image, LoadingOverlay, Stack } from '@mantine/core';
 import Text from '@components/Text';
 import { useFetchMyAssets } from '@hooks/useFetchMyAssets';
+import TitleWithLine from '@components/atoms/TitleWithLine';
 
 const CollectionsPage: React.FunctionComponent = () => {
   const [assets, isLoading] = useFetchMyAssets();
@@ -11,6 +12,7 @@ const CollectionsPage: React.FunctionComponent = () => {
   return (
     <div className={styles.wrapper}>
       <div className={styles.root}>
+        <TitleWithLine>Collections</TitleWithLine>
         <LoadingOverlay visible={isLoading} />
         {assets.length == 0 && (
           <Text size="sm" my="auto" align="center">
