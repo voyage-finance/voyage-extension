@@ -87,7 +87,7 @@ const PreviewErrorBox: React.FunctionComponent<IProps> = ({
               onClick={() => navigate('/vault/topup/method')}
             >
               <ins>
-                <strong>here</strong>
+                <strong>here.</strong>
               </ins>
             </Box>
           </div>

@@ -4,8 +4,8 @@ import Input from '@components/Input';
 import Text from '@components/Text';
 import useVoyageController from '@hooks/useVoyageController';
 import { ReactComponent as Voyage } from '@images/logo-menu.svg';
-import VoyageTestnet from '@images/logo-menu-testnet.png';
-import { Group, Image } from '@mantine/core';
+import { ReactComponent as VoyageStating } from '@images/voyage-logo-staging.svg';
+import { Group } from '@mantine/core';
 import { useForm, yupResolver } from '@mantine/form';
 import { encodeRedirectUri, webAuth } from '@utils/auth';
 import { config } from '@utils/env';
@@ -77,11 +77,7 @@ const EnterEmailStep: React.FC = () => {
     >
       <form onSubmit={form.onSubmit(onFormSubmit)}>
         <Group direction="column" align={'center'} spacing={0}>
-          {config.chainId == ChainID.Goerli ? (
-            <Image src={VoyageTestnet} />
-          ) : (
-            <Voyage />
-          )}
+          {config.chainId == ChainID.Goerli ? <VoyageStating /> : <Voyage />}
           {config.chainId == ChainID.Mainnet && (
             <Text mt={12}>Supercharge your collection.</Text>
           )}
