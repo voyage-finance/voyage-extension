@@ -91,7 +91,7 @@ const PaymentHoverBoard: React.FunctionComponent<IProps> = ({
             <EthSvg style={{ width: 19 }} />
           </Group>
           <Group align="center" spacing={0}>
-            <Text>Platform fee</Text>
+            <Text>Platform Fee</Text>
             <Text weight={'bold'} ml="auto">
               {formatAmount(fee.multipliedBy(nper))}
             </Text>

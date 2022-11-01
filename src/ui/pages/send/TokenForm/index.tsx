@@ -64,7 +64,7 @@ const WithdrawNftSpeedSelector: React.FunctionComponent<{
               : wethBalance
             : Zero;
         if (num.gt(balance)) {
-          return 'You have insufficient balance';
+          return 'You have insufficient balance.';
         }
 
         return null;
