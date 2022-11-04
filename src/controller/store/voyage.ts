@@ -185,13 +185,40 @@ class VoyageStore {
       data,
     });
 
-    const txRequest = await this.voyage.populateTransaction.buyNow(
+    const twap = await this.getTwap(collection);
+    const txRequest = await this.voyage.populateTransaction.buyNowV2(
       collection,
       tokenId,
       this.vaultAddress!,
       marketplace,
-      data
+      data,
+      twap
     );
+    // wait for twap.timestamp to be less than the pending block's timestamp.
+    // this mitigates random InvalidTwapTimestamp error when the twap timestamp is too fresh.
+    // failing to do this will cause estimateGas to randomly fail with InvalidTwampTimestamp.
+    const waitForValidBlock = async () => {
+      return new Promise<void>((resolve, reject) => {
+        const intervalId = setInterval(async () => {
+          try {
+            const block = await this.root.provider.getBlock('pending');
+            console.log('pending block timestamp: ', block.timestamp);
+            console.log('twap timetstamp: ', twap.timestamp);
+            console.log(
+              'is twap message valid: ',
+              block.timestamp >= twap.timestamp
+            );
+            if (block.timestamp >= twap.timestamp) {
+              clearInterval(intervalId);
+              return resolve();
+            }
+          } catch (err) {
+            reject(err);
+          }
+        }, 1000);
+      });
+    };
+    await waitForValidBlock();
     return this.root.gsnStore.relayTransaction(txRequest);
   }
 
@@ -344,6 +371,15 @@ class VoyageStore {
       _amount
     );
   }
+
+  async getTwap(collection: string) {
+    const res = await fetch(
+      `${process.env.VOYAGE_API_URL}/v2/twap/${collection}`
+    );
+    const data = await res.json();
+    return data.twap?.message;
+  }
+
   getBalance(address: string) {
     return this.root.provider.getBalance(address);
   }
