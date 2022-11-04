@@ -1,6 +1,6 @@
 import * as React from 'react';
 import VoyagePaper from '@components/Card';
-import { Group, Stack, Title } from '@mantine/core';
+import { Group, Loader, Stack, Title } from '@mantine/core';
 import { ReactComponent as LookrareIcon } from 'assets/img/looksrare-icon.svg';
 import { ReactComponent as OpenseaIcon } from 'assets/img/opensea-icon.svg';
 import PepePlacholderImg from '@images/pepe-placeholder.png';
@@ -9,6 +9,8 @@ import Text from '@components/Text';
 import { useReserves } from '@hooks/useReserves';
 import { useCollectionMetadata } from '@hooks/useCollectionMetadata';
 import { useTwap } from '@hooks/useTwap';
+import { formatAmount } from '@utils/bn';
+import BigNumber from 'bignumber.js';
 
 const CollectionCard: React.FC<{ collection: string }> = ({ collection }) => {
   const [data, loading] = useCollectionMetadata(collection);
@@ -23,7 +25,9 @@ const CollectionCard: React.FC<{ collection: string }> = ({ collection }) => {
         <Text size="lg" weight={'bold'}>
           {loading ? '...' : data?.name}
         </Text>
-        <Text size="sm">Floor: {twap || '-'} ETH</Text>
+        <Text size="sm">
+          Floor: {twap ? formatAmount(new BigNumber(twap)) : '-'} ETH
+        </Text>
       </Stack>
       <Group spacing={6} ml="auto">
         <LookrareIcon
@@ -48,13 +52,14 @@ const CollectionCard: React.FC<{ collection: string }> = ({ collection }) => {
 };
 
 const SupportedCollections: React.FunctionComponent = () => {
-  const { data: reservesResult } = useReserves();
+  const { data: reservesResult, loading } = useReserves();
 
   return (
     <Stack>
       <Title order={3} mt={30} sx={{ color: 'white' }}>
         Supported Collections
       </Title>
+      {loading && <Loader mx="auto" />}
       {reservesResult?.reserves.map((reserve) => (
         <CollectionCard collection={reserve.collection} />
       ))}
