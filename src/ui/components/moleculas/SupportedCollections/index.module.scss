@@ -1,0 +1,17 @@
+.collection {
+  padding: 12px 19px;
+  display: flex;
+  align-items: center;
+  .logo {
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+  }
+
+  .marketplaceLogo {
+    &:hover {
+      cursor: pointer;
+      opacity: 0.9;
+    }
+  }
+}

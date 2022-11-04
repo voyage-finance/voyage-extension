@@ -1,18 +1,14 @@
 import React, { useEffect } from 'react';
 import { useNetwork } from 'wagmi';
 import AppConnector from '@components/AppConnector';
-import VoyagePaper from '@components/Card';
 import styles from './index.module.scss';
 import { App, getDappForTab } from '@utils/dapps';
 import { useAppDispatch, useAppSelector } from '@hooks/useRedux';
 import { useAutoConnect } from '@utils/chain';
 import { updateActiveTab } from '@state/modules/core';
 import TitleWithLine from '@components/atoms/TitleWithLine';
-import { Group, Title } from '@mantine/core';
-import { ReactComponent as LookrareIcon } from 'assets/img/looksrare-w-text.svg';
-import { ReactComponent as OpenseaIcon } from 'assets/img/opensea-w-text.svg';
-import Button from '@components/Button';
 import TopUpCard from '@components/TopUpCard';
+import SupportedCollections from '@components/moleculas/SupportedCollections';
 
 const Home: React.FC = () => {
   const { chain } = useNetwork();
@@ -63,8 +59,6 @@ const Home: React.FC = () => {
     fetchCurrentTab();
   }, []);
 
-  const handleMarketplaceClick = (link: string) => window.open(link, '_blank');
-
   return (
     <div className={styles.root}>
       <TopUpCard />
@@ -72,29 +66,7 @@ const Home: React.FC = () => {
       <div className={styles.appConnector}>
         <AppConnector app={app} session={session} />
       </div>
-      <Title order={3} mt={30} sx={{ color: 'white' }}>
-        Marketplaces
-      </Title>
-      <Group spacing={11} my={16} noWrap>
-        <VoyagePaper className={styles.marketplaceCard}>
-          <OpenseaIcon className={styles.logo} />
-          <Button
-            className={styles.letsGoBtn}
-            onClick={() => handleMarketplaceClick('https://opensea.io/')}
-          >
-            LET'S GO!
-          </Button>
-        </VoyagePaper>
-        <VoyagePaper className={styles.marketplaceCard}>
-          <LookrareIcon className={styles.logo} />
-          <Button
-            className={styles.letsGoBtn}
-            onClick={() => handleMarketplaceClick('https://looksrare.org/')}
-          >
-            LET'S GO!
-          </Button>
-        </VoyagePaper>
-      </Group>
+      <SupportedCollections />
       {/* <CollectionCarousel /> */}
     </div>
   );

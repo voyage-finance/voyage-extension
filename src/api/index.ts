@@ -85,3 +85,11 @@ export const fetchEstimatedGas = async (relayedTx: RelayTransactionRequest) => {
   const body = await estimateGasResponse.json();
   return body.gas;
 };
+
+export const getTwap = async (collection: string) => {
+  const res = await fetch(
+    `${process.env.VOYAGE_API_URL}/v2/twap/${collection}`
+  );
+  const data = await res.json();
+  return data.twap;
+};
