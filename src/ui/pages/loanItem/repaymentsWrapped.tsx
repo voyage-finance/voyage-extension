@@ -44,6 +44,7 @@ const RepaymentsWrapped: React.FunctionComponent<{
 
   const { data: loanWithRepayments, loading } = useFetchLoanRepayments(
     vaultAddress!,
+    collection,
     loanId!,
     true
   );
