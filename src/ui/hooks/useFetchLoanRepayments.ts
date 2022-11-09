@@ -3,6 +3,7 @@ import { GET_LOAN_REPAYMENTS } from 'graphql/queries/repayments';
 
 export const useFetchLoanRepayments = (
   vaultAddress: string,
+  collectionAddress: string,
   loanId: number,
   polling?: boolean
 ) => {
@@ -17,7 +18,7 @@ export const useFetchLoanRepayments = (
     };
   }>(GET_LOAN_REPAYMENTS, {
     variables: {
-      id: `${vaultAddress!.toLowerCase()}_${loanId}`,
+      id: `${vaultAddress!.toLowerCase()}_${collectionAddress.toLowerCase()}_${loanId}`,
     },
     fetchPolicy: 'no-cache',
     pollInterval: polling ? 5000 : 0,
