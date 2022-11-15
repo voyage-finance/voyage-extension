@@ -1,34 +1,12 @@
 .root {
   display: flex;
   flex-direction: column;
+  overflow: scroll;
   height: 100%;
   width: 100%;
   padding: 23px;
-
+  padding-bottom: 60px;
   .appConnector {
     margin-top: 16px;
-  }
-
-  .marketplaceCard {
-    flex: 1;
-    height: 125px;
-    padding: 0 19px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
-    .logo {
-      margin-top: auto;
-    }
-
-    .letsGoBtn {
-      background: rgba(255, 255, 255, 0.1);
-      font-weight: 700;
-      font-size: 14px !important;
-      line-height: 16px;
-      width: 100px;
-      margin-bottom: 26px;
-      margin-top: 14px;
-    }
   }
 }

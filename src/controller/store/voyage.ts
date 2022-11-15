@@ -15,6 +15,7 @@ import { storage } from 'webextension-polyfill';
 import BigNumber from 'bignumber.js';
 import browser from 'webextension-polyfill';
 import { config } from '@utils/env';
+import { getTwap } from 'api';
 
 class VoyageStore {
   root: ControllerStore;
@@ -185,7 +186,7 @@ class VoyageStore {
       data,
     });
 
-    const twap = await this.getTwap(collection);
+    const twap = (await getTwap(collection))?.message;
     const txRequest = await this.voyage.populateTransaction.buyNowV2(
       collection,
       tokenId,
@@ -370,14 +371,6 @@ class VoyageStore {
       _to,
       _amount
     );
-  }
-
-  async getTwap(collection: string) {
-    const res = await fetch(
-      `${process.env.VOYAGE_API_URL}/v2/twap/${collection}`
-    );
-    const data = await res.json();
-    return data.twap?.message;
   }
 
   getBalance(address: string) {
