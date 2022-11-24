@@ -45,7 +45,7 @@ export const fetchLoan = async (
     {
       method: 'POST',
       body: JSON.stringify({
-        vault,
+        vault, //: `${vault.toLowerCase()}_${collection.toLowerCase()}`,
         collection,
         loanId,
       }),

@@ -46,32 +46,6 @@
           font-size: 14px;
           line-height: 16px;
         }
-        .network {
-          display: flex;
-          flex-direction: row;
-          align-items: center;
-          .status {
-            flex: 0 0 auto;
-            height: 6px;
-            width: 6px;
-            margin-right: 5px;
-            border-radius: 50%;
-            &.ok {
-              background-color: #0ccdaa;
-            }
-            &.bad {
-              background-color: #f4501b;
-            }
-          }
-          .name {
-            overflow: hidden;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-            color: #fff;
-            font-size: 11px;
-            line-height: 12px;
-          }
-        }
       }
     }
 
@@ -85,5 +59,103 @@
     align-items: center;
     justify-content: center;
     flex: 1 0 auto;
+  }
+}
+
+.drawerRoot {
+  background-color: #3b3e5d;
+  padding: 13px;
+  .profileHeader {
+    display: grid;
+    grid-template-columns: 33px 1fr 33px;
+    .connectionInfo {
+      grid-column-start: 2;
+    }
+    .closeBtn {
+      width: 33px;
+      height: 33px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      .arrowIconGradient {
+        display: none;
+      }
+      &:hover {
+        background: rgba(255, 255, 255, 0.1);
+        cursor: pointer;
+        .arrowIconGradient {
+          display: block;
+        }
+        .arrowIconDefault {
+          display: none;
+        }
+      }
+    }
+  }
+  .address {
+    display: flex;
+    align-items: center;
+    padding: 3px 9px;
+    border-radius: 10px;
+    .copyIconGradient {
+      display: none;
+    }
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+      cursor: pointer;
+      .copyIconGradient {
+        display: block;
+      }
+      .copyIcon {
+        display: none;
+      }
+    }
+  }
+  .scanBtn {
+    display: flex;
+    align-items: center;
+    padding: 3px;
+    border-radius: 10px;
+    .scanIconGradient {
+      display: none;
+    }
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+      cursor: pointer;
+      .scanIconGradient {
+        display: block;
+      }
+      .scanIcon {
+        display: none;
+      }
+    }
+  }
+}
+
+.network {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  .status {
+    flex: 0 0 auto;
+    height: 6px;
+    width: 6px;
+    margin-right: 5px;
+    border-radius: 50%;
+    &.ok {
+      background-color: #0ccdaa;
+    }
+    &.bad {
+      background-color: #f4501b;
+    }
+  }
+  .name {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    color: #fff;
+    font-size: 11px;
+    line-height: 12px;
   }
 }
